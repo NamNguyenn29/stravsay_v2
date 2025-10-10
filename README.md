@@ -34,3 +34,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+| Folder       | Vai trò chính                 | Ví dụ file thường có     |
+| ------------ | ----------------------------- | ------------------------ |
+| `api`        | Gọi API tới backend           | `userApi.ts`             |
+| `app`        | Cấu trúc route Next.js        | `page.tsx`, `layout.tsx` |
+| `components` | UI component dùng lại         | `Navbar.tsx`             |
+| `css`        | CSS toàn cục                  | `globals.css`            |
+| `hook`       | Custom hooks                  | `useAuth.ts`             |
+| `layout`     | Layout dùng chung             | `MainLayout.tsx`         |
+| `model`      | Kiểu dữ liệu (interface/type) | `User.ts`                |
+| `service`    | Xử lý logic nghiệp vụ         | `authService.ts`         |
+| `static`     | Hình ảnh và file tĩnh         | `banner.jpg`             |
+| `store`      | Quản lý state                 | `cartStore.ts`           |
+| `utils`      | Hàm tiện ích                  | `formatCurrency.ts`      |

@@ -6,6 +6,13 @@ export default function Booking() {
         useBookingStore();
 
     return (
-        <div>{roomType || "chua chon"}</div>
+        <>
+            <div>{roomType || "chua chon"}</div>
+            <div> {checkInDate || "a"}</div>
+            <div>{checkOutDate || "a"}</div>
+            <div>{adult}</div>
+            <div>{children}</div>
+
+        </>
     );
 }

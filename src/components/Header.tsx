@@ -17,7 +17,7 @@ export default function Header() {
         <>
             <div className="header-top-bar bg-black px-10">
                 <div className="flex items-center">
-                    <Link href="/" className="cursor-pointer block w-[150px] mx-auto mt-[20px]"><Image src={"/logo.png"} alt='stravstaylogo' width={150} height={150} /></Link>
+                    <Link href="/" className="cursor-pointer block w-[150px] mx-auto "><Image src={"/logo.png"} alt='stravstaylogo' width={150} height={150} /></Link>
                     <div className='font-semibold text-white text-right pr-[5px] cursor-pointer my-auto relative 
                                     after:content-[""]
                                     after:absolute 

@@ -28,17 +28,17 @@ body {
 
 .ant-dropdown-menu-item {
   font-size: 18px !important;
-  min-width: 250px !important;
+  min-width: 200px !important;
 }
 
-.ant-dropdown-menu-item {
-  padding: 10px 20px !important;
-}
+
 
 /* placeholder + input text */
 .ant-picker-input input {
   color: #000 !important;
   opacity: 1 !important;
+  font-size: 20px !important;
+  width: 120px !important;
 }
 
 .ant-picker-input input::placeholder {

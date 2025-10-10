@@ -2,14 +2,14 @@ import { create } from "zustand";
 
 interface BookingState {
     roomType: string | null;
-    checkInDate: Date | null;
-    checkOutDate: Date | null;
+    checkInDate: string | null;
+    checkOutDate: string | null;
     children: number | null;
     adult: number | null;
 
     setRoomType: (roomType: string | null) => void;
-    setCheckInDate: (date: Date | null) => void;
-    setCheckOutDate: (date: Date | null) => void;
+    setCheckInDate: (date: string | null) => void;
+    setCheckOutDate: (date: string | null) => void;
     setChildren: (children: number | null) => void;
     setAdult: (adult: number | null) => void;
 

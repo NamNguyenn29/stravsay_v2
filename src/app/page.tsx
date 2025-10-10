@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import "../css/globals.css";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

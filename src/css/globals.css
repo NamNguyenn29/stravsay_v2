@@ -50,3 +50,26 @@ body {
   color: #000 !important;
   opacity: 1 !important;
 }
+
+/* modal */
+.ant-modal {
+  box-shadow: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.ant-modal-wrap,
+.ant-modal-mask {
+  animation: none !important;
+}
+
+.ant-modal-content {
+  box-shadow: none !important;
+}
+
+.ant-fade-appear,
+.ant-fade-enter,
+.ant-zoom-appear,
+.ant-zoom-enter {
+  animation: none !important;
+}

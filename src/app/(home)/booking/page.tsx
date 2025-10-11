@@ -17,6 +17,8 @@ import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { Room } from "@/model/Room";
 import { Carousel } from 'antd';
+import { Modal, Box } from "@mui/material";
+import Button from '@mui/material/Button';
 import Image from 'next/image';
 export async function getRooms(): Promise<Room[]> {
     try {
@@ -36,18 +38,26 @@ export async function getRooms(): Promise<Room[]> {
     }
 }
 export default function Booking() {
-    const { room, setRoom } = useBookingStore();
+    // luu va lay thong tin room da chon
+    const { setRoom } = useBookingStore();
+    // danh ssach room
     const [rooms, setRooms] = useState<Room[]>([]);
+
+    const [selectedRoomDetail, setSelectedRoomDetail] = useState<Room | null>(null);
+    // ham chon room
     const handleSelectRoom = (room: Room) => {
         setRoom(room);
     }
+    // useEffect de goi api lay dsach room
     useEffect(() => {
         getRooms().then((data) => setRooms(data));
     }, [])
+    // ham dong modal
+
     return (
         <>
             {rooms.map((room) => (
-                <div key={room.id} className="border border-none bg-white p-10 rounded-md">
+                <div key={room.id} className="border border-none bg-white p-10 rounded-md ">
                     <div className="grid grid-cols-12 gap-10">
                         <div className="col-span-3 mt-[10[px]]">
                             <Carousel autoplay>
@@ -105,7 +115,7 @@ export default function Booking() {
                                 className="ml-100 my-10 inline-flex items-center gap-2 px-4 py-2 border rounded-full cursor-pointer
                                         text-gray-800 hover:bg-sky-900 hover:text-white transition"
                             >
-                                <span>Show more</span>
+                                <span onClick={() => setSelectedRoomDetail(room)}>Show more</span>
                                 <FontAwesomeIcon icon={faChevronDown} size="lg" />
                             </div>
                         </div>
@@ -160,8 +170,127 @@ export default function Booking() {
                             </div>
                         </div>
                     </div>
-                </div>
-            ))}
+                </div >
+            ))
+            }
+
+            <Modal open={!!selectedRoomDetail} onClose={() => setSelectedRoomDetail(null)}>
+                <Box
+                    sx={{
+                        p: 4,
+                        bgcolor: "white",
+                        borderRadius: 2,
+                        width: 1200,
+                        mx: "auto",
+                        mt: 5,
+                        maxHeight: "90vh",
+                        overflowY: "auto",
+                    }}
+                >
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold mb-4">{selectedRoomDetail?.roomName}</h2>
+
+                    {/* Slider + description */}
+                    <div className="grid grid-cols-12 gap-6 mb-6">
+                        <div className="mx-auto col-span-12 flex gap-4 overflow-x-auto">
+                            {selectedRoomDetail?.imageURls.map((url, index) => (
+                                <img
+                                    key={index}
+                                    src={url}
+                                    alt={`${selectedRoomDetail?.roomName} - ${index + 1}`}
+                                    className="w-60 h-40 object-cover rounded-lg shadow-md"
+                                />
+                            ))}
+                        </div>
+                        <div className="col-span-12 grid grid-cols-12">
+                            <div className="col-span-3">
+                                <div className="text-gray-600 italic mb-2 ">
+                                    <b>
+                                        Accommodates{" "}
+                                        {(selectedRoomDetail ? selectedRoomDetail.adult : 0) +
+                                            (selectedRoomDetail ? selectedRoomDetail.children : 0)}{" "}
+                                        guests
+                                    </b>
+
+                                </div>
+                                <div className="text-gray-600 mb-2">
+                                    <FontAwesomeIcon icon={faArrowsLeftRight} size="lg" className="-rotate-45" />
+
+                                    <b>{selectedRoomDetail?.space}</b> m<sup>2</sup>
+                                </div>
+                            </div>
+                            <div className="col-span-9">
+                                <p className="text-gray-700">{selectedRoomDetail?.description}</p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dynamic tiện ích */}
+                    <div className="flex flex-wrap gap-4 mb-6">
+                        <span className="bg-gray-100 px-3 py-2 rounded-md">
+                            <FontAwesomeIcon icon={faPaw} />{" "}
+                            Pet Allowed
+                        </span>
+                        <span className="bg-gray-100 px-3 py-2 rounded-md">
+                            <FontAwesomeIcon icon={faWifi} /> Wi-Fi
+                        </span>
+                        <span className="bg-gray-100 px-3 py-2 rounded-md">
+                            <FontAwesomeIcon icon={faSnowflake} /> Air conditioning
+                        </span>
+                        <span className="bg-gray-100 px-3 py-2 rounded-md">
+                            <FontAwesomeIcon icon={faBed} /> {selectedRoomDetail?.bedType}
+                        </span>
+                        <span className="bg-gray-100 px-3 py-2 rounded-md">
+                            <FontAwesomeIcon icon={faPhone} />{" "}
+                            Phone
+                        </span>
+                    </div>
+
+                    {/* Fixed tiện ích */}
+                    {/* Services + tiện ích khác */}
+                    <div className="grid grid-cols-4 gap-6 bg-gray-50 p-6 rounded-md">
+                        <div>
+                            <h3 className="!font-semibold mb-2">Pet-friendly</h3>
+                            <p>Pets allowed</p>
+
+                            <h3 className="!font-semibold mt-4 mb-2">Video and audio</h3>
+                            <p>Flat-screen TV</p>
+                            <p>Cable television</p>
+                        </div>
+
+                        <div>
+                            <h3 className="!font-semibold mb-2">Electronic devices</h3>
+                            <p>Air conditioning</p>
+                            <p>Hair dryer</p>
+                            <p>Refrigerator</p>
+
+                            <h3 className="!font-semibold mt-4 mb-2">Bathroom</h3>
+                            <p>Shower</p>
+                        </div>
+
+                        <div>
+                            <h3 className="!font-semibold  mb-2">Furniture</h3>
+                            <p>Desk</p>
+                            <p>Wardrobe</p>
+                            <p>Chair</p>
+                            <p>Mirror</p>
+                        </div>
+
+                    </div>
+
+                    {/* Close button */}
+                    <div className="flex justify-end mt-6">
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => setSelectedRoomDetail(null)}
+                        >
+                            Close
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
         </>
     );
 }

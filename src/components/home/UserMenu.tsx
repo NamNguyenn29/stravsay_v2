@@ -26,7 +26,7 @@ export default function UserMenu() {
     return (
         <>
             <div className="border border-t-black bg-black w-full"></div>
-            <div className="grid grid-cols-12  ">
+            <div className="grid grid-cols-12  mr-[50px] ">
                 <div className="col-start-9 col-span-4 p-6" >
                     <div className="flex items-center justify-end gap-4">
                         <Avatar size={50}>USER</Avatar>

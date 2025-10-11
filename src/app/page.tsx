@@ -23,8 +23,8 @@ export default function Home() {
     roomType,
     checkInDate,
     checkOutDate,
-    adult,
-    children,
+    noAdult,
+    noChildren,
     setRoomType,
     setCheckInDate,
     setCheckOutDate,
@@ -105,7 +105,7 @@ export default function Home() {
           <div className="relative text-xl">
             <label className="text-xl block text-left text-amber-500">Check in - Check Out</label>
             <div className="cursor-pointer flex justify-between items-center bg-white text-black text-xl mt-2">
-              <RangePicker size="large" style={{
+              <RangePicker size="large" defaultValue={[dayjs(), dayjs().add(1, "day")]} style={{
                 color: "black ",
                 fontSize: "24px",
                 fontWeight: "bold",
@@ -119,9 +119,9 @@ export default function Home() {
             <label className="text-xl block text-left text-amber-500">Guest</label>
             <div className="cursor-pointer flex justify-between items-center bg-white text-black text-xl mt-4">
               <InputNumber min={1} max={10} defaultValue={2} onChange={handleAdultChange} />
-              <span className=" text-black pl-2 pr-5"> {adult || 2} Adult{adult || 2 > 1 ? "s" : ""}</span>
+              <span className=" text-black pl-2 pr-5"> Adult{noAdult || 2 > 1 ? "s" : ""}</span>
               <InputNumber min={0} max={10} defaultValue={0} onChange={handleChildrenChange} />
-              <span className=" text-black pl-2 pr-5">{children || 0} Child{children || 0 > 1 ? "ren" : ""}</span>
+              <span className=" text-black pl-2 pr-5"> Child{noChildren || 0 > 1 ? "ren" : ""}</span>
               <FontAwesomeIcon icon={faUserFriends} size="xs" color="black" />
             </div>
           </div>

@@ -1,0 +1,65 @@
+/* src/app/css/admin.css */
+
+/* Layout tổng thể cho admin dashboard */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+/* Sidebar trái */
+.admin-sidebar {
+  width: 260px;
+  background-color: #fff;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-sidebar-logo {
+  width: 44px;
+  height: 44px;
+  background: #fafafa;
+  border-radius: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Header trên cùng */
+.admin-header {
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Main content */
+.admin-main {
+  flex: 1;
+  padding: 24px;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Sidebar phải */
+.admin-rightbar {
+  width: 320px;
+  background-color: #fff;
+  border-left: 1px solid #f0f0f0;
+  padding: 16px;
+}
+

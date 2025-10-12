@@ -1,4 +1,4 @@
-import UserMenu from "@/components/home/UserMenu"
+import UserMenu from "@/components/user/UserMenu"
 export default function UserLayout({ children }: { children: React.ReactNode }) {
     return (
         <div>

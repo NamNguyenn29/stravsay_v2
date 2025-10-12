@@ -10,7 +10,7 @@ import { DatePicker } from 'antd';
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import MyBooking from "@/components/MyBooking";
+import MyBooking from "@/components/user/MyBooking";
 import { useEffect, useState } from "react";
 import { Room } from "@/model/Room";
 

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Room } from "@/model/Room";
+import dayjs from "dayjs";
 interface BookingState {
     roomType: string | null;
     checkInDate: string | null;
@@ -21,8 +22,8 @@ interface BookingState {
 
 export const useBookingStore = create<BookingState>((set) => ({
     roomType: null,
-    checkInDate: null,
-    checkOutDate: null,
+    checkInDate: dayjs().format('YYYY-MM-DD'),
+    checkOutDate: dayjs().add(1, 'day').format('YYYY-MM-DD'),
     noChildren: null,
     noAdult: null,
     room: null,

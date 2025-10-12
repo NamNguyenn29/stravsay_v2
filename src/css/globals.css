@@ -51,25 +51,18 @@ body {
   opacity: 1 !important;
 }
 
-/* modal */
-.ant-modal {
-  box-shadow: none !important;
-  animation: none !important;
-  transform: none !important;
+html,
+body {
+  overflow-x: hidden;
 }
 
-.ant-modal-wrap,
-.ant-modal-mask {
-  animation: none !important;
+/* Bảo đảm phần bảng cuộn riêng */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
-.ant-modal-content {
-  box-shadow: none !important;
-}
-
-.ant-fade-appear,
-.ant-fade-enter,
-.ant-zoom-appear,
-.ant-zoom-enter {
-  animation: none !important;
+.container {
+  max-width: 100%;
 }

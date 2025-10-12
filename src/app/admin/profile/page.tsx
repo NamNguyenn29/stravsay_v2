@@ -1,5 +1,5 @@
 import Profile from "@/components/user/Profile";
 
-export default function UserProfile() {
+export default function AdminProfile() {
     return <Profile />;
 }

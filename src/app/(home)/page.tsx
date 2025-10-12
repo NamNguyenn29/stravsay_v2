@@ -105,7 +105,7 @@ export default function Home() {
           <div className="relative text-xl">
             <label className="text-xl block text-left text-amber-500">Check in - Check Out</label>
             <div className="cursor-pointer flex justify-between items-center bg-white text-black text-xl mt-2">
-              <RangePicker size="large" defaultValue={[dayjs(), dayjs().add(1, "day")]} style={{
+              <RangePicker size="large" defaultValue={[dayjs(checkInDate), dayjs(checkOutDate)]} style={{
                 color: "black ",
                 fontSize: "24px",
                 fontWeight: "bold",

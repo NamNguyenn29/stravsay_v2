@@ -1,10 +1,10 @@
 'use client';
-import "../css/globals.css";
+import "@/css/globals.css";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
-import "../css/globals.css";
+import "@/css/globals.css";
 import { useBookingStore } from "@/store/useBookingStore";
 import { useRouter } from "next/navigation";
 import { DatePicker } from 'antd';

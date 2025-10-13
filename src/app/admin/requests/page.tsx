@@ -26,7 +26,7 @@ export default function UserMangement() {
     // phân trang
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentRequests = requests.slice(indexOfFirst, indexOfLast);
+    const currentRequests = filteredByStatus.slice(indexOfFirst, indexOfLast);
 
     const handleFilterClick = (filter: "all" | 1 | 0) => {
         setActiveFilter(filter);
@@ -101,6 +101,7 @@ export default function UserMangement() {
                             <th className=" border-b-2  border-gray-400 px-4 py-2"> ID</th>
                             <th className="border-b-2  border-gray-400 px-4 py-2">User/ Email </th>
                             <th className="border-b-2  border-gray-400 px-4 py-2">Title</th>
+                            <th className="border-b-2  border-gray-400 px-4 py-2">Description</th>
                             <th className="border-b-2  border-gray-400 px-4 py-2">Status</th>
                             <th className="border-b-2  border-gray-400 px-4 py-2">Created Date</th>
                             <th className="border-b-2  border-gray-400 px-4 py-2">Action</th>
@@ -115,6 +116,7 @@ export default function UserMangement() {
                                         {request.userEmail}
                                     </td>
                                     <td className="px-4 py-2">{request.title}</td>
+                                    <td className="px-4 py-2">{request.description}</td>
                                     <td className="px-4 py-2">
                                         <div
                                             className={`font-semibold border rounded-md p-2 w-32 text-center
@@ -127,22 +129,23 @@ export default function UserMangement() {
                                         </div>
                                     </td>
                                     <td className="px-4 py-2">{request.createdDate}</td>
-                                    <td className="flex gap-5 px-4 py-2 ">
-                                        <div
+                                    <td className="flex gap-5 px-4 py-2  ">
+                                        {/* <div
                                             className="bg-emerald-400 p-2 px-4 text-white rounded cursor-pointer"
                                             onClick={() => setSelectedRequestView(request)}
                                         >
                                             View
-                                        </div>
-                                        <div className="bg-rose-400 p-2 px-4 text-white rounded cursor-pointer">
-                                            Remove
-                                        </div>
+                                        </div> */}
                                         <div
-                                            className="bg-slate-700 p-2 px-4 text-white rounded cursor-pointer"
+                                            className="!text-white bg-slate-700 p-2 px-4  rounded cursor-pointer "
                                             onClick={() => setSelectedRequestResponse(request)}
                                         >
                                             Response
                                         </div>
+                                        <div className="bg-rose-400 p-2 px-4  rounded cursor-pointer !text-white">
+                                            Remove
+                                        </div>
+
                                     </td>
                                 </tr>
                             );
@@ -153,7 +156,7 @@ export default function UserMangement() {
                 <Pagination
                     current={currentPage}                // Trang hiện tại
                     pageSize={itemsPerPage}              // Số item mỗi trang
-                    total={filteredByStatus.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
+                    total={currentRequests.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
                     showSizeChanger                      // Cho phép chọn số item/trang
                     pageSizeOptions={[5, 10, 20, 50]}    // Tùy chọn số dòng mỗi trang
                     onChange={(page, pageSize) => {
@@ -170,7 +173,7 @@ export default function UserMangement() {
 
                 {/* --- MODAL RESPONSE --- */}
                 {selectedRequestResponse && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
+                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-40">
                         <div className="bg-white text-gray-800 rounded-xl shadow-2xl p-6 w-[420px]">
                             <div className="mb-4 border-b pb-2">
                                 <h2 className="text-xl font-bold">Response</h2>
@@ -199,13 +202,13 @@ export default function UserMangement() {
                                 />
                             </div>
 
-                            <div className="flex justify-end gap-3">
-                                <button className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full shadow">
+                            <div className="flex justify-end gap-3 ">
+                                <button className="px-5 py-2 bg-green-500 hover:bg-green-600 !text-white rounded-full shadow">
                                     Send
                                 </button>
                                 <button
                                     onClick={() => setSelectedRequestResponse(null)}
-                                    className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow"
+                                    className="px-5 py-2 bg-red-500 hover:bg-red-600 !text-white rounded-full shadow"
                                 >
                                     Cancel
                                 </button>

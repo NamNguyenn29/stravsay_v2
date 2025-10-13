@@ -1,10 +1,10 @@
 'use client'
 import Link from 'next/link';
 import Image from "next/image";
-
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
-
+    const router = useRouter();
     const menu = [
         { name: "HOTEL", href: "/" },
         { name: "OURSERVICE", href: "/ourservice" },
@@ -12,6 +12,14 @@ export default function Header() {
         { name: "STRAVSTAY DISCOVERTY", href: "#" },
         { name: "CONTACT US", href: "/supportrequest" }
     ];
+
+    const handleClickMemberLogin = (() => {
+        router.push("/profile");
+    })
+
+    const handleClickBooknow = (() => {
+        router.push("/booking");
+    })
 
     return (
         <>
@@ -29,7 +37,8 @@ export default function Header() {
                                     after:bg-white
                                     after:transition-all
                                     after:duration-300 
-                    '>MEMBER LOGIN</div>
+                    '
+                        onClick={handleClickMemberLogin} >MEMBER LOGIN</div>
                 </div>
             </div>
 
@@ -58,7 +67,7 @@ export default function Header() {
                     </ul>
                 </nav>
                 <div className="w-40 h-20 bg-rose-500 transform -skew-x-12 flex items-center justify-center text-xl hover:bg-blue-950 hover:!text-rose-500 group ">
-                    <span className='cursor-pointer skew-x-12 text-white font-semibold group-hover:text-yellow-400 '>Book Now</span>
+                    <span className='cursor-pointer skew-x-12 text-white font-semibold group-hover:text-yellow-400 ' onClick={handleClickBooknow}>Book Now</span>
                 </div>
             </div >
         </>

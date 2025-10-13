@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
 export default function UserMenu() {
-    const [isOpnen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -31,9 +31,9 @@ export default function UserMenu() {
                     <div className="flex items-center justify-end gap-4">
                         <Avatar size={50}>USER</Avatar>
                         <div className='text-left text-xl font-semibold underline cursor-pointer '>NA</div>
-                        <div className="relative">
+                        <div className="relative" ref={menuRef}>
                             <button
-                                onClick={() => setIsOpen(!isOpnen)}
+                                onClick={() => setIsOpen(!isOpen)}
                                 type="button"
                                 className="p-2"
                                 aria-label="menu"
@@ -41,11 +41,11 @@ export default function UserMenu() {
                                 <FontAwesomeIcon icon={faBars} size="2xl" />
                             </button>
 
-                            {isOpnen && (
+                            {isOpen && (
                                 <div className=" w-[250px] absolute right-0 mt-2 bg-white rounded-md shadow-lg border py-2 z-50">
                                     <div>
                                         <button
-                                            onClick={() => router.push("/member")}
+                                            onClick={() => router.push("/profile")}
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-rose-500"
                                         >
                                             Profile
@@ -55,12 +55,6 @@ export default function UserMenu() {
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-rose-500"
                                         >
                                             My Booking
-                                        </button>
-                                        <button
-                                            onClick={() => router.push("/changepassword")}
-                                            className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-rose-500"
-                                        >
-                                            Change Password
                                         </button>
                                         <button className="w-full text-left px-4 py-2 hover:gray-100 hover:text-rose-500">
                                             Log out

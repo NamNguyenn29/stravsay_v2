@@ -134,7 +134,7 @@ export default function RoomManagement() {
                                     </td>
                                     <td className="px-6 py-3">
                                         <span
-                                            className={`px-3 py-1 rounded-full text-base font-medium
+                                            className={`px-3 py-1 rounded-full text-base font-medium !text-white
                                             } ${status.color}`}
                                         >
                                             {status.text}

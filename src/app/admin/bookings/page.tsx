@@ -190,15 +190,19 @@ export default function BookingMangement() {
                                         <td className="px-6 py-4">{booking.discountCode ? `#${booking.discountCode}` : "-"}</td>
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-sm font-semibold uppercase tracking-wide
+                                                className={`px-3 py-3 rounded-full text-white text-sm font-semibold uppercase tracking-wide
                                             ${status.color}`}
                                             >
                                                 {status.text}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
+                                        <td className="px-6 py-4 text-center flex gap-5">
                                             <button
-
+                                                className="px-4 py-2 text-sm font-medium !text-white bg-yellow-500 hover:bg-green-600 rounded-lg shadow"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
                                                 className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
                                             >
                                                 Remove

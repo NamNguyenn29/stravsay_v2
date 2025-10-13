@@ -44,7 +44,7 @@ export default function UserBooking() {
                 <div className="text-4xl mx-10">
                     My Bookings
                 </div>
-                <div className=" border border-b-1 container mx-auto bg-black mt-2 mb-2"></div>
+                {/* <div className=" border border-b-1 container mx-auto bg-black mt-2 mb-2"></div> */}
 
                 <div className=" flex justify-start gap-5 container p-10 mb-10 ">
                     <input type="search"

@@ -29,7 +29,7 @@ export default function Profile() {
 
             <Card
                 className="w-full max-w-6xl shadow-2xl rounded-3xl border border-gray-200"
-                bodyStyle={{ padding: "3rem 4rem" }}
+                style={{ padding: "3rem 4rem" }}
             >
                 <div className="flex gap-12">
                     {/* Avatar Section */}

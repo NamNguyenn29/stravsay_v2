@@ -3,14 +3,23 @@ import { User } from "@/model/User";
 import { getUsers } from "@/api/getUser";
 import { useState, useEffect } from "react";
 import { Pagination } from 'antd';
-import { Modal, Box, Button } from "@mui/material";
+import UserDetailModal from "@/components/admin/UserDetailModal";
+
+// danh sách role mẫu
+
 export default function UserMangement() {
     const [users, setUsers] = useState<User[]>([]);
     useEffect(() => {
-        getUsers().then(setUsers);
-    });
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+        loadUsers();
+    }, []);
 
+    const loadUsers = async () => {
+        const data = await getUsers();
+        setUsers(data);
+    };
+
+
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const totalUser = users.length;
     const activeCount = users.filter(u => u.isActive && !u.isActive).length;
     const inactiveUser = users.filter(u => !u.isActive && !u.isDeleted).length;
@@ -141,9 +150,9 @@ export default function UserMangement() {
                                     <td className="px-6 py-3 ">{user.createdDate}</td>
                                     <td className="px-6 py-3 "></td>
                                     <td className="px-6 py-3 flex gap-5">
-                                        <div className="bg-emerald-400 hover:bg-emerald-600 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer">Edit</div>
-                                        <div className="bg-rose-400 hover:bg-rose-600 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer">Remove</div>
                                         <div className="bg-slate-500 hover:bg-slate-800 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer " onClick={() => setSelectedUser(user)}>More Detail</div>
+                                        <div className="bg-rose-400 hover:bg-rose-600 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer">Remove</div>
+
                                     </td>
 
                                 </tr>
@@ -167,104 +176,13 @@ export default function UserMangement() {
                 showTotal={(total) => `Total ${total} items`}
                 showQuickJumper
             />
+            <UserDetailModal
+                selectedUser={selectedUser}
+                onClose={() => setSelectedUser(null)}
+                onUpdated={loadUsers}
+            />
 
 
-            <Modal open={!!selectedUser} onClose={() => setSelectedUser(null)}>
-                <Box
-                    sx={{
-                        p: 4,
-                        bgcolor: "rgb(100,116,139)",
-                        borderRadius: 2,
-                        width: 1400,
-                        mx: "auto",
-                        mt: 5,
-                        maxHeight: "90vh",   // giới hạn chiều cao modal
-                        overflowY: "auto",   // bật thanh cuộn dọc
-                    }}
-                >
-                    {selectedUser && (
-                        <div className="grid grid-cols-12 gap-10 text-xl">
-                            <div className="rounded-lg col-span-5 bg-white p-10 h-100 flex gap-10 relative">
-                                <span className="bg-[rgb(238,242,255)] h-15 w-15 rounded-full text-center text-xl/15">
-                                    {selectedUser.fullName.substring(0, 2).toUpperCase()}
-                                </span>
-                                <span className="mt-4">
-                                    <div className="font-bold">{selectedUser.fullName}</div>
-                                    <div>{selectedUser.email}</div>
-                                    <div className="mt-4 px-3 py-2 rounded-full bg-green-300 w-24 text-center">
-                                        {selectedUser.status}
-                                    </div>
-
-                                </span>
-                                <div className="absolute top-50">
-                                    <div className="flex gap-20">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">User ID</div>
-                                            <div className="mb-5"> {selectedUser.id}</div>
-                                            <div className="font-semibold text-sky-700 mb-2">Last login</div>
-                                            <div className="mb-5"> {selectedUser.id}</div>
-                                        </div>
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Created Date</div>
-                                            <div className="mb-5"> {selectedUser.createdDate}</div>
-                                            <div className="font-semibold text-sky-700 mb-2">Date of Birth</div>
-                                            <div className="mb-5"> {selectedUser.dateOfBirth}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-span-7 bg-white p-10 h-100 text-xl rounded">
-
-                                <div className="text-sky-700 font-semibold text-2xl ">Personal Information</div>
-                                <div className="grid grid-cols-12 mt-10">
-                                    <div className="col-span-4 ">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Full Name</div>
-                                            <div className="mb-5" >{selectedUser.fullName}</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-span-4 ">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Email</div>
-                                            <div className="mb-5" >{selectedUser.email}</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-span-4 ">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Phone</div>
-                                            <div className="mb-5" >{selectedUser.phone}</div>
-                                        </div>
-                                    </div>
-                                    <div className="col-span-8 ">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Address</div>
-                                            <div className="mb-5" >{ }</div>
-                                        </div>
-                                    </div>
-                                    {/* <div className="col-span-4 ">
-                                        <div>
-                                            <div className="font-semibold text-sky-700 mb-2">Genders</div>
-                                            <div className="mb-5" >{selectedUser.fullName}</div>
-                                        </div>
-                                    </div> */}
-
-                                </div>
-                            </div>
-                            <div className=" col-start-6 col-span-7 bg-white p-10 h-60 text-xl rounded">b</div>
-                        </div>
-                    )}
-                    <div className="flex justify-end mt-6">
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() => setSelectedUser(null)}
-                        >
-                            Close
-                        </Button>
-                    </div>
-                </Box>
-            </Modal>
         </>
     )
 }

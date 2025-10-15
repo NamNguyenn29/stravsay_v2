@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,8 +9,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTSerO\**" />
+    <Content Remove="DTSerO\**" />
+    <EmbeddedResource Remove="DTSerO\**" />
+    <None Remove="DTSerO\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interface\Implement\" />
+    <Folder Include="Helper\" />
+    <Folder Include="Core\" />
+    <Folder Include="DTO\" />
+    <Folder Include="Query\" />
+    <Folder Include="Security\" />
+    <Folder Include="Service\" />
+	  
   </ItemGroup>
 
 </Project>

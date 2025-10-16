@@ -3245,11 +3245,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\behotel.csproj",
+      "projectUniqueName": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
       "projectName": "behotel",
-      "projectPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\behotel.csproj",
+      "projectPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
       "packagesPath": "C:\\Users\\nam22\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\obj\\",
+      "outputPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

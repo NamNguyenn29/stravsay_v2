@@ -11,5 +11,5 @@ Core : lưu thông tin khóa bí mật của project
 
 //  mẫu connection string
 "ConnectionStrings": {
-    "DBConnection": "data source=DESKTOP-OCE20UL;initial catalog=Syllabus;persist security info=True;user id=sa;password=123456;MultipleActiveResultSets=True;encrypt=false"
+    "DBConnection": "data source=,;initial catalog=Syllabus;persist security info=True;user id=sa;password=123456;MultipleActiveResultSets=True;encrypt=false"
   }

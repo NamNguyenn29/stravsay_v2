@@ -1,0 +1,15 @@
+﻿namespace behotel.Models
+{
+    public class Booking
+    {
+        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
+        public Guid RoomId { get; set; }
+        public DateTime CheckInDate { get; set; }
+        public DateTime CheckOutDate { get; set; }
+        public int Price { get; set; }
+        public Guid? DiscountID { get; set; }
+        public int Status { get; set; }
+        public DateTime CreatedDAte { get; set; }
+    }
+}

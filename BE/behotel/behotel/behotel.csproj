@@ -23,9 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Core\" />
     <Folder Include="Interface\Implement\" />
     <Folder Include="Helper\" />
-    <Folder Include="Core\" />
     <Folder Include="DTO\" />
     <Folder Include="Query\" />
     <Folder Include="Security\" />

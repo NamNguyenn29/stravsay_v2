@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\discount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\discount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -25,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\bookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,11 +74,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 15,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "behotel\\WeatherForecast.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\WeatherForecast.cs",
+              "RelativeToolTip": "behotel\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T04:32:56.499Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -90,7 +107,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Discount.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Discount.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\Discount.cs",
@@ -103,7 +120,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "BookingService.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\BookingService.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\BookingService.cs",
@@ -115,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Booking.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Booking.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\Booking.cs",
@@ -127,7 +144,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "RoomType.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\RoomType.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\RoomType.cs",
@@ -139,7 +156,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Room.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Room.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\Room.cs",
@@ -151,7 +168,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Service.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Service.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\Service.cs",
@@ -163,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "UserRole.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\UserRole.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\UserRole.cs",
@@ -175,7 +192,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Role.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Role.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\Role.cs",
@@ -187,7 +204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\User.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\User.cs",
@@ -199,7 +216,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "HotelManagementContext.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\HotelManagementContext.cs",
@@ -211,7 +228,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\appsettings.json",
               "RelativeDocumentMoniker": "behotel\\appsettings.json",
@@ -219,11 +236,12 @@
               "RelativeToolTip": "behotel\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAACRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-15T10:25:35.037Z"
+              "WhenOpened": "2025-10-15T10:25:35.037Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Program.cs",
               "RelativeDocumentMoniker": "behotel\\Program.cs",
@@ -235,7 +253,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Readme.md",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Readme.md",
               "RelativeDocumentMoniker": "behotel\\Readme.md",
@@ -247,7 +265,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "behotel.csproj",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
               "RelativeDocumentMoniker": "behotel\\behotel.csproj",
@@ -259,7 +277,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "behotel\\Controllers\\WeatherForecastController.cs",

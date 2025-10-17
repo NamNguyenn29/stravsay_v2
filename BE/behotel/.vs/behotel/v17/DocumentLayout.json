@@ -1,118 +1,272 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\",
+  "WorkspaceRootPath": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\systemlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\systemlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\reviewphoto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\reviewphoto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\reviewcomment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\reviewcomment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\refund.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\refund.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\behotel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\behotel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\systemsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\systemsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\behotel.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\behotel.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\stravstay_v2\\stravsay_front\\be\\behotel\\behotel\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\khang\\desktop\\stravsay_v2\\be\\behotel\\behotel\\behotel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\behotel.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
-      "VerticalTabListWidth": 256,
+      "VerticalTabListWidth": 100,
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SystemLog.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\SystemLog.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\SystemLog.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\SystemLog.cs",
+              "RelativeToolTip": "behotel\\Models\\SystemLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T03:17:40.401Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SystemSetting.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\SystemSetting.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\SystemSetting.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\SystemSetting.cs",
+              "RelativeToolTip": "behotel\\Models\\SystemSetting.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T03:17:02.87Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ReviewComment.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\ReviewComment.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\ReviewComment.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\ReviewComment.cs",
+              "RelativeToolTip": "behotel\\Models\\ReviewComment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T03:14:54.365Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ReviewPhoto.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\ReviewPhoto.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\ReviewPhoto.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\ReviewPhoto.cs",
+              "RelativeToolTip": "behotel\\Models\\ReviewPhoto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-17T03:13:45.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Review.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Review.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\Review.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Review.cs",
+              "RelativeToolTip": "behotel\\Models\\Review.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-15T12:02:10.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Refund.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Refund.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\Refund.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Refund.cs",
+              "RelativeToolTip": "behotel\\Models\\Refund.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-15T11:59:50.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Payment.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\Payment.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Payment.cs",
+              "RelativeToolTip": "behotel\\Models\\Payment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-15T11:55:24.515Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "behotel",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
+              "RelativeDocumentMoniker": "behotel\\behotel.csproj",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
+              "RelativeToolTip": "behotel\\behotel.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-15T11:47:45.961Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "behotel\\WeatherForecast.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\WeatherForecast.cs",
+              "RelativeToolTip": "behotel\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-15T11:47:28.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PaymentMethod.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\PaymentMethod.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\PaymentMethod.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\PaymentMethod.cs",
+              "RelativeToolTip": "behotel\\Models\\PaymentMethod.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-15T11:42:32.574Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Models\\User.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\User.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\User.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\User.cs",
               "RelativeToolTip": "behotel\\Models\\User.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAYwA8AAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-15T10:49:31.672Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "HotelManagementContext.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
               "RelativeDocumentMoniker": "behotel\\Models\\HotelManagementContext.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
               "RelativeToolTip": "behotel\\Models\\HotelManagementContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-15T10:46:09.367Z"
+              "WhenOpened": "2025-10-15T10:46:09.367Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\appsettings.json",
               "RelativeDocumentMoniker": "behotel\\appsettings.json",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\appsettings.json",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\appsettings.json",
               "RelativeToolTip": "behotel\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAB3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-15T10:25:35.037Z"
+              "WhenOpened": "2025-10-15T10:25:35.037Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 13,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Program.cs",
               "RelativeDocumentMoniker": "behotel\\Program.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Program.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Program.cs",
               "RelativeToolTip": "behotel\\Program.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAowB8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-15T10:24:45.726Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 15,
               "Title": "Readme.md",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Readme.md",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Readme.md",
               "RelativeDocumentMoniker": "behotel\\Readme.md",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Readme.md",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Readme.md",
               "RelativeToolTip": "behotel\\Readme.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
@@ -120,28 +274,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 16,
               "Title": "behotel.csproj",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\behotel.csproj",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
               "RelativeDocumentMoniker": "behotel\\behotel.csproj",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\behotel.csproj",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
               "RelativeToolTip": "behotel\\behotel.csproj",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAB8AAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAIBJwCAAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-10-15T10:15:36.649Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-15T10:15:36.649Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "WeatherForecastController.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Controllers\\WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "behotel\\Controllers\\WeatherForecastController.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\StravStay_v2\\stravsay_front\\BE\\behotel\\behotel\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Users\\Khang\\Desktop\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\WeatherForecastController.cs",
               "RelativeToolTip": "behotel\\Controllers\\WeatherForecastController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-15T10:15:12.737Z"
+              "WhenOpened": "2025-10-15T10:15:12.737Z",
+              "EditorCaption": ""
             }
           ]
         }

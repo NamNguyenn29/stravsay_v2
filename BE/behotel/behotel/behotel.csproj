@@ -24,12 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Interface\Implement\" />
-    <Folder Include="Helper\" />
     <Folder Include="DTO\" />
-    <Folder Include="Query\" />
-    <Folder Include="Security\" />
-    <Folder Include="Service\" />
 	  
   </ItemGroup>
 

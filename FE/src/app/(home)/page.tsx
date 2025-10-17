@@ -38,6 +38,7 @@ export default function Home() {
     { key: "3", label: "Strav Deluxe" },
     { key: "4", label: "Strav Twin Deluxe" },
     { key: "5", label: "Strav City View" },
+    { key: "6", label: "Strav Family Room" },
   ];
   // xu ly su kien chon item trong dropdown
   const handleMenuClick: MenuProps["onClick"] = (e) => {
@@ -80,7 +81,7 @@ export default function Home() {
       <div className="p-25 text-white text-6xl font-semibold text-center bg-black/25">
         <div className="mt-[15ps] mb-[15px]">WELCOME TO TRAVSTAY</div>
         <div>Your Gateway To Great Stays</div>
-        <div className="mx-[20px] mt-40 h-[120px] bg-white flex justify-center gap-20 p-[50px] k h-[180px] ">
+        <div className="mx-[20px] mt-40 h-[120px] bg-white flex justify-center gap-10 p-[50px] k h-[180px] ">
           <div className="relative text-xl">
             <label className="text-xl block text-left text-amber-500">Room</label>
             <div className="cursor-pointer flex justify-between items-center bg-white text-black text-xl mt-[15px]">

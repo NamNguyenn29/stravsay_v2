@@ -7,7 +7,7 @@
         public Guid RoomId { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public Guid? DiscountID { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDAte { get; set; }

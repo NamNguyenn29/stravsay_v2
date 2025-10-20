@@ -6,6 +6,6 @@
         public Guid IdRole { get; set; }
         public Guid IdUser { get; set; }
         public int Status { get; set; }
-        public DateTime createdDate { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

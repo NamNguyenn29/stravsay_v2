@@ -13,3 +13,5 @@ Core : lưu thông tin khóa bí mật của project
 "ConnectionStrings": {
     "DBConnection": "data source=,;initial catalog=Syllabus;persist security info=True;user id=sa;password=123456;MultipleActiveResultSets=True;encrypt=false"
   }
+
+  trong helper tạo 1 class gọi là api response : total page , current page , list  <T> , object T, code(string) , message(string), isSuccess(bit)  , string (string), int 

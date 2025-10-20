@@ -8,8 +8,8 @@ export default function Header() {
     const menu = [
         { name: "HOTEL", href: "/" },
         { name: "OURSERVICE", href: "/ourservice" },
-        { name: "EXPERIENCE WITH TRAVSTAY", href: "#" },
-        { name: "STRAVSTAY DISCOVERTY", href: "#" },
+        { name: "EXPERIENCE WITH TRAVSTAY", href: "/experience" },
+        { name: "STRAVSTAY DISCOVERTY", href: "/discovery" },
         { name: "CONTACT US", href: "/supportrequest" }
     ];
 

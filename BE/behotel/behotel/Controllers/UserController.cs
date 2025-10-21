@@ -1,4 +1,6 @@
-﻿using behotel.Interface;
+﻿using behotel.DTO;
+using behotel.Helper;
+using behotel.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +12,7 @@ namespace behotel.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService )
         {
             _userService = userService;
         }
@@ -18,8 +20,15 @@ namespace behotel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            ApiResponse<UserDTO> _apiResponse = new ApiResponse<UserDTO>();
             var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            var UserDTOs = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                UserDTOs.Add(await _userService.GetUserDTOAsync(user.Id));
+            }
+            _apiResponse.List = UserDTOs;
+            return Ok(_apiResponse);
         }
 
         [HttpGet("id")]

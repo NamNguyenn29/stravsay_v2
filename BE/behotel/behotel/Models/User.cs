@@ -12,7 +12,6 @@
         public string ActiveCode { get; set; }
         public bool IsActived { get; set; }
         public string ?ForgotPassCode { get; set; }
-        public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
 
 

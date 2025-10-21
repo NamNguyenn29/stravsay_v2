@@ -1,4 +1,5 @@
-﻿using behotel.Models;
+﻿using behotel.DTO;
+using behotel.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
@@ -21,13 +22,12 @@ namespace behotel.Interface.Implement
 
         public async Task<bool> DeleteUserAsync(Guid id)
         {
-            User user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return false;
-            }
-            user.IsDeleted = true;
-            await _context.SaveChangesAsync();
+            //User user = await _context.User.FindAsync(id);
+            //if (user == null)
+            //{
+            //    return false;
+            //}
+            //await _context.SaveChangesAsync();
             return true;
         }
 
@@ -41,6 +41,31 @@ namespace behotel.Interface.Implement
             return await _context.User.FindAsync(id);
         }
 
+        public async Task<UserDTO> GetUserDTOAsync(Guid id)
+        {
+            // lấy user
+            var UserOrigin = await GetUserByIdAsync(id);
+            if (UserOrigin == null)
+            {
+                return null; ;
+            }
+            UserDTO userDTO = new UserDTO() ;
+            //lấy danh sách user kèm role 
+            var RoleList =  await _context.UserRole.Where(ur => ur.IdUser == id).Join(_context.Role, ur => ur.IdRole, r=> r.Id, (ur,r) => r.RoleName ).ToListAsync();
+            userDTO.Id = UserOrigin.Id;
+            userDTO.FullName = UserOrigin.FullName;
+            userDTO.Phone = UserOrigin.Phone;
+            userDTO.Email = UserOrigin.Email;
+            userDTO.DateOfBirth = UserOrigin.DateOfBirth;
+            userDTO.IsActived = UserOrigin.IsActived;
+            userDTO.CreatedDate = UserOrigin.CreatedDate;
+            userDTO.RoleList = RoleList;
+            return userDTO;
 
+            
+
+
+
+        }
     }
 }

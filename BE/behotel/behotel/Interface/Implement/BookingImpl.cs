@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
-    public class BookingService : IBookingService
+    public class BookingImpl : IBookingService
     {
         private readonly HotelManagementContext _context;
-        public BookingService(HotelManagementContext context)
+        public BookingImpl(HotelManagementContext context)
         {
             _context = context;
         }
@@ -58,5 +58,35 @@ namespace behotel.Interface.Implement
             var booking = await _context.Booking.FindAsync(id);
             return booking;
         }
+
+        public async Task<BookingDTO> GetBookingDTOByIdAsync(Guid id)
+        {
+            var bookingOrigin = await _context.Booking.FindAsync(id);
+            if(bookingOrigin == null)
+            {
+                return null;
+            }
+            var roomBooking = await _context.Room.FindAsync(bookingOrigin.RoomId);
+            var userBooking = await _context.User.FindAsync(bookingOrigin.UserId);
+            if (roomBooking == null || userBooking == null)
+            {
+                return null;
+            }
+            var services = await _context.BookingService.Where(bs => bs.BookingId == id).Join(_context.Service, bs => bs.ServiceId, s => s.Id, (bs, s) => s.Name).ToListAsync();
+            var bookingDTO = new BookingDTO();
+            bookingDTO.Id = bookingOrigin.Id;
+            bookingDTO.FullName = userBooking.FullName;
+            bookingDTO.Phone = userBooking.Phone;
+            bookingDTO.RoomName = roomBooking.RoomName;
+            bookingDTO.RoomNumber = roomBooking.RoomNumber;
+            bookingDTO.CheckInDate = bookingOrigin.CheckInDate;
+            bookingDTO.CheckOutDate = bookingOrigin.CheckOutDate;
+            bookingDTO.Price = bookingOrigin.Price;
+            bookingDTO.Status = bookingOrigin.Status;
+            bookingDTO.CreatedDate = bookingOrigin.CreatedDate;
+            bookingDTO.Services = services;
+            return bookingDTO;
+
+         }
     }
 }

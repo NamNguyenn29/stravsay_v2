@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Pagination } from 'antd';
 import UserDetailModal from "@/components/admin/UserDetailModal";
 
-// danh sách role mẫu
+
 
 export default function UserMangement() {
     const [users, setUsers] = useState<User[]>([]);
@@ -15,21 +15,21 @@ export default function UserMangement() {
 
     const loadUsers = async () => {
         const data = await getUsers();
-        setUsers(data);
+        setUsers(data.list);
     };
 
 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const totalUser = users.length;
-    const activeCount = users.filter(u => u.isActive && !u.isActive).length;
-    const inactiveUser = users.filter(u => !u.isActive && !u.isDeleted).length;
-    const deletedCount = users.filter(u => !u.isActive && u.isDeleted).length;
+    // const totalUser = users.length;
+    // const activeCount = users.filter(u => u.isActive && !u.isActive).length;
+    // const inactiveUser = users.filter(u => !u.isActive && !u.isDeleted).length;
+    // const deletedCount = users.filter(u => !u.isActive && u.isDeleted).length;
 
-    const getDisplayStatus = (user: User) => {
-        if (user.isDeleted) return "Deleted";
-        if (user.isActive) return "Active";
-        return "Inactive";
-    }
+    // const getDisplayStatus = (user: User) => {
+    //     if (user.isDeleted) return "Deleted";
+    //     if (user.isActive) return "Active";
+    //     return "Inactive";
+    // }
 
     const getStatusStyles = (status: string) => {
         switch (status) {
@@ -37,8 +37,6 @@ export default function UserMangement() {
                 return "bg-green-100 text-green-700 border-green-400";
             case "Inactive":
                 return "bg-yellow-100 text-yellow-700 border-yellow-400";
-            case "Deleted":
-                return "bg-red-100 text-red-700 border-red-400";
             default:
                 return "bg-gray-100 text-gray-700 border-gray-400";
         }
@@ -52,24 +50,26 @@ export default function UserMangement() {
     const indexOfLast = currentPage * itemsPerpage;
     const indexOfFirst = indexOfLast - itemsPerpage;
 
-    const filteredByStatus = users.filter(user => {
-        switch (activeFilter) {
-            case "Active":
-                return user.isActive && !user.isDeleted;
-            case "Inactive":
-                return !user.isActive && !user.isDeleted;
-            case "Deleted":
-                return user.isDeleted;
-            default:
-                return true;
-        }
-    })
-    const currentUsers = filteredByStatus.slice(indexOfFirst, indexOfLast);
+    const currentUsers = users.slice(indexOfFirst, indexOfLast);
 
-    const handleFilterClick = (filter: "All" | "Active" | "Inactive" | "Deleted") => {
-        setActiveFilter(filter);
-        setCurrentPage(1);
-    }
+    // const filteredByStatus = users.filter(user => {
+    //     switch (activeFilter) {
+    //         case "Active":
+    //             return user.isActive && !user.isDeleted;
+    //         case "Inactive":
+    //             return !user.isActive && !user.isDeleted;
+    //         case "Deleted":
+    //             return user.isDeleted;
+    //         default:
+    //             return true;
+    //     }
+    // })
+    // const currentUsers = filteredByStatus.slice(indexOfFirst, indexOfLast);
+
+    // const handleFilterClick = (filter: "All" | "Active" | "Inactive" | "Deleted") => {
+    //     setActiveFilter(filter);
+    //     setCurrentPage(1);
+    // }
     return (
         <>
             <div className="font-semibold text-lg">User Management</div>
@@ -84,37 +84,29 @@ export default function UserMangement() {
             </div>
             {/*Summary box*/}
             <div className="flex gap-5 container mb-10">
-                <div onClick={() => handleFilterClick("All")}
+                <div onClick={() => setActiveFilter("All")}
                     className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "All" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-blue-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Total User</span>
                     </div>
-                    <span className="text-xl font-bold">{totalUser}</span>
+                    <span className="text-xl font-bold">{100}</span>
                 </div>
-                <div onClick={() => handleFilterClick("Active")}
+                <div onClick={() => setActiveFilter("Active")}
                     className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "Active" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-green-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Active User</span>
                     </div>
-                    <span className="text-xl font-bold">{activeCount}</span>
+                    <span className="text-xl font-bold">10</span>
                 </div>
-                <div onClick={() => handleFilterClick("Inactive")}
+                <div onClick={() => setActiveFilter("Inactive")}
                     className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "Inactive" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-yellow-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Inactive User</span>
                     </div>
-                    <span className="text-xl font-bold">{inactiveUser}</span>
-                </div>
-                <div onClick={() => handleFilterClick("Deleted")}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "Deleted" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
-                    <div className="flex items-center gap-3 ">
-                        <span className="w-8 h-8 bg-rose-300 rounded-full inline-block"></span>
-                        <span className="inline-block w-32 ">Deletd User</span>
-                    </div>
-                    <span className="text-xl font-bold">{deletedCount}</span>
+                    <span className="text-xl font-bold">{10}</span>
                 </div>
 
             </div>
@@ -141,10 +133,10 @@ export default function UserMangement() {
                                         <div className=" text-lg font-semibold">{user.fullName}</div>
                                         <div>{user.email}</div>
                                     </td>
-                                    <td className="px-6 py-3 ">{user.roles.toString()}</td>
+                                    <td className="px-6 py-3 ">{user.roleList.toString()}</td>
                                     <td className="px-6 py-3 ">
-                                        <div className={`font-semibold border rounded-md p-3 w-24 text-center${getStatusStyles(getDisplayStatus(user))}`}>
-                                            {getDisplayStatus(user)}
+                                        <div className={`ont-semibold border rounded-md p-3 w-24 text-center ${getStatusStyles(user.status)}`}>
+                                            {user.status}
                                         </div>
                                     </td>
                                     <td className="px-6 py-3 ">{user.createdDate}</td>

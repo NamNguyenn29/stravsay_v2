@@ -1,7 +1,8 @@
+import { ApiResponse } from "@/model/ApiResponse";
 import { User } from "@/model/User";
-export async function getUsers(): Promise<User[]> {
+export async function getUsers(): Promise<ApiResponse<User>> {
     try {
-        const res = await fetch("http://localhost:5199/api/User", {
+        const res = await fetch("https://localhost:7020/api/User", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -12,6 +13,17 @@ export async function getUsers(): Promise<User[]> {
         return await res.json();
     } catch (err) {
         console.error("Error fetching users:", err);
-        return [];
+        return {
+            totalPage: 0,
+            currentPage: 0,
+            code: "500",
+            message: "Error fetching users",
+            list: [],
+            object: null,
+            isSuccess: null,
+            string: null,
+            int: null,
+        };
+
     }
 }

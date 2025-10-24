@@ -20,23 +20,7 @@ import { Carousel } from 'antd';
 import { Modal, Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-export async function getRooms(): Promise<Room[]> {
-    try {
-        const res = await fetch("http://localhost:5199/api/Room", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        if (!res.ok) throw new Error("Failed to fetch rooms");
-        const data = await res.json();
-        console.log("Fetched rooms:", data);
-        return data;
-    } catch (err) {
-        console.error("Error fetching rooms:", err);
-        return [];
-    }
-}
+import { getRooms } from "@/api/getRoom";
 export default function Booking() {
     // luu va lay thong tin room da chon
     const { setRoom } = useBookingStore();
@@ -50,8 +34,13 @@ export default function Booking() {
     }
     // useEffect de goi api lay dsach room
     useEffect(() => {
-        getRooms().then((data) => setRooms(data));
+        loadRooms();
     }, [])
+
+    const loadRooms = async () => {
+        const data = await getRooms();
+        setRooms(data.list)
+    }
     // ham dong modal
 
     return (
@@ -61,7 +50,7 @@ export default function Booking() {
                     <div className="grid grid-cols-12 gap-10">
                         <div className="col-span-3 mt-[10[px]]">
                             <Carousel autoplay>
-                                {room.imageURls.map((url, index) => (
+                                {room.imageUrl.map((url, index) => (
                                     <div key={index}>
                                         <Image src={url} alt='' width={250} height={150}
                                             className="w-full h-[200px] object-cover rounded-lg" />
@@ -193,7 +182,7 @@ export default function Booking() {
                     {/* Slider + description */}
                     <div className="grid grid-cols-12 gap-6 mb-6">
                         <div className="mx-auto col-span-12 flex gap-4 overflow-x-auto">
-                            {selectedRoomDetail?.imageURls.map((url, index) => (
+                            {selectedRoomDetail?.imageUrl.map((url, index) => (
                                 <img
                                     key={index}
                                     src={url}

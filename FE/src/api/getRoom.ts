@@ -1,17 +1,27 @@
+import { ApiResponse } from "@/model/ApiResponse";
 import { Room } from "@/model/Room";
-export async function getRooms(): Promise<Room[]> {
+export async function getRooms(): Promise<ApiResponse<Room>> {
     try {
-        const res = await fetch("http://localhost:5199/api/Room", {
+        const res = await fetch("https://localhost:7020/api/Room", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-            },
-            credentials: "include",
+            }
         });
         if (!res.ok) throw new Error("Failed to fetch rooms");
         return await res.json();
     } catch (err) {
         console.error("Error fetching rooms:", err);
-        return [];
+        return {
+            totalPage: 0,
+            currentPage: 0,
+            code: "500",
+            message: "Error fetching rooms",
+            list: [],
+            object: null,
+            isSuccess: null,
+            string: null,
+            int: null,
+        };
     }
 }

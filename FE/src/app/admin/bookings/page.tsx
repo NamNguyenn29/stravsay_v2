@@ -22,23 +22,28 @@ export default function BookingMangement() {
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
-        getBookings().then(setBookings);
+        loadingBooking();
     }, []);
 
-    useEffect(() => {
-        bookings.forEach((b) => {
-            if (!users[b.userId]) {
-                getUserById(b.userId).then((u) => {
-                    if (u) setUsers((prev) => ({ ...prev, [b.userId]: u }));
-                });
-            }
-            if (!rooms[b.roomId]) {
-                getRoomById(b.roomId).then((r) => {
-                    if (r) setRooms((prev) => ({ ...prev, [b.roomId]: r }));
-                });
-            }
-        });
-    }, [bookings]);
+    const loadingBooking = async () => {
+        const data = await getBookings();
+        setBookings(data.list);
+    }
+
+    // useEffect(() => {
+    //     bookings.forEach((b) => {
+    //         if (!users[b.userId]) {
+    //             getUserById(b.userId).then((u) => {
+    //                 if (u) setUsers((prev) => ({ ...prev, [b.userId]: u }));
+    //             });
+    //         }
+    //         if (!rooms[b.roomId]) {
+    //             getRoomById(b.roomId).then((r) => {
+    //                 if (r) setRooms((prev) => ({ ...prev, [b.roomId]: r }));
+    //             });
+    //         }
+    //     });
+    // }, [bookings]);
 
     const [activeFilter, setActiveFilter] = useState<"all" | 0 | 1 | 2>("all");
     const [currentPage, setCurrentPage] = useState(1);
@@ -124,10 +129,10 @@ export default function BookingMangement() {
                                 <tr key={booking.id} className="hover:bg-gray-50 transition">
                                     <td className="px-6 py-4">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                                     <td className="px-6 py-4">
-                                        <div>{users[booking.userId]?.fullName || "Loading..."}</div>
-                                        <div className="text-gray-500 text-sm">{users[booking.userId]?.phone || "-"}</div>
+                                        <div>{booking.fullName || "Loading..."}</div>
+                                        <div className="text-gray-500 text-sm">{booking.phone || "-"}</div>
                                     </td>
-                                    <td className="px-6 py-4">{rooms[booking.roomId]?.roomNumber || "Loading..."}</td>
+                                    <td className="px-6 py-4">{booking.roomNumber || "Loading..."}</td>
                                     <td className="px-6 py-4">{booking.checkInDate}</td>
                                     <td className="px-6 py-4">{booking.checkOutDate}</td>
                                     <td className="px-6 py-4 text-right">{booking.price.toLocaleString()}₫</td>
@@ -189,7 +194,7 @@ export default function BookingMangement() {
                     className="mt-4"
                 >
                     <Form.Item label="User Name">
-                        <Input value={users[selectedBooking?.userId || ""]?.fullName} disabled />
+                        <Input value={selectedBooking?.fullName} disabled />
                     </Form.Item>
 
                     <Form.Item

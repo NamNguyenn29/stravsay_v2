@@ -10,6 +10,6 @@
         public decimal Price { get; set; }
         public Guid? DiscountID { get; set; }
         public int Status { get; set; }
-        public DateTime CreatedDAte { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

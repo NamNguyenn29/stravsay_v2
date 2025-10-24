@@ -48,7 +48,7 @@ export default function MyBooking({ datedif, start, end, room, guest }: MyBookin
                     <div className="flex flex-col items-center">
                         <div className="w-[200px] h-[150px] overflow-hidden rounded-lg">
                             <Carousel autoplay dots={false}>
-                                {room.imageURls.map((url, index) => (
+                                {room.imageUrl.map((url, index) => (
                                     <div key={index} className="flex justify-center items-center h-[150px]">
                                         <Image
                                             src={url}

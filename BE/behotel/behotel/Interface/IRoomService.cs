@@ -1,4 +1,5 @@
 ﻿using behotel.Models;
+using behotel.DTO;
 
 namespace behotel.Interface
 {
@@ -8,5 +9,7 @@ namespace behotel.Interface
         Task<Room?> GetRoomByIdAsync(Guid id);
         Task<Room> CreateRoomAsync(Room room);
         Task <bool> DeleteRoomAsync(Guid id);
+
+        Task<RoomDTO> GetRoomDTOByIdAsync(Guid id);
     }
 }

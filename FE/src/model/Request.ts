@@ -5,4 +5,5 @@ export type Request = {
     status: number,
     description: string,
     createdDate: string,
+    response: string | null
 }

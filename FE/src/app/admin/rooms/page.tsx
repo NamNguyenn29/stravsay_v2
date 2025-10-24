@@ -12,8 +12,14 @@ export default function RoomManagement() {
     // get rooms
     const [rooms, setRooms] = useState<Room[]>([]);
     useEffect(() => {
-        getRooms().then(setRooms);
+        loadRoom();
     }, []);
+
+    const loadRoom = async () => {
+        const data = await getRooms();
+        setRooms(data.list);
+    }
+
 
     // edit 
     const [editModelVisible, setEditModalVisible] = useState(false);
@@ -27,10 +33,10 @@ export default function RoomManagement() {
         setSelectedRoom(room);
         form.setFieldsValue({
             ...room,
+            imageUrl: room.imageUrl || [], // đảm bảo là mảng
         });
         setEditModalVisible(true);
-
-    }
+    };
 
     const handleEditSubmit = async () => {
         try {
@@ -180,14 +186,13 @@ export default function RoomManagement() {
                     <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 text-lg font-semibold">
                         <tr>
                             <th className="px-6 py-3">No</th>
-                            <th className="px-6 py-3">Room Name</th>
+                            <th className="px-6 py-3 w-[250px]">Room Name</th>
                             <th className="px-6 py-3">Price</th>
                             <th className="px-6 py-3">Status</th>
                             <th className="px-6 py-3">Description</th>
                             <th className="px-6 py-3">Bed</th>
                             <th className="px-6 py-3">Guests</th>
                             <th className="px-6 py-3">Space</th>
-                            <th className="px-6 py-3">Image URL</th>
                             <th className="px-6 py-3 text-center">Action</th>
                         </tr>
                     </thead>
@@ -219,9 +224,7 @@ export default function RoomManagement() {
                                         {room.adult} Adults, {room.children} Children
                                     </td>
                                     <td className="px-6 py-3">{room.space} m²</td>
-                                    <td className="px-6 py-3 truncate max-w-[200px] text-blue-500">
-                                        {room.imageURls[0]}
-                                    </td>
+
                                     <td className="px-6 py-3 text-center">
                                         <div className="flex justify-center gap-2">
                                             <div className="bg-emerald-400 p-3 px-5 text-white rounded rounded-(200px) " onClick={() => openEditModal(room)} >Edit</div>
@@ -280,20 +283,10 @@ export default function RoomManagement() {
                         <TextArea ></TextArea>
                     </Form.Item>
                     <div className="flex gap-3">
-                        <Form.Item name="bedType" label="Bed" className="w-1/3">
-                            <Input ></Input>
-                        </Form.Item>
-                        <Form.Item name="adult" label="Adult" className="w-1/3">
-                            <Input ></Input>
-                        </Form.Item>
-                        <Form.Item name="children" label="Children" className="w-1/3">
-                            <Input ></Input>
-                        </Form.Item>
+
                     </div>
                     <div className="flex gap-3">
-                        <Form.Item name="space" label="Space" className="w-1/2">
-                            <Input ></Input>
-                        </Form.Item>
+
                         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
                             <Select>
                                 <Select.Option value={0}>Pending</Select.Option>
@@ -306,11 +299,11 @@ export default function RoomManagement() {
                         </Form.Item>
                     </div>
                     <div className="mb-2 font-medium">Image URLs</div>
-                    <Form.List name="imageURls">
+                    <Form.List name="imageUrl">
                         {(fields, { add, remove }) => (
-                            <div className="flex flex-col gap-2 ">
+                            <div className="flex flex-col gap-2">
                                 {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className="flex gap-2 items-center mb-2">
+                                    <div key={key} className="flex items-center gap-3 mb-2">
                                         <Form.Item
                                             {...restField}
                                             name={name}
@@ -328,6 +321,7 @@ export default function RoomManagement() {
                             </div>
                         )}
                     </Form.List>
+
 
                 </Form>
 
@@ -350,19 +344,14 @@ export default function RoomManagement() {
                         <Form.Item name="roomNumber" label="Room Number" className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
                     <Form.Item name="description" label="Description"><TextArea /></Form.Item>
-                    <div className="flex gap-3">
-                        <Form.Item name="bedType" label="Bed" className="w-1/3"><Input /></Form.Item>
-                        <Form.Item name="adult" label="Adult" className="w-1/3"><Input /></Form.Item>
-                        <Form.Item name="children" label="Children" className="w-1/3"><Input /></Form.Item>
-                    </div>
 
                     {/* 🆕 Select Room Type */}
-                    <Form.Item name="roomType" label="Room Type" rules={[{ required: true }]}>
-                        <Select placeholder="Select room type" options={roomTypes} />
-                    </Form.Item>
+
 
                     <div className="flex gap-3">
-                        <Form.Item name="space" label="Space" className="w-1/2"><Input /></Form.Item>
+                        <Form.Item name="roomType" label="Room Type" rules={[{ required: true }]}>
+                            <Select placeholder="Select room type" options={roomTypes} />
+                        </Form.Item>
                         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
                             <Select>
                                 <Select.Option value={0}>Unavailable</Select.Option>
@@ -373,7 +362,7 @@ export default function RoomManagement() {
                     </div>
 
                     <div className="mb-2 font-medium">Image URLs</div>
-                    <Form.List name="imageURls">
+                    <Form.List name="imageUrl">
                         {(fields, { add, remove }) => (
                             <div className="flex flex-col gap-2 ">
                                 {fields.map(({ key, name, ...restField }) => (

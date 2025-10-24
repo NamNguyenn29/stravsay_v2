@@ -1,4 +1,7 @@
-﻿using behotel.Interface;
+﻿using behotel.DTO;
+using behotel.Helper;
+using behotel.Interface;
+using behotel.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,20 +19,34 @@ namespace behotel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() {
+        public async Task<ApiResponse<BookingDTO>> GetAll() {
             var bookings = await _bookingService.GetAllBookingAsync();
-            return Ok(bookings);
+            var bookingDTOs = new List<BookingDTO>();
+            foreach (var booking in bookings)
+            {
+                bookingDTOs.Add(await _bookingService.GetBookingDTOByIdAsync(booking.Id));
+            }
+            ApiResponse<BookingDTO> _apiResponse = new ApiResponse<BookingDTO>(0, 0, bookingDTOs, null, "200", "Get booking successfully", true, null, 0);
+            return _apiResponse;
         }
 
         [HttpGet("id")]
-        public async Task<IActionResult> GetBokingById(Guid id) 
+        public async Task<ApiResponse<BookingDTO>> GetBokingById(string idString) 
         {
-            var booking = await _bookingService.GetBookingByIdAsync(id);
+            ApiResponse<BookingDTO> _apiResponse;
+            if (String.IsNullOrWhiteSpace(idString))
+            {
+                _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Bad request", false, null, 0);
+            }
+            Guid id = Guid.Parse(idString);
+            var booking = await _bookingService.GetBookingDTOByIdAsync(id);
             if (booking == null)
             {
-                return NotFound();
+                _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Booking not found", false, null, 0);
             }
-            return Ok(booking);
+
+            _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, booking, "200", "Get booking successfully", true, null, 0);
+            return _apiResponse;
         }
 
     }

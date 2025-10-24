@@ -345,3 +345,6 @@ C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debu
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\obj\Debug\net8.0\behotel.RazorAssemblyInfo.cache
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\obj\Debug\net8.0\behotel.RazorAssemblyInfo.cs
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\FluentValidation.AspNetCore.dll

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
-    public class ServiceService : IServiceService
+    public class ServiceImpl : IServiceService
     {
         private readonly HotelManagementContext _context;
-        public ServiceService(HotelManagementContext context)
+        public ServiceImpl(HotelManagementContext context)
         {
             _context = context;
         }

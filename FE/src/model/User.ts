@@ -4,12 +4,12 @@ export type User = {
     email: string;
     dateOfBirth: string;
     phone: string;
-    password: string;
-    status: number;
-    activeCode?: string;
-    isActive: boolean;
-    forgotPasswordcode?: string;
-    isDeleted: false;
+    // password: string;
+    status: string;
+    // activeCode?: string;
+    // isActive: boolean;
+    // forgotPasswordcode?: string;
+    // isDeleted: false;
     createdDate: string;
-    roles: string[];
+    roleList: string[];
 }

@@ -1,13 +1,14 @@
 ﻿
+using behotel.DTO;
 using behotel.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
-    public class RoomTypeService : IRoomTypeService
+    public class RoomTypeImpl : IRoomTypeService
     {
         private readonly HotelManagementContext _context;
-        public RoomTypeService(HotelManagementContext context)
+        public RoomTypeImpl(HotelManagementContext context)
         {
             _context = context;
         }
@@ -39,6 +40,20 @@ namespace behotel.Interface.Implement
         public async Task<RoomType?> GetRoomTypeByIdAsync(Guid id)
         {
             return await _context.RoomType.FindAsync(id);
+        }
+
+        public async Task<RoomTypeDTO> GetRoomTypeDTOByID(Guid id)
+        {
+            var RoomTypeOrigin = await _context.RoomType.FindAsync(id);
+            if (RoomTypeOrigin == null)
+            {
+                return null;
+            }
+            RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+            roomTypeDTO.Id = id;
+            roomTypeDTO.TypeName = RoomTypeOrigin.TypeName;
+            return roomTypeDTO;
+
         }
     }
 }

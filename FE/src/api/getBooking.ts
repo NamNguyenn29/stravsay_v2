@@ -1,7 +1,8 @@
+import { ApiResponse } from "@/model/ApiResponse";
 import { Booking } from "@/model/Booking";
-export async function getBookings(): Promise<Booking[]> {
+export async function getBookings(): Promise<ApiResponse<Booking>> {
     try {
-        const res = await fetch("http://localhost:5199/api/Booking", {
+        const res = await fetch("https://localhost:7020/api/Booking", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -12,6 +13,16 @@ export async function getBookings(): Promise<Booking[]> {
 
     } catch (err) {
         console.error("Error fetching bookings:", err);
-        return [];
+        return {
+            totalPage: 0,
+            currentPage: 0,
+            code: "500",
+            message: "Error fetching users",
+            list: [],
+            object: null,
+            isSuccess: null,
+            string: null,
+            int: null,
+        };
     }
 } 

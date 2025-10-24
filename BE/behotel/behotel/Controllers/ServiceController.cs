@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using behotel.DTO;
+using behotel.Helper;
 using behotel.Interface;
+using behotel.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace behotel.Controllers
 {
@@ -16,21 +19,30 @@ namespace behotel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() 
+        public async Task<ApiResponse<Service>> GetAll()
         {
-            var services = await _serviceService.GetAllServiceAsync();
-            return Ok(services);
+            List<Service> services = (List<Service>)await _serviceService.GetAllServiceAsync();
+            ApiResponse<Service> _apiResponse = new ApiResponse<Service>(0, 0, services, null, "200", "Get all service successfully", true, null, 0);
+            return _apiResponse;
         }
-        [HttpGet("id")]
-        public async Task<IActionResult> GetServiceById(Guid id)
+            [HttpGet("id")]
+        public async Task<ApiResponse<Service>> GetServiceById(string idString)
         {
-            var service = await _serviceService.GetServiceByIdAsync(id);
-            if (service == null)
+            ApiResponse<Service> _apiResponse;
+            if (String.IsNullOrWhiteSpace(idString))
             {
-                return NotFound();
+                _apiResponse = new ApiResponse<Service>(0, 0, null, null, "404", "Bad request", false, null, 0);
             }
-            return Ok(service);
-        }
+            Guid id = Guid.Parse(idString);
+            var service = await _serviceService.GetServiceByIdAsync(id);
+                if (service == null)
+                {
+                    _apiResponse = new ApiResponse<Service>(0, 0, null, null, "404", "Service not found", false, null, 0);
+                }
+
+                _apiResponse = new ApiResponse<Service>(0, 0, null, service, "200", "Get service successfully", true, null, 0);
+                return _apiResponse;
+            }
         
     }
 }

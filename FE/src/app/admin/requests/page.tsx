@@ -5,7 +5,14 @@ import { Request } from "@/model/Request";
 import { getRequests } from "@/api/getRequest";
 export default function UserMangement() {
     const [requests, setRequests] = useState<Request[]>([]);
+    useEffect(() => {
+        loadRequest();
+    }, [])
 
+    const loadRequest = async () => {
+        const data = await getRequests();
+        setRequests(data.list);
+    }
     const totalRequests = requests.length;
     const respondedCount = requests.filter(b => b.status === 0).length;
     const pendingCount = requests.filter(b => b.status === 1).length;
@@ -35,9 +42,7 @@ export default function UserMangement() {
 
     const [selectedRequestResponse, setSelectedRequestResponse] = useState<Request | null>(null);
     const [selectedRequestView, setSelectedRequestView] = useState<Request | null>(null);
-    useEffect(() => {
-        getRequests().then(setRequests);
-    }, [])
+
     return (
         <>
             <>

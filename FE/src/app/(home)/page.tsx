@@ -12,7 +12,10 @@ import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import type { InputNumberProps } from 'antd';
 import { InputNumber } from 'antd';
+import { useState, useEffect } from "react";
 import "antd/dist/reset.css";
+import { getRoomType } from "@/api/getRoomType";
+import { RoomType } from "@/model/RoomType";
 export default function Home() {
   const router = useRouter();
   const { RangePicker } = DatePicker;
@@ -32,14 +35,25 @@ export default function Home() {
     setChildren,
   } = useBookingStore();
   // item cho room type dropdown
-  const items: MenuProps['items'] = [
-    { key: "1", label: "Strav Single Room" },
-    { key: "2", label: "Strav Double Room" },
-    { key: "3", label: "Strav Deluxe" },
-    { key: "4", label: "Strav Twin Deluxe" },
-    { key: "5", label: "Strav City View" },
-    { key: "6", label: "Strav Family Room" },
-  ];
+  const [items, setItems] = useState<MenuProps["items"]>([]);
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+  useEffect(() => {
+    loadRoomType();
+  }, [])
+  const loadRoomType = async () => {
+    const data = await getRoomType();
+    const list: RoomType[] = data.list;
+
+    const mappedItems: MenuProps["items"] = list.map(rt => ({
+      key: rt.id.toString(),
+      label: rt.typeName,
+
+    }));
+
+    setItems(mappedItems);
+  }
+
+
   // xu ly su kien chon item trong dropdown
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const selected = items?.find(

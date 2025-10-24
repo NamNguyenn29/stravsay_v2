@@ -1,11 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using behotel.Models;
+﻿using behotel.Controllers;
+using behotel.Helper.Validation;
 using behotel.Interface;
 using behotel.Interface.Implement;
+using behotel.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using behotel.Controllers;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<UserRegisterValidator>();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddFluentValidationAutoValidation();
+
 
 builder.Services.AddCors(options =>
 {
@@ -24,12 +35,18 @@ builder.Services.AddDbContext<HotelManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
-builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingService>();
-builder.Services.AddScoped<ISupportRequestService, SupportRequestService>();
-builder.Services.AddScoped<IServiceService, ServiceService>();
+
+
+
+builder.Services.AddScoped<IUserService, UserImpl>();
+builder.Services.AddScoped<IRoomService, RoomImpl>();
+builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingImpl>();
+builder.Services.AddScoped<ISupportRequestService, SupportRequestImpl>();
+builder.Services.AddScoped<IServiceService, ServiceImpl>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<IRoomTypeService,RoomTypeImpl>();
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

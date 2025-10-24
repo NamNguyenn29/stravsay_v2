@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
-    public class UserService : IUserService
+    public class UserImpl : IUserService
     {
         private readonly HotelManagementContext _context;
 
-        public UserService(HotelManagementContext context)
+        public UserImpl(HotelManagementContext context)
         {
             _context = context;
         }
@@ -36,6 +36,11 @@ namespace behotel.Interface.Implement
             return await _context.User.ToListAsync();
         }
 
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.User.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
             return await _context.User.FindAsync(id);
@@ -57,8 +62,14 @@ namespace behotel.Interface.Implement
             userDTO.Phone = UserOrigin.Phone;
             userDTO.Email = UserOrigin.Email;
             userDTO.DateOfBirth = UserOrigin.DateOfBirth;
-            userDTO.IsActived = UserOrigin.IsActived;
             userDTO.CreatedDate = UserOrigin.CreatedDate;
+            if(UserOrigin.Status == 0)
+            {
+                userDTO.status = "Inactive";
+            } else { 
+                userDTO.status = "Active";
+
+            }
             userDTO.RoleList = RoleList;
             return userDTO;
 

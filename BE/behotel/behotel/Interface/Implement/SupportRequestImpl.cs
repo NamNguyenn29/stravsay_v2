@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
-    public class SupportRequestService : ISupportRequestService
+    public class SupportRequestImpl : ISupportRequestService
     {
         private readonly HotelManagementContext _context;
-        public SupportRequestService(HotelManagementContext context)
+        public SupportRequestImpl(HotelManagementContext context)
         {
             _context = context;
         }

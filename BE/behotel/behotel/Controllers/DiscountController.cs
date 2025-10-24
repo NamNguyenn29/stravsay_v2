@@ -1,4 +1,7 @@
-﻿using behotel.Interface;
+﻿using behotel.DTO;
+using behotel.Helper;
+using behotel.Interface;
+using behotel.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,21 +18,30 @@ namespace behotel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ApiResponse<Discount>> GetAll()
         { 
-            var discounts = await _discountService.GetAllDiscountAsync();
-            return Ok(discounts);
+            List<Discount> discounts = (List<Discount>)await _discountService.GetAllDiscountAsync();
+            ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>(0, 0, discounts, null, "200", "Get all discount successfully", true, null, 0);
+            return _apiResponse;
         }
 
         [HttpGet("id")]
-        public async Task<IActionResult> GetDiscountById(Guid id)
+        public async Task<ApiResponse<Discount>> GetDiscountById(string idString)
         {
+            ApiResponse<Discount> _apiResponse;
+            if (String.IsNullOrWhiteSpace(idString))
+            {
+                _apiResponse = new ApiResponse<Discount>(0, 0, null, null, "404", "Bad request", false, null, 0);
+            }
+            Guid id = Guid.Parse(idString);
             var discount = await _discountService.GetDiscountByIdAsync(id);
             if (discount == null)
             {
-                return NotFound();
+                _apiResponse = new ApiResponse<Discount>(0, 0, null, null, "404", "Discount not found", false, null, 0);
             }
-            return Ok(discount);
+
+            _apiResponse = new ApiResponse<Discount>(0, 0, null, discount, "200", "Get discount successfully", true, null, 0);
+            return _apiResponse;
         }
     }
 }

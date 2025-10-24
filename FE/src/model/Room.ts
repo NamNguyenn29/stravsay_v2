@@ -3,7 +3,7 @@ export type Room = {
     roomName: string;
     roomNumber: number;
     description: string;
-    imageURls: string[];
+    imageUrl: string[];
     floor: number;
     status: number;
     createdDate: string;

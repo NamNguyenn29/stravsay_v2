@@ -1,7 +1,8 @@
+import { ApiResponse } from "@/model/ApiResponse";
 import { Request } from "@/model/Request";
-export async function getRequests(): Promise<Request[]> {
+export async function getRequests(): Promise<ApiResponse<Request>> {
     try {
-        const res = await fetch("http://localhost:5199/api/Request", {
+        const res = await fetch("https://localhost:7020/api/SupportRequest", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -12,6 +13,16 @@ export async function getRequests(): Promise<Request[]> {
 
     } catch (err) {
         console.error("Error fetching requests:", err)
-        return [];
+        return {
+            totalPage: 0,
+            currentPage: 0,
+            code: "500",
+            message: "Error fetching users",
+            list: [],
+            object: null,
+            isSuccess: null,
+            string: null,
+            int: null,
+        };
     }
 }

@@ -9,6 +9,6 @@ namespace behotel.Interface
         Task<RoomType> CreateRoomTypeByIdAsync(RoomType roomType);
         Task<bool> DeleteRoomTypeByIdAsync(Guid id);
 
-        Task<RoomTypeDTO> GetRoomTypeDTOByID(Guid id);
+        Task<RoomTypeDTO?> GetRoomTypeDTOByID(Guid id);
     }
 }

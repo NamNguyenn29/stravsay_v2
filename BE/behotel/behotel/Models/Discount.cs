@@ -3,7 +3,7 @@
     public class Discount
     {
         public Guid Id { get; set; }
-        public string DiscountCode { get; set; }
+        public required string DiscountCode { get; set; }
         public decimal DiscountValue { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime ExpiredDate { get; set; }

@@ -7,9 +7,13 @@ namespace behotel.Interface
     {
         Task<IEnumerable<Room>> GetAllRoomAsync();
         Task<Room?> GetRoomByIdAsync(Guid id);
-        Task<Room> CreateRoomAsync(Room room);
+        Task<Room?> CreateRoomAsync(RoomRequest newRoom);
         Task <bool> DeleteRoomAsync(Guid id);
 
-        Task<RoomDTO> GetRoomDTOByIdAsync(Guid id);
+        Task<RoomDTO?> GetRoomDTOByIdAsync(Guid id);
+
+        Task<Room?> updateRoomAsync(Guid id,RoomRequest roomRequest);
     }
+
+
 }

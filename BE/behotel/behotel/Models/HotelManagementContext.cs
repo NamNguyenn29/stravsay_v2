@@ -17,6 +17,8 @@ namespace behotel.Models
 
         public DbSet<SupportRequest> SupportRequest { get; set; }
 
+        public DbSet<User_Deleted> User_Deleted { get; set; }
+
 
     }
 }

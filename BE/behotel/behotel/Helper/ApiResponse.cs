@@ -14,7 +14,7 @@
 
 
 
-        public ApiResponse(int TotalPage, int CurrentPage, List<T> List, T Object, string Code, string Message, bool IsSuccess, string String, int Int)
+        public ApiResponse(int TotalPage, int CurrentPage, List<T>? List, T? Object, string Code, string Message, bool IsSuccess, string? String, int Int)
         {
                this.TotalPage = TotalPage;
             this.currentPage = CurrentPage;
@@ -27,7 +27,7 @@
             this.Int = Int;
         }
 
-        public ApiResponse() { }
+       
     }
 
 

@@ -24,25 +24,30 @@ namespace behotel.Controllers
             var bookingDTOs = new List<BookingDTO>();
             foreach (var booking in bookings)
             {
-                bookingDTOs.Add(await _bookingService.GetBookingDTOByIdAsync(booking.Id));
+                var bookingDTO = await _bookingService.GetBookingDTOByIdAsync(booking.Id);
+                if(bookingDTO != null)
+                {
+                    bookingDTOs.Add(bookingDTO);
+                }
+
             }
             ApiResponse<BookingDTO> _apiResponse = new ApiResponse<BookingDTO>(0, 0, bookingDTOs, null, "200", "Get booking successfully", true, null, 0);
             return _apiResponse;
         }
 
-        [HttpGet("id")]
-        public async Task<ApiResponse<BookingDTO>> GetBokingById(string idString) 
+        [HttpGet("{id}")]
+        public async Task<ApiResponse<BookingDTO>> GetBokingById(string id) 
         {
             ApiResponse<BookingDTO> _apiResponse;
-            if (String.IsNullOrWhiteSpace(idString))
+            if (String.IsNullOrWhiteSpace(id))
             {
-                _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Bad request", false, null, 0);
             }
-            Guid id = Guid.Parse(idString);
-            var booking = await _bookingService.GetBookingDTOByIdAsync(id);
+            Guid idGuid = Guid.Parse(id);
+            var booking = await _bookingService.GetBookingDTOByIdAsync(idGuid);
             if (booking == null)
             {
-                _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Booking not found", false, null, 0);
+                return _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Booking not found", false, null, 0);
             }
 
             _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, booking, "200", "Get booking successfully", true, null, 0);

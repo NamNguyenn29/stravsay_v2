@@ -22,8 +22,8 @@ namespace behotel.Interface.Implement
 
         public async Task<bool> DeleteRoomTypeByIdAsync(Guid id)
         {
-           var roomType = await _context.RoomType.FindAsync(id);
-            if(roomType == null)
+            var roomType = await _context.RoomType.FindAsync(id);
+            if (roomType == null)
             {
                 return false;
             }
@@ -42,16 +42,18 @@ namespace behotel.Interface.Implement
             return await _context.RoomType.FindAsync(id);
         }
 
-        public async Task<RoomTypeDTO> GetRoomTypeDTOByID(Guid id)
+        public async Task<RoomTypeDTO?> GetRoomTypeDTOByID(Guid id)
         {
             var RoomTypeOrigin = await _context.RoomType.FindAsync(id);
             if (RoomTypeOrigin == null)
             {
                 return null;
             }
-            RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-            roomTypeDTO.Id = id;
-            roomTypeDTO.TypeName = RoomTypeOrigin.TypeName;
+            RoomTypeDTO roomTypeDTO = new RoomTypeDTO()
+            {
+                Id = id,
+                TypeName = RoomTypeOrigin.TypeName
+            };
             return roomTypeDTO;
 
         }

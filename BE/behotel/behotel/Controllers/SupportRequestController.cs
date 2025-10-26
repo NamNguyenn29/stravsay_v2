@@ -26,19 +26,19 @@ namespace behotel.Controllers
             return _apiResponse;
 
         }
-        [HttpGet("id")]
-        public async Task<ApiResponse<SupportRequest>> GetResponseById(string idString)
+        [HttpGet("{id}")]
+        public async Task<ApiResponse<SupportRequest>> GetResponseById(string id)
         {
             ApiResponse<SupportRequest> _apiResponse;
-            if (String.IsNullOrWhiteSpace(idString))
+            if (String.IsNullOrWhiteSpace(id))
             {
-                _apiResponse = new ApiResponse<SupportRequest>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return _apiResponse = new ApiResponse<SupportRequest>(0, 0, null, null, "404", "Bad request", false, null, 0);
             }
-            Guid id = Guid.Parse(idString);
-            var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(id);
+            Guid idGuid = Guid.Parse(id);
+            var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(idGuid);
             if (supportRequest == null)
             {
-                _apiResponse = new ApiResponse<SupportRequest>(0, 0, null, null, "404", "Request not found", false, null, 0);
+                return _apiResponse = new ApiResponse<SupportRequest>(0, 0, null, null, "404", "Request not found", false, null, 0);
             }
             _apiResponse = new ApiResponse<SupportRequest>(0, 0, null, supportRequest, "200", "Get request successfully", true, null, 0);
             return _apiResponse;

@@ -1,15 +1,16 @@
 import { create } from "zustand";
 import { Room } from "@/model/Room";
 import dayjs from "dayjs";
+import { RoomType } from "@/model/RoomType";
 interface BookingState {
-    roomType: string | null;
+    roomType: RoomType | null;
     checkInDate: string | null;
     checkOutDate: string | null;
     noChildren: number | null;
     noAdult: number | null;
     room: Room | null;
 
-    setRoomType: (roomType: string | null) => void;
+    setRoomType: (roomType: RoomType | null) => void;
     setCheckInDate: (date: string | null) => void;
     setCheckOutDate: (date: string | null) => void;
     setChildren: (children: number | null) => void;

@@ -20,15 +20,18 @@ namespace behotel.Controllers
         }
 
         [HttpGet]
-
         public async Task<ApiResponse<RoomTypeDTO>> GetAll()
         {
 
             var roomTypes = await _roomTypeService.GetAllRoomTypeAsync();
             var roomTypeDTOs = new List<RoomTypeDTO>();
-            foreach ( var roomType in roomTypes )
+            foreach (var roomType in roomTypes)
             {
-                roomTypeDTOs.Add(await _roomTypeService.GetRoomTypeDTOByID(roomType.Id));
+                var roomTypeDTO = await _roomTypeService.GetRoomTypeDTOByID(roomType.Id);
+                if (roomTypeDTO != null)
+                {
+                    roomTypeDTOs.Add(roomTypeDTO);
+                }
             }
             ApiResponse<RoomTypeDTO> _apiResponse = new ApiResponse<RoomTypeDTO>(0, 0, roomTypeDTOs, null, "200", "Get all room types successfully", true, null, 0);
             return _apiResponse;

@@ -44,6 +44,8 @@ export default function Home() {
     const data = await getRoomType();
     const list: RoomType[] = data.list;
 
+    setRoomTypes(list);
+
     const mappedItems: MenuProps["items"] = list.map(rt => ({
       key: rt.id.toString(),
       label: rt.typeName,
@@ -56,12 +58,8 @@ export default function Home() {
 
   // xu ly su kien chon item trong dropdown
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    const selected = items?.find(
-      (item) => item && item.key === e.key
-    ) as Exclude<MenuProps["items"], undefined>[number];
-    if (selected && "label" in selected && selected.label) {
-      setRoomType(String(selected.label));
-    }
+    const selectedType = roomTypes.find(rt => rt.id.toString() === e.key) || null;
+    setRoomType(selectedType);
   };
 
   // xu ly su kien chon date
@@ -108,7 +106,7 @@ export default function Home() {
                 trigger={["click"]}
               >
                 <div className="text-xl cursor-pointer bg-white">
-                  {roomType || "Select Room"}
+                  {roomType ? roomType.typeName : "Select Room"}
                 </div>
               </Dropdown>
 

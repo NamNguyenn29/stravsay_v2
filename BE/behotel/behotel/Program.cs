@@ -6,7 +6,8 @@ using behotel.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using behotel.Helper.SendMail.Implement;
+using behotel.Helper.SendMail;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidatorsFromAssemblyContaining<UserRegisterValidator>();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddFluentValidationAutoValidation();
+
+// Load EmailSettings từ appsettings.json
+builder.Services.Configure<EmailSetting>(builder.Configuration.GetSection("EmailSettings"));
+
+// Đăng ký EmailService vào DI container
+builder.Services.AddTransient<IMailService, MailImpl>();
 
 
 builder.Services.AddCors(options =>
@@ -34,6 +41,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HotelManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
+        options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
+    });
 
 
 

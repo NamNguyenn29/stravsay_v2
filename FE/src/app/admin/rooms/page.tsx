@@ -5,6 +5,8 @@ import { getRooms } from "@/api/getRoom";
 import { Pagination } from 'antd';
 import { Modal, Form, Input, Select, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { getRoomType } from "@/api/getRoomType";
+import { RoomType } from "@/model/RoomType";
 
 
 export default function RoomManagement() {
@@ -13,12 +15,19 @@ export default function RoomManagement() {
     const [rooms, setRooms] = useState<Room[]>([]);
     useEffect(() => {
         loadRoom();
+        loadRoomType();
     }, []);
 
     const loadRoom = async () => {
         const data = await getRooms();
         setRooms(data.list);
     }
+    const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+    const loadRoomType = async () => {
+        const data = await getRoomType();
+        setRoomTypes(data.list);
+    }
+
 
 
     // edit 
@@ -71,7 +80,7 @@ export default function RoomManagement() {
         try {
             const values = await form.validateFields();
             const newRoom: Room = {
-                id: Math.random(), // tạm thời random id
+                id: Math.random(), // 
                 ...values,
             };
             setRooms(prev => [...prev, newRoom]);
@@ -81,12 +90,7 @@ export default function RoomManagement() {
             messageApi.error("Failed to add room!");
         }
     };
-    // temp roomTypes
-    const roomTypes = [
-        { value: "standard", label: "Standard" },
-        { value: "deluxe", label: "Deluxe" },
-        { value: "suite", label: "Suite" },
-    ];
+
 
     // curetnpage 
     const [currentPage, setCurrentPage] = useState(1);
@@ -295,7 +299,13 @@ export default function RoomManagement() {
                             </Select>
                         </Form.Item>
                         <Form.Item name="roomType" label="Room Type" >
-                            <Select placeholder={selectedRoom?.typeName} options={roomTypes} />
+                            <Select
+                                placeholder={selectedRoom?.typeName}
+                                options={roomTypes.map(rt => ({
+                                    label: rt.typeName,
+                                    value: rt.id,
+                                }))}
+                            />
                         </Form.Item>
                     </div>
                     <div className="mb-2 font-medium">Image URLs</div>
@@ -343,21 +353,27 @@ export default function RoomManagement() {
                         <Form.Item name="roomName" label="Room Name" className="w-2/3" rules={[{ required: true }]}><Input /></Form.Item>
                         <Form.Item name="roomNumber" label="Room Number" className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
-                    <Form.Item name="description" label="Description"><TextArea /></Form.Item>
+                    <Form.Item name="description" label="Description" rules={[{ required: true }]}><TextArea /></Form.Item>
 
                     {/* 🆕 Select Room Type */}
 
 
                     <div className="flex gap-3">
-                        <Form.Item name="roomType" label="Room Type" rules={[{ required: true }]}>
-                            <Select placeholder="Select room type" options={roomTypes} />
+                        <Form.Item
+                            name="roomType"
+                            label="Room Type"
+                            rules={[{ required: true, message: "Please select room type" }]}
+                        >
+                            <Select
+                                placeholder="Select room type"
+                                options={roomTypes.map(rt => ({
+                                    label: rt.typeName,
+                                    value: rt.id,
+                                }))}
+                            />
                         </Form.Item>
-                        <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-                            <Select>
-                                <Select.Option value={0}>Unavailable</Select.Option>
-                                <Select.Option value={1}>Available</Select.Option>
-                            </Select>
-                        </Form.Item>
+
+                        <Form.Item name="floor" label="Floor " className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
 
                     </div>
 

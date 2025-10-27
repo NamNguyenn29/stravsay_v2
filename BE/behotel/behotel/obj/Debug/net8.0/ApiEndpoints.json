@@ -165,7 +165,7 @@
   },
   {
     "ContainingType": "behotel.Controllers.RoomController",
-    "Method": "updateRoom",
+    "Method": "UpdateRoom",
     "RelativePath": "api/Room/{id}",
     "HttpMethod": "PUT",
     "IsController": true,

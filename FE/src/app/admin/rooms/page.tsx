@@ -1,14 +1,16 @@
 "use client"
 import { useEffect, useState } from "react";
 import { Room } from "@/model/Room";
-import { getRooms } from "@/api/getRoom";
+import { getRooms } from "@/api/RoomApi/getRoom";
 import { Pagination } from 'antd';
 import { Modal, Form, Input, Select, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
-
-
+import { createRoom } from "@/api/RoomApi/createRoom";
+import { updateRoom } from "@/api/RoomApi/updateRoom";
+import { deleteRoom } from "@/api/RoomApi/deleteRoom";
+import "@/css/modal.css"
 export default function RoomManagement() {
 
     // get rooms
@@ -41,8 +43,13 @@ export default function RoomManagement() {
     const openEditModal = (room: Room) => {
         setSelectedRoom(room);
         form.setFieldsValue({
-            ...room,
-            imageUrl: room.imageUrl || [], // đảm bảo là mảng
+            roomName: room.roomName,
+            roomNumber: room.roomNumber,
+            description: room.description,
+            roomType: room.roomTypeID, // ✅ lấy đúng id loại phòng
+            floor: room.floor,
+            imageUrl: room.imageUrl || [],
+            status: room.status
         });
         setEditModalVisible(true);
     };
@@ -50,19 +57,39 @@ export default function RoomManagement() {
     const handleEditSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const updated = {
-                ...selectedRoom,
-                ...values,
 
+            if (!selectedRoom) {
+                messageApi.error("No room selected!");
+                return;
+            }
+
+            // Backend yêu cầu RoomRequest
+            const updatedData = {
+                roomName: values.roomName,
+                roomNumber: values.roomNumber,
+                description: values.description,
+                roomTypeID: values.roomType, // ✅ backend dùng RoomTypeID
+                floor: values.floor,
+                imageUrl: values.imageUrl || [],
+                status: values.status
             };
 
-            setRooms(prev => prev.map(r => r.id === updated.id ? updated : r));
-            setEditModalVisible(false);
-            messageApi.success("Room updated successfully!")
+            const response = await updateRoom(selectedRoom.id, updatedData);
+
+            if (response.isSuccess) {
+                messageApi.success("Room updated successfully!");
+                setEditModalVisible(false);
+                form.resetFields();
+                await loadRoom(); // ✅ reload lại danh sách sau khi update
+            } else {
+                messageApi.error(response.message || "Failed to update room!");
+            }
         } catch (err) {
-            messageApi.error("Room update successfully!");
+            console.error("Error updating room:", err);
+            messageApi.error("Error updating room!");
         }
     };
+
 
     const handleCancle = () => {
         setEditModalVisible(false);
@@ -79,58 +106,86 @@ export default function RoomManagement() {
     const handleAddSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const newRoom: Room = {
-                id: Math.random(), // 
-                ...values,
+
+            const payload = {
+                roomName: values.roomName,
+                roomNumber: values.roomNumber,
+                description: values.description,
+                roomTypeID: values.roomType,
+                floor: values.floor,
+                imageUrl: values.imageUrl || [],
+                status: values.status
             };
-            setRooms(prev => [...prev, newRoom]);
-            setAddModalVisible(false);
-            messageApi.success("Room added successfully!");
+            const res = await createRoom(payload);
+
+            if (res.isSuccess) {
+                messageApi.success("Room added successfully!");
+                setAddModalVisible(false);
+                form.resetFields();
+                await loadRoom();
+            }
         } catch (err) {
+            console.error("Error adding room:", err);
             messageApi.error("Failed to add room!");
         }
     };
+    const [modal, modalContextHolder] = Modal.useModal();
+
+    const handleDeleteRoom = (id: string) => {
+        modal.confirm({
+            title: "Are you sure you want to delete this room?",
+            content: "This action cannot be undone.",
+            centered: true,
+            okText: "Yes, delete it",
+            cancelText: "Cancel",
+            okType: "danger",
+            className: "custom-delete-confirm",
+
+            async onOk() {
+                const res = await deleteRoom(id);
+                if (res.isSuccess) {
+                    message.success(res.message || "Room deleted successfully!");
+                    await loadRoom();
+                } else {
+                    message.error(res.message || "Failed to delete room!");
+                }
+            },
+        });
+    };
+
 
 
     // curetnpage 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
 
-    // filter by status
-    const totalRoom = rooms.length;
-    const availableCount = rooms.filter(r => r.status === 1).length;
-    const unavailableCount = rooms.filter(r => r.status === 0).length;
-
-    const [statusFilter, setStatusFilter] = useState<"all" | 0 | 1>("all");
-
-    const filteredByStatus = statusFilter === "all" ? rooms : rooms.filter(r => r.status === statusFilter);
 
 
 
-    const handleFilterClick = (filter: "all" | 0 | 1) => {
-        setStatusFilter(filter);
-        setCurrentPage(1);
-    }
 
     // Tính toán dữ liệu hiển thị
     const indexOfLast = currentPage * itemsPerPage;
     const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentRooms = filteredByStatus.slice(indexOfFirst, indexOfLast);
+    const currentRooms = rooms.slice(indexOfFirst, indexOfLast);
 
-    const getStatusLabel = (status: number) => {
-        switch (status) {
-            case 0:
-                return { text: "Unavailable", color: "bg-yellow-500" };
-            case 1:
-                return { text: "Available", color: "bg-green-500" };
-            default:
-                return { text: "Unknown", color: "bg-gray-500" };
+    const getStatusLabel = (status: string) => {
+        if (status.includes("Unavailable")) {
+
+            return { text: "Unavailable", color: "bg-yellow-500" };
         }
-    };
+        else if (status.includes("Available")) {
+            return { text: "Available", color: "bg-green-500" };
+        }
+        else {
+            return { text: "Unknown", color: "bg-gray-500" };
+        }
+    }
+
 
     return (
         <>
             {contexHolder}
+            {modalContextHolder}
             <div className=" font-semibold text-lg">Room Mangement</div>
             <div className=" my-3 border border-b-1 container mx-auto bg-black "></div>
             <div className="flex justify-start gap-5 pt-4 container mb-10">
@@ -151,38 +206,38 @@ export default function RoomManagement() {
             </div>
 
             {/*summary box */}
-            <div className="flex gap-5 container mx-auto mb-10">
+            {/* <div className="flex gap-5 container mx-auto mb-10">
                 <div
-                    onClick={() => handleFilterClick("all")}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${statusFilter === "all" ? "bg-blue-100 border-blue-500 " : "hover:bg-gray-50"}`}>
+
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${} ? "bg-blue-100 border-blue-500 " : "hover:bg-gray-50"}`}>
                     <div className="flex item-center gap-3">
                         <span className="w-8 h-8 bg-blue-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Total Room</span>
                     </div>
-                    <span>{totalRoom}</span>
+                    <span>{ }</span>
 
                 </div>
                 <div
-                    onClick={() => handleFilterClick(1)}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${statusFilter === 1 ? "bg-green-100 border-green-500 " : "hover:bg-gray-50"}`}>
+
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${ } ? "bg-green-100 border-green-500 " : "hover:bg-gray-50"}`}>
                     <div className="flex item-center gap-3">
                         <span className="w-8 h-8 bg-green-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Available</span>
                     </div>
-                    <span>{availableCount}</span>
+                    <span>{ }</span>
 
                 </div>
                 <div
-                    onClick={() => handleFilterClick(0)}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${statusFilter === 0 ? "bg-yellow-100 border-yellow-500 " : "hover:bg-gray-50"}`}>
+
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${} ? "bg-yellow-100 border-yellow-500 " : "hover:bg-gray-50"}`}>
                     <div className="flex item-center gap-3">
                         <span className="w-8 h-8 bg-yellow-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Unavailable</span>
                     </div>
-                    <span>{unavailableCount}</span>
+                    <span>{ }</span>
 
                 </div>
-            </div>
+            </div> */}
 
             {/* Table */}
             <div className="container mx-auto my-10 bg-white rounded-xl shadow-lg overflow-hidden">
@@ -232,7 +287,7 @@ export default function RoomManagement() {
                                     <td className="px-6 py-3 text-center">
                                         <div className="flex justify-center gap-2">
                                             <div className="bg-emerald-400 p-3 px-5 text-white rounded rounded-(200px) " onClick={() => openEditModal(room)} >Edit</div>
-                                            <div className="bg-rose-400 p-3 px-5 text-white rounded rounded-(200px)"  >Remove</div>
+                                            <div className="bg-rose-400 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer" onClick={() => handleDeleteRoom(room.id)} >Remove</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -245,7 +300,7 @@ export default function RoomManagement() {
             <Pagination
                 current={currentPage}                // Trang hiện tại
                 pageSize={itemsPerPage}              // Số item mỗi trang
-                total={filteredByStatus.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
+                total={currentRooms.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
                 showSizeChanger                      // Cho phép chọn số item/trang
                 pageSizeOptions={[5, 10, 20, 50]}    // Tùy chọn số dòng mỗi trang
                 onChange={(page, pageSize) => {
@@ -293,12 +348,15 @@ export default function RoomManagement() {
 
                         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
                             <Select>
-                                <Select.Option value={0}>Pending</Select.Option>
-                                <Select.Option value={1}>Approved</Select.Option>
-                                <Select.Option value={2}>Cancelled</Select.Option>
+                                <Select.Option value={"Unavailable"}>Unavailable</Select.Option>
+                                <Select.Option value={"Available"}>Available</Select.Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item name="roomType" label="Room Type" >
+                        <Form.Item
+                            name="roomType"
+                            label="Room Type"
+                            rules={[{ required: true, message: "Please select room type" }]}
+                        >
                             <Select
                                 placeholder={selectedRoom?.typeName}
                                 options={roomTypes.map(rt => ({
@@ -307,6 +365,7 @@ export default function RoomManagement() {
                                 }))}
                             />
                         </Form.Item>
+                        <Form.Item name="floor" label="Floor " className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
                     <div className="mb-2 font-medium">Image URLs</div>
                     <Form.List name="imageUrl">
@@ -335,18 +394,19 @@ export default function RoomManagement() {
 
                 </Form>
 
-            </Modal>
+            </Modal >
 
             {/*Add room modal*/}
-            <Modal
-                title={<span className="text-xl font-semibold text-green-600">Add Room</span>}
+            < Modal
+                title={< span className="text-xl font-semibold text-green-600" > Add Room</span >}
                 open={addModalVisible}
                 onCancel={handleCancle}
                 centered
-                footer={[
-                    <Button key="cancel" onClick={handleCancle}>Cancel</Button>,
-                    <Button key="add" type="primary" className="bg-green-600" onClick={handleAddSubmit}>Add Room</Button>
-                ]}
+                footer={
+                    [
+                        <Button key="cancel" onClick={handleCancle}>Cancel</Button>,
+                        <Button key="add" type="primary" className="bg-green-600" onClick={handleAddSubmit}>Add Room</Button>
+                    ]}
             >
                 <Form form={form} layout="vertical" className="mt-4">
                     <div className="flex gap-3">
@@ -354,10 +414,6 @@ export default function RoomManagement() {
                         <Form.Item name="roomNumber" label="Room Number" className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
                     <Form.Item name="description" label="Description" rules={[{ required: true }]}><TextArea /></Form.Item>
-
-                    {/* 🆕 Select Room Type */}
-
-
                     <div className="flex gap-3">
                         <Form.Item
                             name="roomType"
@@ -371,6 +427,12 @@ export default function RoomManagement() {
                                     value: rt.id,
                                 }))}
                             />
+                        </Form.Item>
+                        <Form.Item name="status" label="Status" rules={[{ required: true }]} className="w-[100px]"  >
+                            <Select>
+                                <Select.Option value={"Unavailable"}>Unavailable</Select.Option>
+                                <Select.Option value={"Available"}>Available</Select.Option>
+                            </Select>
                         </Form.Item>
 
                         <Form.Item name="floor" label="Floor " className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
@@ -399,7 +461,7 @@ export default function RoomManagement() {
                         )}
                     </Form.List>
                 </Form>
-            </Modal>
+            </Modal >
 
         </>
     );

@@ -1167,14 +1167,18 @@
             "format": "int32"
           },
           "status": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "nullable": true
           },
           "createdDate": {
             "type": "string",
             "format": "date-time"
           },
           "typeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomTypeID": {
             "type": "string",
             "nullable": true
           },
@@ -1263,7 +1267,11 @@
           },
           "roomTypeID": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
           },
           "description": {
             "type": "string",

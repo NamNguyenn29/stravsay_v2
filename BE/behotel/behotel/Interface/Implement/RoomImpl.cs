@@ -7,7 +7,7 @@ namespace behotel.Interface.Implement
     public class RoomImpl : IRoomService
     {
         private readonly HotelManagementContext _context;
-        public RoomImpl (HotelManagementContext context)
+        public RoomImpl(HotelManagementContext context)
         {
             _context = context;
         }
@@ -18,17 +18,22 @@ namespace behotel.Interface.Implement
             {
                 return null;
             }
+            int status = 0;
+            if(newRoom.Status.Equals("Available"))
+            {
+                status = 1;
+            }
             Room room = new Room()
             {
                 Id = new Guid(),
                 RoomName = newRoom.RoomName,
                 RoomNumber = newRoom.RoomNumber,
                 IsAvailable = true,
-                RoomTypeID = newRoom.RoomTypeID,
+                RoomTypeID = Guid.Parse(newRoom.RoomTypeID),
                 Description = newRoom.Description,
-                ImageUrl = String.Join(",",newRoom.ImageUrl),
+                ImageUrl = String.Join(",", newRoom.ImageUrl),
                 Floor = newRoom.Floor,
-                Status = 1,
+                Status = status,
                 CreatedDate = DateTime.Now
             };
             _context.Room.Add(room);
@@ -39,13 +44,13 @@ namespace behotel.Interface.Implement
         public async Task<bool> DeleteRoomAsync(Guid id)
         {
             var room = await _context.Room.FindAsync(id);
-            if(room == null)
+            if (room == null)
             {
                 return false;
             }
             _context.Room.Remove(room);
             await _context.SaveChangesAsync();
-            return true; 
+            return true;
 
 
         }
@@ -62,7 +67,7 @@ namespace behotel.Interface.Implement
 
         public async Task<RoomDTO?> GetRoomDTOByIdAsync(Guid id)
         {
-           var roomOrigin = await _context.Room.FindAsync(id);
+            var roomOrigin = await _context.Room.FindAsync(id);
             if (roomOrigin == null)
             {
                 return null;
@@ -77,9 +82,25 @@ namespace behotel.Interface.Implement
             roomDTO.RoomNumber = roomOrigin.RoomNumber;
             roomDTO.RoomName = roomOrigin.RoomName;
             roomDTO.Description = roomOrigin.Description;
-            roomDTO.ImageUrl =  roomOrigin.ImageUrl.Split(",");
+            roomDTO.ImageUrl = roomOrigin.ImageUrl.Split(",");
             roomDTO.Floor = roomOrigin.Floor;
-            roomDTO.Status = roomOrigin.Status;
+            roomDTO.RoomTypeID = roomOrigin.RoomTypeID.ToString();
+            string status = "";
+            if (roomOrigin.Status == 0)
+            {
+                status = "Unavailable";
+            }
+            else if (roomOrigin.Status == 1)
+            {
+                status = "Available";
+            }
+            else
+            {
+                status = "Unknow";
+            }
+
+            roomDTO.Status = status;
+
             roomDTO.CreatedDate = roomOrigin.CreatedDate;
             roomDTO.TypeName = roomType.TypeName;
             roomDTO.BasePrice = roomType.BasePrice;
@@ -91,19 +112,25 @@ namespace behotel.Interface.Implement
             return roomDTO;
         }
 
-        public async Task<Room?> updateRoomAsync(Guid id,RoomRequest roomRequest)
+        public async Task<Room?> UpdateRoomAsync(Guid id, RoomRequest roomRequest)
         {
-           var roomOrigin = await GetRoomByIdAsync(id);
-            if(roomOrigin == null)
+            var roomOrigin = await GetRoomByIdAsync(id);
+            if (roomOrigin == null)
             {
                 return null;
+            }
+            int status = 0;
+            if (roomRequest.Status.Equals("Available"))
+            {
+                status = 1;
             }
             roomOrigin.RoomNumber = roomRequest.RoomNumber;
             roomOrigin.RoomName = roomRequest.RoomName;
             roomOrigin.Description = roomRequest.Description;
             roomOrigin.ImageUrl = String.Join(",", roomRequest.ImageUrl);
             roomOrigin.Floor = roomRequest.Floor;
-            roomOrigin.RoomTypeID = roomRequest.RoomTypeID;
+            roomOrigin.RoomTypeID = Guid.Parse(roomRequest.RoomTypeID);
+            roomOrigin.Status = status;
             await _context.SaveChangesAsync();
             return roomOrigin;
         }

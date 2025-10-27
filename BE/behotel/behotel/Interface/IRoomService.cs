@@ -12,7 +12,7 @@ namespace behotel.Interface
 
         Task<RoomDTO?> GetRoomDTOByIdAsync(Guid id);
 
-        Task<Room?> updateRoomAsync(Guid id,RoomRequest roomRequest);
+        Task<Room?> UpdateRoomAsync(Guid id,RoomRequest roomRequest);
     }
 
 

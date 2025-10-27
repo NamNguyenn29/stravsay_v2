@@ -73,7 +73,7 @@ namespace behotel.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ApiResponse<RoomDTO>> updateRoom(string id, [FromBody] RoomRequest roomRequest)
+        public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromBody] RoomRequest roomRequest)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -86,7 +86,7 @@ namespace behotel.Controllers
                 var combinedErrors = string.Join("; ", errorMessages);
                 return new ApiResponse<RoomDTO>(0, 0, null, null, "400", combinedErrors, false, null, 0);
             }
-            var room = await _roomImpl.updateRoomAsync(guidId, roomRequest);
+            var room = await _roomImpl.UpdateRoomAsync(guidId, roomRequest);
             if (room == null)
             {
                 return new ApiResponse<RoomDTO>(0, 0, null, null, "400", "Failed to create room", false, null, 0);

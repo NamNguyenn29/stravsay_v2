@@ -8,9 +8,12 @@
         public string Description { get; set; }
         public string[] ImageUrl { get; set; }
         public int Floor { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public string TypeName { get; set; }
+
+        public string RoomTypeID { get; set; }
+
         public decimal BasePrice { get; set; }
         public bool HasBreakFast { get; set; }
         public string BedType { get; set; }

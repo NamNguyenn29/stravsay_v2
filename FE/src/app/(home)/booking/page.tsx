@@ -20,7 +20,7 @@ import { Carousel } from 'antd';
 import { Modal, Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-import { getRooms } from "@/api/getRoom";
+import { getRooms } from "@/api/RoomApi/getRoom";
 export default function Booking() {
     // luu va lay thong tin room da chon
     const { setRoom } = useBookingStore();

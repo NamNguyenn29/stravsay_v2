@@ -5,7 +5,7 @@ import { Room } from "@/model/Room";
 import { getBookings } from "@/api/getBooking";
 import { useState, useEffect } from "react";
 import { getUserById } from "@/api/getUserById";
-import { getRoomById } from "@/api/getRoomById";
+import { getRoomById } from "@/api/RoomApi/getRoomById";
 import { Pagination, Modal, Form, Input, Select, DatePicker, Button, message } from "antd";
 import dayjs from "dayjs";
 

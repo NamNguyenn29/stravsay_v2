@@ -149,128 +149,120 @@ export default function Home() {
 
 
       </div>
-      {/* ===: Experiences + Promotions === */}
+
+      {/* === Experiences + Promotions === */}
       <div className="bg-gray-50 px-6 py-24">
-        {/* Experiences (zig-zag trapezoids) */}
-        <section className="max-w-6xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-center mb-6">The TravStay Experience</h2>
+        {/* EXPERIENCES */}
+        <section className="max-w-6xl mx-auto mb-20">
+          <h2 className="text-4xl font-bold text-center mb-4">The TravStay Experience</h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Discover unique experiences that make your stay memorable.
+            Discover unforgettable stays — where modern comfort meets authentic hospitality.
           </p>
 
-          <div className="space-y-8">
-            {/* Row 1: two trapezoids side-by-side */}
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              {/* Left trapezoid (slanted left) */}
-              <div className="relative overflow-hidden">
+          <div className="space-y-12">
+            {/* ROW 1 */}
+            <div className="grid md:grid-cols-2 gap-10 items-center">
+              {/* Left trapezoid */}
+              <div className="relative group">
                 <img
-                  src="experiences/experience1.jpg"
-                  alt="Stay24"
-                  loading="lazy"
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80"
+                  alt="Luxury Rooms"
+                  className="w-full h-[340px] object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-105"
                   style={{
-                    width: "100%",
-                    height: "320px",
-                    objectFit: "cover",
                     clipPath: "polygon(8% 0, 100% 0, 92% 100%, 0 100%)",
                   }}
-                  className="transition-transform duration-500 hover:scale-105"
                 />
-                <div className="mt-4 pl-2">
-                  <div className="text-sm font-semibold">STAY24</div>
-                  <div className="text-xs text-gray-500">Check in anytime, check out anytime</div>
+                <div className="absolute inset-0 bg-gradient-to-t via-transparent rounded-xl"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <h4 className="text-lg font-semibold">LUXURY ROOMS</h4>
+                  <p className="text-sm opacity-90">Designed for ultimate comfort & style</p>
                 </div>
               </div>
 
-              {/* Right trapezoid (slanted right) */}
-              <div className="relative overflow-hidden">
+              {/* Right trapezoid */}
+              <div className="relative group">
                 <img
-                  src="experiences/experience2.jpg"
-                  alt="24/7 Services"
-                  loading="lazy"
+                  src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80"
+                  alt="Fine Dining"
+                  className="w-full h-[340px] object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-105"
                   style={{
-                    width: "100%",
-                    height: "320px",
-                    objectFit: "cover",
                     clipPath: "polygon(0 0, 92% 0, 100% 100%, 8% 100%)",
                   }}
-                  className="transition-transform duration-500 hover:scale-105"
                 />
-                <div className="mt-4 pl-2">
-                  <div className="text-sm font-semibold">24/7 SERVICES</div>
-                  <div className="text-xs text-gray-500">Trav Bar, Grab & Go, Co-working spaces</div>
+                <div className="absolute inset-0 bg-gradient-to-t via-transparent rounded-xl"></div>
+                <div className="absolute bottom-6 left-12 text-white">
+                  <h4 className="text-lg font-semibold">FINE DINING</h4>
+                  <p className="text-sm opacity-90">World-class cuisine with local flair</p>
                 </div>
               </div>
             </div>
 
-            {/* Row 2: centered larger trapezoid */}
+            {/* ROW 2 */}
             <div className="flex justify-center">
-              <div className="w-full md:w-3/4 relative overflow-hidden">
+              <div className="relative w-full md:w-3/4 group">
                 <img
-                  src="experiences/experience3.jpg"
-                  alt="Tech-driven comfort"
-                  loading="lazy"
+                  src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80"
+                  alt="Wellness & Spa"
+                  className="w-full h-[360px] object-cover rounded-xl shadow-lg transition-transform duration-500 group-hover:scale-105"
                   style={{
-                    width: "100%",
-                    height: "360px",
-                    objectFit: "cover",
-                    clipPath: "polygon(12% 0, 88% 0, 100% 100%, 0 100%)",
+                    clipPath: "polygon(10% 0, 90% 0, 100% 100%, 0 100%)",
                   }}
-                  className="transition-transform duration-500 hover:scale-105"
                 />
-                <div className="mt-4 pl-2">
-                  <div className="text-sm font-semibold">TECH-DRIVEN COMFORT</div>
-                  <div className="text-xs text-gray-500">Smart rooms, digital keys, seamless booking</div>
+                <div className="absolute inset-0 bg-gradient-to-t via-transparent rounded-xl"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <h4 className="text-lg font-semibold">WELLNESS & SPA</h4>
+                  <p className="text-sm opacity-90">Recharge your body and mind in paradise</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Promotions */}
+        {/* PROMOTIONS */}
         <section className="max-w-7xl mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-6">Current Promotions</h3>
-          <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-            Limited-time deals to help you save on your next stay.
+          <h3 className="text-4xl font-bold text-center mb-4">Current Promotions</h3>
+          <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">
+            Make your next stay even more rewarding with our exclusive offers.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-10">
             {[
               {
-                img: "promotions/promo1.jpg",
-                title: "All-in-One Golf Vacation Package",
-                desc: "Perfect golf getaway with premium amenities.",
+                img: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80",
+                title: "Early Bird Discount",
+                desc: "Book at least 14 days in advance and save up to 25%.",
               },
               {
-                img: "promotions/promo2.jpg",
-                title: "Dining Voucher for Every Night",
-                desc: "Receive daily F&B credit during your stay.",
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80",
+                title: "Weekend Getaway",
+                desc: "Stay 2 nights and get the 3rd night free on weekends.",
               },
               {
-                img: "promotions/promo3.jpg",
-                title: "Free Massage & Airport Shuttle",
-                desc: "Relax with a massage and enjoy complimentary transfer.",
+                img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+                title: "Spa & Relax Package",
+                desc: "Enjoy complimentary massage and wellness treatments.",
               },
-            ].map((p, idx) => (
-              <article key={idx} className="bg-white rounded-2xl shadow-md overflow-hidden group">
+            ].map((promo, i) => (
+              <article
+                key={i}
+                className="bg-white rounded-2xl shadow-md overflow-hidden group hover:shadow-xl transition-shadow duration-300"
+              >
                 <div className="relative overflow-hidden">
                   <img
-                    src={p.img}
-                    alt={p.title}
-                    loading="lazy"
-                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                    src={promo.img}
+                    alt={promo.title}
+                    className="w-full h-60 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent opacity-0 group-hover:opacity-100 transition"></div>
                 </div>
-                <div className="p-5 text-left">
-                  <h4 className="font-semibold text-lg mb-2">{p.title}</h4>
-                  <p className="text-sm text-gray-600 mb-4">{p.desc}</p>
-                  <div className="flex items-center justify-between">
+                <div className="p-6">
+                  <h4 className="text-lg font-semibold mb-2">{promo.title}</h4>
+                  <p className="text-sm text-gray-600 mb-4">{promo.desc}</p>
+                  <div className="flex justify-between items-center">
                     <a href="#" className="text-rose-500 font-medium hover:underline">
-                      View details →
+                      View Details →
                     </a>
-                    <button
-                      type="button"
-                      className="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 transition"
-                    >
+                    <button className="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 transition">
                       Book Now
                     </button>
                   </div>
@@ -280,6 +272,7 @@ export default function Home() {
           </div>
         </section>
       </div>
+
 
     </div>
 

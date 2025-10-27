@@ -9,6 +9,7 @@ import {
   UserOutlined,
   HomeOutlined,
   FileTextOutlined,
+  TagOutlined,
   SettingOutlined,
   LogoutOutlined,
   UnorderedListOutlined,
@@ -37,8 +38,10 @@ const MENU: AdminMenuItem[] = [
   { key: "/admin/users", label: "Users", href: "/admin/users", icon: <UserOutlined /> },
   { key: "/admin/requests", label: "Requests", href: "/admin/requests", icon: <FileTextOutlined /> },
   { key: "/admin/reviews", label: "Reviews", href: "/admin/reviews", icon: <FileTextOutlined /> },
+  { key: "/admin/discounts", label: "Discounts", href: "/admin/discounts", icon: <TagOutlined /> },
   { key: "/admin/settings", label: "Settings", href: "/admin/settings", icon: <SettingOutlined /> },
   { key: "/admin/logs", label: "System Logs", href: "/admin/logs", icon: <FileTextOutlined /> },
+
 ];
 
 function toAntdItems(items: AdminMenuItem[]): MenuProps["items"] {
@@ -90,7 +93,7 @@ export default function AdminSidebar({ selectedKey, collapsed = false, onLogout 
             width: 44,
             height: 44,
             borderRadius: 8,
-            background: "#0f2130",
+            background: "#456d8dff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -101,8 +104,8 @@ export default function AdminSidebar({ selectedKey, collapsed = false, onLogout 
         </div>
         {!collapsed && (
           <div>
-            <div style={{ fontWeight: 700, color:"#04090eff" }}>Admin Panel</div>
-            <div style={{ fontSize: 12, color: "#888" }}>Quản trị</div>
+            <div style={{ fontWeight: 700, color: "#04090eff" }}>Admin Panel</div>
+            <div style={{ fontSize: 12, color: "#888" }}>Admin</div>
           </div>
         )}
       </div>

@@ -1,6 +1,8 @@
 export type ApiResponse<T> = {
-    totalPage: number | null
-    currentPage: number | null
+    totalPage: number
+    currentPage: number
+    pageSize: number
+    totalElement: number
     list: T[] | []
     object: T | null
     code: string | null

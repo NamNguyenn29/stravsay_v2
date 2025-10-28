@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/model/ApiResponse";
 import { Room } from "@/model/Room";
-export async function getRooms(): Promise<ApiResponse<Room>> {
+export async function getRooms(currentPage: number, itemPerPage: number): Promise<ApiResponse<Room>> {
     try {
         const res = await fetch("https://localhost:7020/api/Room", {
             method: "GET",
@@ -15,6 +15,8 @@ export async function getRooms(): Promise<ApiResponse<Room>> {
         return {
             totalPage: 0,
             currentPage: 0,
+            totalElement: 0,
+            pageSize: 0,
             code: "500",
             message: "Error fetching rooms",
             list: [],

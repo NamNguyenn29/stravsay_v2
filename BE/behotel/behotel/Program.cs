@@ -47,6 +47,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
         options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
+        
     });
 
 

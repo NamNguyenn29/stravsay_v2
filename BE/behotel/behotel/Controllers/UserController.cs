@@ -23,58 +23,43 @@ namespace behotel.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResponse<UserDTO>> GetAll()
+        public async Task<ApiResponse<UserDTO>> GetAll(int currentPage, int pageSize)
         {
 
-            var users = await _userService.GetAllUsersAsync();
-            var userDTOs = new List<UserDTO>();
-            foreach (var user in users)
-            {
-                var userDTO = await _userService.GetUserDTOAsync(user.Id);
-                if (userDTO != null)
-                {
-                    userDTOs.Add(userDTO);
-
-                }
-            }
-            ApiResponse<UserDTO> _apiResponse = new ApiResponse<UserDTO>(0, 0, userDTOs, null, "200", "Get all users successfully", true, null, 0);
-            return _apiResponse;
+            return (_userService.GetUsersWithPaginationAsync(currentPage, pageSize)).Result;
         }
 
         [HttpGet("{id}")]
         public async Task<ApiResponse<UserDTO>> GetUserById(string id)
         {
-            ApiResponse<UserDTO> _apiResponse;
             if (String.IsNullOrWhiteSpace(id))
             {
-                return _apiResponse = new ApiResponse<UserDTO>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "Id is required", false, 0, 0, 0, 0, null, null);
             }
             Guid idGuid = Guid.Parse(id);
             var user = await _userService.GetUserDTOAsync(idGuid);
             if (user == null)
             {
-                return _apiResponse = new ApiResponse<UserDTO>(0, 0, null, null, "404", "User not found", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
             }
 
-            _apiResponse = new ApiResponse<UserDTO>(0, 0, null, user, "200", "Get user successfully", true, null, 0);
-            return _apiResponse;
+            return new ApiResponse<UserDTO>(null, user, "200", "Get user successfully", true, 0, 0, 0, 1, null, null);
 
         }
 
         [HttpPost("register")]
         public async Task<ApiResponse<User>> Register(UserRegister userRegister)
         {
-            ApiResponse<User> _apiResponse;
             if (!ModelState.IsValid)
             {
                 var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 var combinedErrors = string.Join("; ", errorMessages);
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", combinedErrors, false, null, 0);
+                return new ApiResponse<User>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
             var existingUser = await _userService.GetUserByEmailAsync(userRegister.Email);
             if (existingUser != null)
             {
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "Email Exists", false, null, 0);
+                return new ApiResponse<User>(null, null, "400", "Email already exists", false, 0, 0, 0, 0, null, null);
             }
             int workFactor = 12;
             string hashed = BCrypt.Net.BCrypt.HashPassword(userRegister.Password, workFactor);
@@ -82,16 +67,16 @@ namespace behotel.Controllers
             var registedusr = await _userService.ResgisterUser(userRegister, hashed);
             if (registedusr == null)
             {
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "Register Failed", false, null, 0);
+                return new ApiResponse<User>(null, null, "400", "Failed to register account", false, 0, 0, 0, 0, null, null);
             }
             await SendActiveCode(userRegister.Email, registedusr.ActiveCode);
-            return _apiResponse = new ApiResponse<User>(0, 0, null, registedusr, "200", "Register successfully", true, null, 0);
+            return new ApiResponse<User>(null, registedusr, "200", "Account registered successfully", true, 0, 0, 0, 1, null, null);
         }
 
         [HttpPost("sendActiveCode")]
         public async Task<ApiResponse<UserDTO>> SendActiveCode(string to, string activationCode)
         {
-            var subject = "Kích hoạt tài khoản của bạn - My App";
+            var subject = "Kích hoạt tài khoản của bạn - Stravstay";
 
             // Nội dung HTML email
             var body = $@"
@@ -111,8 +96,7 @@ namespace behotel.Controllers
                 </div>
             ";
             await _mailService.SendEmailAsync(to, subject, body);
-            ApiResponse<UserDTO> _apiResponse = new ApiResponse<UserDTO>(0, 0, null, null, "200", "Send mail successfully", true, null, 0);
-            return _apiResponse;
+            return new ApiResponse<UserDTO>(null, null, "200", "Send mail successfully", true, 0, 0, 0, 0, null, null);
         }
 
         [HttpGet("activeUser")]
@@ -134,24 +118,24 @@ namespace behotel.Controllers
             {
                 var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 var combinedErrors = string.Join("; ", errorMessages);
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", combinedErrors, false, null, 0);
+                return _apiResponse = new ApiResponse<User>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
 
             var userByEmail = await _userService.GetUserByEmailAsync(userRegistered.Email);
             if (userByEmail == null)
             {
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "Accoutn is not exists", false, null, 0);
+                return _apiResponse = new ApiResponse<User>(null, null, "400", "Account is not exists", false, 0, 0, 0, 0, null, null);
             }
             if (userByEmail.IsActived == false)
             {
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "Inactive Account", false, null, 0);
+                return _apiResponse = new ApiResponse<User>(null, null, "400", "Inactive Account", false, 0, 0, 0, 0, null, null);
             }
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(userRegistered.Password, userByEmail.Password);
             if (!isPasswordValid)
             {
-                return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "InCorrect Information", false, null, 0);
+                return _apiResponse = new ApiResponse<User>(null, null, "400", "InCorrect Information", false, 0, 0, 0, 0, null, null);
             }
-            return _apiResponse = new ApiResponse<User>(0, 0, null, null, "404", "Login successfully", true, null, 0);
+            return _apiResponse = new ApiResponse<User>(null, null, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
         }
 
@@ -160,29 +144,29 @@ namespace behotel.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return new ApiResponse<UserDTO>(0, 0, null, null, "400", "User Id can not be null", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "User Id can not be null", false, 0, 0, 0, 0, null, null);
             }
             Guid guidId = Guid.Parse(id);
             if (!ModelState.IsValid)
             {
                 var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 var combinedErrors = string.Join("; ", errorMessages);
-                return new ApiResponse<UserDTO>(0, 0, null, null, "400", combinedErrors, false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
             if (userDTO.Id != guidId)
-                return new ApiResponse<UserDTO>(0, 0, null, null, "400", "ID mismatch between URL and body", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "ID mismatch between URL and body", false, 0, 0, 0, 0, null, null);
 
             var updatedUser = await _userService.UpdateUserAsync(guidId, userDTO);
             if (updatedUser == null)
             {
-                return new ApiResponse<UserDTO>(0, 0, null, null, "404", "Update user failed", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "Failed to update user", false, 0, 0, 0, 0, null, null);
             }
             var updatedUserDTO = await _userService.GetUserDTOAsync(updatedUser.Id);
             if (updatedUserDTO == null)
             {
-                return new ApiResponse<UserDTO>(0, 0, null, null, "404", "Failed to get user information", false, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "Failed to get user information", false, 0, 0, 0, 0, null, null);
             }
-            return new ApiResponse<UserDTO>(0, 0, null, updatedUserDTO, "200", "Update User successfully", true, null, 0);
+            return new ApiResponse<UserDTO>(null, updatedUserDTO, "200", "Update User successfully", true, 0, 0, 0, 0, null, null);
 
         }
 
@@ -191,16 +175,16 @@ namespace behotel.Controllers
         {
             if (string.IsNullOrEmpty(Id))
             {
-                return new ApiResponse<User>(0, 0, null, null, "404", "Failed to delete user", false, null, 0);
+                return new ApiResponse<User>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, null);
             }
             Guid guidId = Guid.Parse(Id);
             bool isDeleteSuccess = await _userService.DeleteUserAsync(guidId);
             if (!isDeleteSuccess)
             {
-                return new ApiResponse<User>(0, 0, null, null, "404", "Failed to delete user", false, null, 0);
+                return new ApiResponse<User>(null, null, "400", "Failed to delete user", false, 0, 0, 0, 0, null, null);
 
             }
-            return new ApiResponse<User>(0, 0, null, null, "200", "Delete User successfully", true, null, 0);
+            return new ApiResponse<User>(null, null, "200", "Delete User successfully", true,0,0,0,0, null, null);
         }
 
 

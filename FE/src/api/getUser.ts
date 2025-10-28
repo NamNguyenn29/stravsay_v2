@@ -1,8 +1,8 @@
 import { ApiResponse } from "@/model/ApiResponse";
 import { User } from "@/model/User";
-export async function getUsers(): Promise<ApiResponse<User>> {
+export async function getUsers(currentPage: number, pageSize: number): Promise<ApiResponse<User>> {
     try {
-        const res = await fetch("https://localhost:7020/api/User", {
+        const res = await fetch(`https://localhost:7020/api/User?currentPage=${currentPage}&pageSize=${pageSize}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -16,6 +16,8 @@ export async function getUsers(): Promise<ApiResponse<User>> {
         return {
             totalPage: 0,
             currentPage: 0,
+            totalElement: 0,
+            pageSize: 0,
             code: "500",
             message: "Error fetching users",
             list: [],

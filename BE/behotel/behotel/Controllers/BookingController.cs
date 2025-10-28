@@ -20,6 +20,7 @@ namespace behotel.Controllers
 
         [HttpGet]
         public async Task<ApiResponse<BookingDTO>> GetAll() {
+            // update with pagination
             var bookings = await _bookingService.GetAllBookingAsync();
             var bookingDTOs = new List<BookingDTO>();
             foreach (var booking in bookings)
@@ -35,23 +36,23 @@ namespace behotel.Controllers
             return _apiResponse;
         }
 
+      
+       
+
         [HttpGet("{id}")]
-        public async Task<ApiResponse<BookingDTO>> GetBokingById(string id) 
+        public async Task<ApiResponse<BookingDTO>> GetBookingById(string id) 
         {
-            ApiResponse<BookingDTO> _apiResponse;
             if (String.IsNullOrWhiteSpace(id))
             {
-                return _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return new ApiResponse<BookingDTO>(null,null, "400", "Id is require", false,0,0,0,0, null, null);
             }
             Guid idGuid = Guid.Parse(id);
             var booking = await _bookingService.GetBookingDTOByIdAsync(idGuid);
             if (booking == null)
             {
-                return _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, null, "404", "Booking not found", false, null, 0);
+                return  new ApiResponse<BookingDTO>( null, null, "404", "Booking not found", false,0,0,0,0, null, null);
             }
-
-            _apiResponse = new ApiResponse<BookingDTO>(0, 0, null, booking, "200", "Get booking successfully", true, null, 0);
-            return _apiResponse;
+            return new ApiResponse<BookingDTO>(null, booking, "200", "Get booking successfully", true,0,0,0,1, null, null);
         }
 
     }

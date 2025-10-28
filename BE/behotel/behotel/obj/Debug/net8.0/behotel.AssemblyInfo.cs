@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("behotel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a92f677129aac6c2dd413b2ea6b90f2546414523")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d18d87f872d43346248d33fbbbc0ab8f1bf5381")]
 [assembly: System.Reflection.AssemblyProductAttribute("behotel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("behotel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -22,26 +22,23 @@ namespace behotel.Controllers
         public async Task<ApiResponse<Service>> GetAll()
         {
             List<Service> services = (List<Service>)await _serviceService.GetAllServiceAsync();
-            ApiResponse<Service> _apiResponse = new ApiResponse<Service>(0, 0, services, null, "200", "Get all service successfully", true, null, 0);
-            return _apiResponse;
+            return new ApiResponse<Service>(services, null, "200", "Get all service successfully", true, 0, 0, 0, services.Count, null, null);
         }
             [HttpGet("{id}")]
         public async Task<ApiResponse<Service>> GetServiceById(string id)
         {
-            ApiResponse<Service> _apiResponse;
             if (String.IsNullOrWhiteSpace(id))
             {
-                return _apiResponse = new ApiResponse<Service>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return new ApiResponse<Service>(null, null, "400", "Id is require", false,0,0,0,0 ,null, null);
             }
             Guid idGuid = Guid.Parse(id);
             var service = await _serviceService.GetServiceByIdAsync(idGuid);
                 if (service == null)
                 {
-                    return _apiResponse = new ApiResponse<Service>(0, 0, null, null, "404", "Service not found", false, null, 0);
+                    return new ApiResponse<Service>(null, null, "404", "Service not found", false, 0, 0, 0, 0, null,null);
                 }
 
-                _apiResponse = new ApiResponse<Service>(0, 0, null, service, "200", "Get service successfully", true, null, 0);
-                return _apiResponse;
+                return new ApiResponse<Service>(null, service, "200", "Get service successfully", true,0,0,0,0, null, null);
             }
         
     }

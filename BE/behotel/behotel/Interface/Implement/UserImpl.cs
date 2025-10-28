@@ -1,4 +1,5 @@
 ﻿using behotel.DTO;
+using behotel.Helper;
 using behotel.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,27 +14,27 @@ namespace behotel.Interface.Implement
             _context = context;
         }
         // Dk user
-         public async Task<User?> ResgisterUser(UserRegister userRegister ,string hashedPassword)
+        public async Task<User?> ResgisterUser(UserRegister userRegister, string hashedPassword)
         {
             var activeCode = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-            User user = new User(new Guid(),null,userRegister.Email,null,null,hashedPassword,0,activeCode,false,null,DateTime.Now);
+            User user = new User(new Guid(), null, userRegister.Email, null, null, hashedPassword, 0, activeCode, false, null, DateTime.Now);
             var newUser = await CreateUserAsync(user);
-            if(newUser == null)
+            if (newUser == null)
             {
                 return null;
             }
             var role = await getRoleIdByRoleName("User");
-            if(role == null)
+            if (role == null)
             {
                 return null;
             }
-            UserRole userRole = new UserRole(new Guid(),role.Id,user.Id,1, DateTime.Now);
+            UserRole userRole = new UserRole(new Guid(), role.Id, user.Id, 1, DateTime.Now);
             var newUserRole = await CreateUserRoleAsync(userRole);
-            if(newUserRole == null)
+            if (newUserRole == null)
             {
                 return null;
             }
-            return  user;
+            return user;
 
         }
         // User origin
@@ -45,8 +46,40 @@ namespace behotel.Interface.Implement
         {
             return await _context.User.FindAsync(id);
         }
+        // get user co phan trag 
+        public async Task<ApiResponse<UserDTO>> GetUsersWithPaginationAsync(int currentPage, int pageSize)
+        {
+            if (currentPage <= 0 || pageSize <= 0)
+            {
+                // Wrap the ApiResponse in a Task using Task.FromResult to match the async signature
+                return new ApiResponse<UserDTO>(null, null, "400", "Current page and page Size is required", false, 0, 0, 0, 0, null, null);
+            }
+            var allUsers = await GetAllUsersAsync();
+            int totalItem = allUsers.Count();
+            int totalPage = (int)Math.Ceiling((double)totalItem / pageSize);
+            var usersWithPagination = allUsers.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            var userDTOsWithPagination = new List<UserDTO>();
+            foreach (var user in usersWithPagination)
+            {
+                var userDO = await GetUserDTOAsync(user.Id);
+                if (userDO != null)
+                {
+                    userDTOsWithPagination.Add(userDO);
+                }
 
-     
+            }
+            //var userDTOsWithPagination = (await 
+            //        Task.WhenAll(
+            //    allUsers.Skip((currentPage - 1) * pageSize)
+            //            .Take(pageSize)
+            //            .Select(async user => await GetUserDTOAsync(user.Id))))
+            //            .Where(dto => dto != null).ToList();
+
+            return new ApiResponse<UserDTO>(userDTOsWithPagination, null, "200", "Get user successfully", true, currentPage, pageSize, totalPage, totalItem, null, null);
+
+        }
+
+
         public async Task<User> CreateUserAsync(User user)
         {
             _context.User.Add(user);
@@ -62,7 +95,7 @@ namespace behotel.Interface.Implement
             {
                 return false;
             }
-            User_Deleted user_Deleted = new User_Deleted(user.Id,user.FullName,user.Email,user.DateOfBirth,user.Phone,user.Password,user.Status,user.ActiveCode,user.IsActived,user.ForgotPassCode,user.CreatedDate);
+            User_Deleted user_Deleted = new User_Deleted(user.Id, user.FullName, user.Email, user.DateOfBirth, user.Phone, user.Password, user.Status, user.ActiveCode, user.IsActived, user.ForgotPassCode, user.CreatedDate);
             await _context.User_Deleted.AddAsync(user_Deleted);
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
@@ -135,12 +168,12 @@ namespace behotel.Interface.Implement
         public async Task<bool> ActiveUser(string email, string activeCode)
         {
             var user = await GetUserByEmailAsync(email);
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
-            if (!user.ActiveCode.Equals(activeCode) )
-                {
+            if (!user.ActiveCode.Equals(activeCode))
+            {
                 return false;
             }
             user.IsActived = true;
@@ -149,7 +182,7 @@ namespace behotel.Interface.Implement
             return true;
         }
 
-        public async Task<User?> UpdateUserAsync(Guid id,UserDTO userDTO)
+        public async Task<User?> UpdateUserAsync(Guid id, UserDTO userDTO)
         {
             var oldUser = await GetUserByIdAsync(id);
             if (oldUser == null)
@@ -162,11 +195,13 @@ namespace behotel.Interface.Implement
                 return null;
             }
             oldUser.Email = userDTO.Email;
-            oldUser.FullName= userDTO.FullName;
+            oldUser.FullName = userDTO.FullName;
             oldUser.DateOfBirth = userDTO.DateOfBirth;
             oldUser.Phone = userDTO.Phone;
             await _context.SaveChangesAsync();
             return oldUser;
         }
+
+
     }
 }

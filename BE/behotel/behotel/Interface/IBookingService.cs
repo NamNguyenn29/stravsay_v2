@@ -10,8 +10,13 @@ namespace behotel.Interface
 
         Task<bool> DeleteBookingAsync(Guid id);
 
-        Task<BookingDTO> GetAllBookingInfor(Guid BookingId);
+        //Task<BookingDTO> GetAllBookingInfor(Guid BookingId);
 
         Task<BookingDTO> GetBookingDTOByIdAsync(Guid id);
+
+        Task<IEnumerable<Booking>?> GetInprogressBookingAsync();
+
+
+        Task<IEnumerable<Booking>?> GetInprogressBookingsForRoom(Guid roomId); 
     }
 }

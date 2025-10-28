@@ -1,4 +1,5 @@
 ﻿using behotel.DTO;
+using behotel.Helper;
 using behotel.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +8,12 @@ namespace behotel.Interface.Implement
     public class RoomImpl : IRoomService
     {
         private readonly HotelManagementContext _context;
-        public RoomImpl(HotelManagementContext context)
+
+        private readonly IBookingService _bookingService;
+        public RoomImpl(HotelManagementContext context, IBookingService bookingService)
         {
             _context = context;
+            _bookingService = bookingService;
         }
         public async Task<Room?> CreateRoomAsync(RoomRequest newRoom)
         {
@@ -19,7 +23,7 @@ namespace behotel.Interface.Implement
                 return null;
             }
             int status = 0;
-            if(newRoom.Status.Equals("Available"))
+            if (newRoom.Status.Equals("Available"))
             {
                 status = 1;
             }
@@ -58,6 +62,63 @@ namespace behotel.Interface.Implement
         public async Task<IEnumerable<Room>> GetAllRoomAsync()
         {
             return await _context.Room.ToListAsync();
+        }
+
+        public async Task<IEnumerable<RoomDTO>?> GetAvailableRoomsAsync(string? selectedType, DateTime checkInDate, DateTime checkOutDate, int Adult, int Children)
+        {
+            var allRooms = await GetAllRoomAsync();
+            List<RoomDTO> filterRooms = new List<RoomDTO>();
+            foreach (var room in allRooms)
+            {
+                var roomDTO = await GetRoomDTOByIdAsync(room.Id);
+                if (roomDTO == null)
+                {
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(selectedType) || selectedType.Trim() == "\"\"")
+                {
+                    selectedType = null;
+                }
+
+                if (!string.IsNullOrEmpty(selectedType))
+                {
+                    if (!roomDTO.TypeName.Contains(selectedType, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                }
+
+                if (roomDTO.Adult < Adult || roomDTO.Children < Children)
+                {
+                    continue;
+                }
+
+                var bookingRoomsInprogress = await _bookingService.GetInprogressBookingsForRoom(room.Id);
+                bool isAvailable = true;
+
+                if (bookingRoomsInprogress != null)
+                {
+                    foreach (var bookingRoom in bookingRoomsInprogress)
+                    {
+                        bool isOverlap = !(checkOutDate <= bookingRoom.CheckInDate || checkInDate >= bookingRoom.CheckOutDate);
+                        if (isOverlap)
+                        {
+                            isAvailable = false;
+                            break;
+                        }
+                    }
+                }
+                if(isAvailable)
+                {
+                    filterRooms.Add(roomDTO);
+                }
+
+            }
+            if(filterRooms.Count == 0)
+            {
+                return null;
+            }
+            return filterRooms;
         }
 
         public async Task<Room?> GetRoomByIdAsync(Guid id)
@@ -110,6 +171,29 @@ namespace behotel.Interface.Implement
             roomDTO.Children = roomType.Children;
             roomDTO.HasBreakFast = roomType.HasBreakFast;
             return roomDTO;
+        }
+
+        public async Task<ApiResponse<RoomDTO>> GetRoomsWithPaginationAsync(int currentPage, int pageSize)
+        {
+            if (currentPage <= 0 || pageSize <= 0)
+            {
+                return new ApiResponse<RoomDTO>(null, null, "400", "Current page and page size is require", true, 0, 0, 0, 0, null, null);
+            }
+            var allRooms = await GetAllRoomAsync();
+            int totalItem = allRooms.Count();
+            int totalPage = (int)Math.Ceiling((double)totalItem / pageSize);
+            var roomsWithPagination = allRooms.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            var roomDTOsWithPagination = new List<RoomDTO>();
+            foreach (Room room in roomsWithPagination)
+            {
+                RoomDTO roomDTO = await GetRoomDTOByIdAsync(room.Id);
+                if (roomDTO != null)
+                {
+                    roomDTOsWithPagination.Add(roomDTO);
+                }
+            }
+
+            return new ApiResponse<RoomDTO>(roomDTOsWithPagination, null, "200", "Get room successfully", true, currentPage, pageSize, totalPage, totalItem, null, null);
         }
 
         public async Task<Room?> UpdateRoomAsync(Guid id, RoomRequest roomRequest)

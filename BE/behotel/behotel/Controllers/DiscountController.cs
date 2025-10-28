@@ -19,7 +19,8 @@ namespace behotel.Controllers
 
         [HttpGet]
         public async Task<ApiResponse<Discount>> GetAll()
-        { 
+        {
+            // update with panigation
             List<Discount> discounts = (List<Discount>)await _discountService.GetAllDiscountAsync();
             ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>(0, 0, discounts, null, "200", "Get all discount successfully", true, null, 0);
             return _apiResponse;
@@ -28,20 +29,18 @@ namespace behotel.Controllers
         [HttpGet("{id}")]
         public async Task<ApiResponse<Discount>> GetDiscountById(string id)
         {
-            ApiResponse<Discount> _apiResponse;
             if (String.IsNullOrWhiteSpace(id))
             {
-                return _apiResponse = new ApiResponse<Discount>(0, 0, null, null, "404", "Bad request", false, null, 0);
+                return new ApiResponse<Discount>(null, null, "400", "is is require", false, 0, 0, 0, 0, null, null);
             }
             Guid idGuid = Guid.Parse(id);
             var discount = await _discountService.GetDiscountByIdAsync(idGuid);
             if (discount == null)
             {
-                return _apiResponse = new ApiResponse<Discount>(0, 0, null, null, "404", "Discount not found", false, null, 0);
+                return new ApiResponse<Discount>(null, null, "404", "Discount not found", false, 0, 0, 0, 0 ,null, null);
             }
 
-            _apiResponse = new ApiResponse<Discount>(0, 0, null, discount, "200", "Get discount successfully", true, null, 0);
-            return _apiResponse;
+            return new ApiResponse<Discount>(null, discount, "200", "Get discount successfully", true,0,0,0,1, null, null);
         }
     }
 }

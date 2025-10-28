@@ -1,5 +1,6 @@
 ﻿using behotel.Models;
 using behotel.DTO;
+using behotel.Helper;
 namespace behotel.Interface
 {
     public interface IUserService
@@ -10,6 +11,8 @@ namespace behotel.Interface
 
         // User origin
         Task<IEnumerable<User>> GetAllUsersAsync();
+
+        Task<ApiResponse<UserDTO>> GetUsersWithPaginationAsync(int currentPage, int pageSize);
         Task<User?> GetUserByIdAsync(Guid id);
         Task<User> CreateUserAsync(User user);
         Task<bool> DeleteUserAsync(Guid id);

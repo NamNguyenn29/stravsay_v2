@@ -9,27 +9,26 @@ import UserDetailModal from "@/components/admin/UserDetailModal";
 
 export default function UserMangement() {
     const [users, setUsers] = useState<User[]>([]);
+    const [totalPage, setTotalPage] = useState(1);
+    const [totalElement, setTotalElement] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     useEffect(() => {
         loadUsers();
-    }, []);
+    }, [currentPage, pageSize]);
 
     const loadUsers = async () => {
-        const data = await getUsers();
+        const data = await getUsers(currentPage, pageSize);
         setUsers(data.list);
+        console.log(data.totalPage);
+        console.log(currentPage);
+        console.log(pageSize);
+        setTotalPage(data.totalPage ? data.totalPage : 0);
+        setTotalElement(data.totalElement)
     };
 
 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    // const totalUser = users.length;
-    // const activeCount = users.filter(u => u.isActive && !u.isActive).length;
-    // const inactiveUser = users.filter(u => !u.isActive && !u.isDeleted).length;
-    // const deletedCount = users.filter(u => !u.isActive && u.isDeleted).length;
-
-    // const getDisplayStatus = (user: User) => {
-    //     if (user.isDeleted) return "Deleted";
-    //     if (user.isActive) return "Active";
-    //     return "Inactive";
-    // }
 
     const getStatusStyles = (status: string) => {
         switch (status) {
@@ -42,34 +41,15 @@ export default function UserMangement() {
         }
     }
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerpage, setItemsPerpage] = useState(5);
 
-    const [activeFilter, setActiveFilter] = useState<"All" | "Active" | "Inactive" | "Deleted">("All");
 
-    const indexOfLast = currentPage * itemsPerpage;
-    const indexOfFirst = indexOfLast - itemsPerpage;
 
-    const currentUsers = users.slice(indexOfFirst, indexOfLast);
 
-    // const filteredByStatus = users.filter(user => {
-    //     switch (activeFilter) {
-    //         case "Active":
-    //             return user.isActive && !user.isDeleted;
-    //         case "Inactive":
-    //             return !user.isActive && !user.isDeleted;
-    //         case "Deleted":
-    //             return user.isDeleted;
-    //         default:
-    //             return true;
-    //     }
-    // })
-    // const currentUsers = filteredByStatus.slice(indexOfFirst, indexOfLast);
 
-    // const handleFilterClick = (filter: "All" | "Active" | "Inactive" | "Deleted") => {
-    //     setActiveFilter(filter);
-    //     setCurrentPage(1);
-    // }
+
+
+
+
     return (
         <>
             <div className="font-semibold text-lg">User Management</div>
@@ -84,24 +64,24 @@ export default function UserMangement() {
             </div>
             {/*Summary box*/}
             <div className="flex gap-5 container mb-10">
-                <div onClick={() => setActiveFilter("All")}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "All" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
+                <div
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton  "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-blue-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Total User</span>
                     </div>
                     <span className="text-xl font-bold">{100}</span>
                 </div>
-                <div onClick={() => setActiveFilter("Active")}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "Active" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
+                <div
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton  "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-green-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Active User</span>
                     </div>
                     <span className="text-xl font-bold">10</span>
                 </div>
-                <div onClick={() => setActiveFilter("Inactive")}
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton ${activeFilter === "Inactive" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
+                <div
+                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton  "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
                     <div className="flex items-center gap-3 ">
                         <span className="w-8 h-8 bg-yellow-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Inactive User</span>
@@ -125,10 +105,10 @@ export default function UserMangement() {
 
                     </thead>
                     <tbody className="devide-y devide-gray-200 !text-base ">
-                        {currentUsers.map((user, index) => {
+                        {users.map((user, index) => {
                             return (
                                 <tr key={user.id}>
-                                    <td className="px-6 py-3 ">{index + 1 + (currentPage - 1) * itemsPerpage}</td>
+                                    <td className="px-6 py-3 ">{index + 1 + (currentPage - 1) * pageSize}</td>
                                     <td className="px-6 py-3 ">
                                         <div className=" text-lg font-semibold">{user.fullName}</div>
                                         <div>{user.email}</div>
@@ -156,13 +136,13 @@ export default function UserMangement() {
 
             <Pagination
                 current={currentPage}
-                pageSize={itemsPerpage}
-                total={users.length}
+                pageSize={pageSize}
+                total={totalElement}
                 showSizeChanger
                 pageSizeOptions={[5, 10, 20, 50]}
                 onChange={(page, pageSize) => {
                     setCurrentPage(page);
-                    setItemsPerpage(pageSize);
+                    setPageSize(pageSize);
                 }}
                 className="text-center flex justify-end !text-lg"
                 showTotal={(total) => `Total ${total} items`}

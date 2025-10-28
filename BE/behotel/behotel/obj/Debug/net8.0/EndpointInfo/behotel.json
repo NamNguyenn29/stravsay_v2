@@ -146,6 +146,24 @@
         "tags": [
           "Room"
         ],
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -192,6 +210,76 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDTOApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDTOApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Room/availableroom": {
+      "get": {
+        "tags": [
+          "Room"
+        ],
+        "parameters": [
+          {
+            "name": "selectedRoomType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "checkIndate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "checkOutDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "Adult",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Children",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -450,6 +538,70 @@
         "tags": [
           "SupportRequest"
         ],
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SupportRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSupportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSupportRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSupportRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -511,12 +663,124 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "SupportRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupportRequest/id": {
+      "delete": {
+        "tags": [
+          "SupportRequest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportRequestApiResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/User": {
       "get": {
         "tags": [
           "User"
+        ],
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -906,16 +1170,6 @@
       "BookingDTOApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -942,6 +1196,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -997,16 +1271,6 @@
       "DiscountApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1035,6 +1299,44 @@
           "int": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NewSupportRequest": {
+        "type": "object",
+        "properties": {
+          "userEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1093,16 +1395,6 @@
       "RoomApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1129,6 +1421,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1211,16 +1523,6 @@
       "RoomDTOApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1247,6 +1549,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1311,16 +1633,6 @@
       "RoomTypeDTOApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1347,6 +1659,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1387,16 +1719,6 @@
       "ServiceApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1423,6 +1745,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1467,16 +1809,6 @@
       "SupportRequestApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1503,6 +1835,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1563,16 +1915,6 @@
       "UserApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1599,6 +1941,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1656,16 +2018,6 @@
       "UserDTOApiResponse": {
         "type": "object",
         "properties": {
-          "totalPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "list": {
             "type": "array",
             "items": {
@@ -1692,6 +2044,26 @@
             "nullable": true
           },
           "int": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalElement": {
             "type": "integer",
             "format": "int32",
             "nullable": true

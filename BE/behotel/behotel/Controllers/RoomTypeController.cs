@@ -33,7 +33,7 @@ namespace behotel.Controllers
                     roomTypeDTOs.Add(roomTypeDTO);
                 }
             }
-            ApiResponse<RoomTypeDTO> _apiResponse = new ApiResponse<RoomTypeDTO>(0, 0, roomTypeDTOs, null, "200", "Get all room types successfully", true, null, 0);
+            ApiResponse<RoomTypeDTO> _apiResponse = new ApiResponse<RoomTypeDTO>(roomTypeDTOs, null, "200", "Get all room types successfully", true,0,0,0,roomTypeDTOs.Count, null, null);
             return _apiResponse;
 
         }

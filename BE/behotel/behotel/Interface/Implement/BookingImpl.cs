@@ -24,7 +24,7 @@ namespace behotel.Interface.Implement
         public async Task<bool> DeleteBookingAsync(Guid id)
         {
             var room = await _context.Booking.FindAsync(id);
-            if(room == null)
+            if (room == null)
             {
                 return false;
             }
@@ -38,20 +38,24 @@ namespace behotel.Interface.Implement
             return await _context.Booking.ToListAsync();
         }
 
-        public async Task<BookingDTO> GetAllBookingInfor(Guid BookingId)
-        {
-            var booking = await _context.Booking.FindAsync(BookingId);
-            if (booking == null)
-            {
-                return null;
-            }
-            BookingDTO bookingDTO = new BookingDTO();
-            // map booking vao bookingDTO
+        //public async Task<BookingDTO> GetAllBookingInfor(Guid BookingId)
+        //{
+        //    var booking = await _context.Booking.FindAsync(BookingId);
+        //    if (booking == null)
+        //    {
+        //        return null;
+        //    }
+        //    BookingDTO bookingDTO = new BookingDTO();
+        //    // map booking vao bookingDTO
 
-            //tim list booking 
+        //    //tim list booking 
 
-            return null;
-        }
+        //    return null;
+        //}
+
+
+
+
 
         public async Task<Booking?> GetBookingByIdAsync(Guid id)
         {
@@ -62,7 +66,7 @@ namespace behotel.Interface.Implement
         public async Task<BookingDTO> GetBookingDTOByIdAsync(Guid id)
         {
             var bookingOrigin = await _context.Booking.FindAsync(id);
-            if(bookingOrigin == null)
+            if (bookingOrigin == null)
             {
                 return null;
             }
@@ -87,6 +91,26 @@ namespace behotel.Interface.Implement
             bookingDTO.Services = services;
             return bookingDTO;
 
-         }
+        }
+
+        public async Task<IEnumerable<Booking>?> GetInprogressBookingAsync()
+        {
+            var bookings = await GetAllBookingAsync();
+            var inprogressBookings = bookings
+     .Where(b => b.CheckOutDate >= DateTime.Now) // tất cả booking chưa kết thúc
+     .ToList();
+            return inprogressBookings;
+        }
+
+        public async Task<IEnumerable<Booking>?> GetInprogressBookingsForRoom(Guid roomId)
+        {
+            var bookingsInprogress = await GetInprogressBookingAsync();
+            if (bookingsInprogress == null)
+            {
+                return null;
+            }
+            var bookingInProgressForRoom = bookingsInprogress.Where(bi => bi.RoomId == roomId).ToList();
+            return bookingInProgressForRoom;
+        }
     }
 }

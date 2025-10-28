@@ -31,7 +31,7 @@ export default function LoginPage() {
         <div className="flex h-screen">
             {/* Left side - background image */}
             <div
-                className="hidden md:flex w-1/2 bg-cover bg-center"
+                className="hidden md:flex w-1/2 bg-cover bg-center "
                 style={{ backgroundImage: "url('/login.jpg')" }}
             >
                 <div className="w-full h-full bg-black/30 flex items-center justify-center">

@@ -1,6 +1,7 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace behotel.Controllers
         {
             _roomTypeService = roomTypeService;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ApiResponse<RoomTypeDTO>> GetAll()
         {

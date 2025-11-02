@@ -2,47 +2,46 @@ import { create } from "zustand";
 import { Room } from "@/model/Room";
 import dayjs from "dayjs";
 import { RoomType } from "@/model/RoomType";
+
 interface BookingState {
     roomType: RoomType | null;
-    checkInDate: string | null;
-    checkOutDate: string | null;
-    noChildren: number | null;
-    noAdult: number | null;
+    checkInDate: string;
+    checkOutDate: string;
+    noChildren: number;
+    noAdult: number;
     room: Room | null;
 
     setRoomType: (roomType: RoomType | null) => void;
-    setCheckInDate: (date: string | null) => void;
-    setCheckOutDate: (date: string | null) => void;
-    setChildren: (children: number | null) => void;
-    setAdult: (adult: number | null) => void;
+    setCheckInDate: (date: string) => void;
+    setCheckOutDate: (date: string) => void;
+    setChildren: (children: number) => void;
+    setAdult: (adult: number) => void;
     setRoom: (room: Room | null) => void;
     resetBooking: () => void;
-
-
 }
 
 export const useBookingStore = create<BookingState>((set) => ({
+    checkInDate: dayjs().hour(14).minute(0).second(0).format("YYYY-MM-DDTHH:mm:ss"),
+    checkOutDate: dayjs().add(1, "day").hour(12).minute(0).second(0).format("YYYY-MM-DDTHH:mm:ss"),
+    noAdult: 2,
+    noChildren: 0,
     roomType: null,
-    checkInDate: dayjs().format('YYYY-MM-DD'),
-    checkOutDate: dayjs().add(1, 'day').format('YYYY-MM-DD'),
-    noChildren: null,
-    noAdult: null,
     room: null,
+
 
     setRoomType: (roomType) => set({ roomType }),
     setCheckInDate: (date) => set({ checkInDate: date }),
     setCheckOutDate: (date) => set({ checkOutDate: date }),
     setChildren: (children) => set({ noChildren: children }),
     setAdult: (adult) => set({ noAdult: adult }),
-    setRoom: (room) => set({ room: room }),
+    setRoom: (room) => set({ room }),
 
     resetBooking: () => set({
         roomType: null,
-        checkInDate: null,
-        checkOutDate: null,
-        noChildren: null,
-        noAdult: null,
+        checkInDate: dayjs().hour(14).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
+        checkOutDate: dayjs().add(1, "day").hour(12).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
+        noAdult: 2,
+        noChildren: 0,
         room: null,
     }),
-
 }));

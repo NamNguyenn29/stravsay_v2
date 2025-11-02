@@ -2,9 +2,9 @@
 import { Booking } from "@/model/Booking";
 import { User } from "@/model/User";
 import { Room } from "@/model/Room";
-import { getBookings } from "@/api/getBooking";
+import { getBookings } from "@/api/Booking/getBooking";
 import { useState, useEffect } from "react";
-import { getUserById } from "@/api/getUserById";
+import { getUserById } from "@/api/UserApi/getUserById";
 import { getRoomById } from "@/api/RoomApi/getRoomById";
 import { Pagination, Modal, Form, Input, Select, DatePicker, Button, message } from "antd";
 import dayjs from "dayjs";

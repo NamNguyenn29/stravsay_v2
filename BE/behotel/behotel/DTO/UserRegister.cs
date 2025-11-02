@@ -1,4 +1,4 @@
-﻿namespace behotel.Models
+﻿namespace behotel.DTO
 {
     public class UserRegister
     {

@@ -18,11 +18,13 @@ export async function createRoom(roomRequest: Partial<RoomRequest>): Promise<Api
         return {
             totalPage: 0,
             currentPage: 0,
+            totalElement: 0,
+            pageSize: 0,
             code: "500",
-            message: "Error creating room",
+            message: "Error fetching rooms",
             list: [],
             object: null,
-            isSuccess: false,
+            isSuccess: null,
             string: null,
             int: null,
         };

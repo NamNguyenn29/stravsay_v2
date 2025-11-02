@@ -9,11 +9,11 @@ namespace behotel.Interface.Implement
     {
         private readonly HotelManagementContext _context;
 
-        private readonly IBookingService _bookingService;
-        public RoomImpl(HotelManagementContext context, IBookingService bookingService)
+        private readonly IInProgressBookingService _inProgressBookingService;
+        public RoomImpl(HotelManagementContext context, IInProgressBookingService inProgressBookingService)
         {
             _context = context;
-            _bookingService = bookingService;
+            _inProgressBookingService = inProgressBookingService;
         }
         public async Task<Room?> CreateRoomAsync(RoomRequest newRoom)
         {
@@ -64,7 +64,7 @@ namespace behotel.Interface.Implement
             return await _context.Room.ToListAsync();
         }
 
-        public async Task<IEnumerable<RoomDTO>?> GetAvailableRoomsAsync(string? selectedType, DateTime checkInDate, DateTime checkOutDate, int Adult, int Children)
+        public async Task<IEnumerable<RoomDTO>?> GetAvailableRoomsAsync(string? selectedTypeId, DateTime checkInDate, DateTime checkOutDate, int Adult, int Children)
         {
             var allRooms = await GetAllRoomAsync();
             List<RoomDTO> filterRooms = new List<RoomDTO>();
@@ -75,14 +75,10 @@ namespace behotel.Interface.Implement
                 {
                     continue;
                 }
-                if (string.IsNullOrWhiteSpace(selectedType) || selectedType.Trim() == "\"\"")
-                {
-                    selectedType = null;
-                }
 
-                if (!string.IsNullOrEmpty(selectedType))
+                if (!string.IsNullOrEmpty(selectedTypeId))
                 {
-                    if (!roomDTO.TypeName.Contains(selectedType, StringComparison.OrdinalIgnoreCase))
+                    if (roomDTO.RoomTypeID != selectedTypeId )
                     {
                         continue;
                     }
@@ -93,7 +89,7 @@ namespace behotel.Interface.Implement
                     continue;
                 }
 
-                var bookingRoomsInprogress = await _bookingService.GetInprogressBookingsForRoom(room.Id);
+                var bookingRoomsInprogress = await _inProgressBookingService.GetInprogressBookingsForRoom(room.Id);
                 bool isAvailable = true;
 
                 if (bookingRoomsInprogress != null)

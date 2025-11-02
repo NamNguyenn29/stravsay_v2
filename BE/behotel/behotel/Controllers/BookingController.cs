@@ -1,7 +1,7 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Interface;
-using behotel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,28 +17,15 @@ namespace behotel.Controllers
         {
             _bookingService = bookingService;
         }
-
+        [Authorize(Roles ="ADMIN")]
         [HttpGet]
-        public async Task<ApiResponse<BookingDTO>> GetAll() {
-            // update with pagination
-            var bookings = await _bookingService.GetAllBookingAsync();
-            var bookingDTOs = new List<BookingDTO>();
-            foreach (var booking in bookings)
-            {
-                var bookingDTO = await _bookingService.GetBookingDTOByIdAsync(booking.Id);
-                if(bookingDTO != null)
-                {
-                    bookingDTOs.Add(bookingDTO);
-                }
-
-            }
-            ApiResponse<BookingDTO> _apiResponse = new ApiResponse<BookingDTO>(0, 0, bookingDTOs, null, "200", "Get booking successfully", true, null, 0);
-            return _apiResponse;
+        public async Task<ApiResponse<BookingDTO>> GetAll(int currentPage, int pageSize) {
+            return  await _bookingService.GetBookingDTOWithPaginationAsync(currentPage,pageSize);
         }
 
-      
-       
 
+
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ApiResponse<BookingDTO>> GetBookingById(string id) 
         {
@@ -54,6 +41,25 @@ namespace behotel.Controllers
             }
             return new ApiResponse<BookingDTO>(null, booking, "200", "Get booking successfully", true,0,0,0,1, null, null);
         }
+
+        [Authorize]
+        [HttpPost]
+
+        public async Task<ApiResponse<BookingDTO>> CreateBooking([FromBody] NewBooking newBooking)
+        {
+            if(!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                var combinedErrors = string.Join("; ", errorMessages);
+                return  new ApiResponse<BookingDTO>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
+            }
+            return await _bookingService.CreateBookingAsync(newBooking);
+
+        }
+
+
+       
+
 
     }
 }

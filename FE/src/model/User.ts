@@ -13,3 +13,4 @@ export type User = {
     createdDate: string;
     roleList: string[];
 }
+

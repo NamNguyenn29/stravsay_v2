@@ -1,13 +1,14 @@
 ﻿using behotel.Models;
 using behotel.DTO;
 using behotel.Helper;
+using Microsoft.AspNetCore.Mvc;
 namespace behotel.Interface
 {
     public interface IUserService
     {
 
         //  Dang ky User
-        Task<User?> ResgisterUser(UserRegister userRegister, string hahsedPassword);
+        Task<UserDTO?> ResgisterUser(UserRegister userRegister, string hahsedPassword);
 
         // User origin
         Task<IEnumerable<User>> GetAllUsersAsync();
@@ -17,7 +18,7 @@ namespace behotel.Interface
         Task<User> CreateUserAsync(User user);
         Task<bool> DeleteUserAsync(Guid id);
 
-        Task<User?> UpdateUserAsync( Guid id ,UserDTO userDTO);
+        Task<User?> UpdateUserAsync( Guid id ,UpdateUser update);
 
         //Task UpdateRole(string roleName);
 
@@ -32,7 +33,7 @@ namespace behotel.Interface
         // lay role
         Task<Role?> getRoleIdByRoleName(string roleName);
 
-        Task<bool> ActiveUser(string email, string activeCode);
+        Task<ApiResponse<String>> ActiveUser(string email, string activeCode);
 
 
 

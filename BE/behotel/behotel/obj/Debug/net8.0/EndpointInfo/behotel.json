@@ -5,11 +5,123 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Booking": {
       "get": {
         "tags": [
           "Booking"
         ],
+        "parameters": [
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBooking"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBooking"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBooking"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -234,21 +346,21 @@
         }
       }
     },
-    "/api/Room/availableroom": {
+    "/api/Room/available": {
       "get": {
         "tags": [
           "Room"
         ],
         "parameters": [
           {
-            "name": "selectedRoomType",
+            "name": "selectedRoomTypeId",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "checkIndate",
+            "name": "checkInDate",
             "in": "query",
             "schema": {
               "type": "string",
@@ -264,7 +376,7 @@
             }
           },
           {
-            "name": "Adult",
+            "name": "adult",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -272,7 +384,7 @@
             }
           },
           {
-            "name": "Children",
+            "name": "children",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -844,62 +956,6 @@
           }
         }
       },
-      "put": {
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserDTOApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserDTOApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserDTOApiResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "tags": [
           "User"
@@ -968,51 +1024,6 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/User/sendActiveCode": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "parameters": [
-          {
-            "name": "to",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "activationCode",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
                   "$ref": "#/components/schemas/UserDTOApiResponse"
                 }
               },
@@ -1059,8 +1070,8 @@
         }
       }
     },
-    "/api/User/login": {
-      "post": {
+    "/me": {
+      "put": {
         "tags": [
           "User"
         ],
@@ -1068,17 +1079,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserRegister"
+                "$ref": "#/components/schemas/UpdateUser"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserRegister"
+                "$ref": "#/components/schemas/UpdateUser"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UserRegister"
+                "$ref": "#/components/schemas/UpdateUser"
               }
             }
           }
@@ -1089,17 +1100,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
                 }
               }
             }
@@ -1163,6 +1174,14 @@
               "type": "string"
             },
             "nullable": true
+          },
+          "adult": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "children": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1202,30 +1221,29 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "Discount": {
         "required": [
-          "discountCode"
+          "createdDate",
+          "discountCode",
+          "expiredDate",
+          "startDate"
         ],
         "type": "object",
         "properties": {
@@ -1234,10 +1252,13 @@
             "format": "uuid"
           },
           "discountCode": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
           },
           "discountValue": {
+            "maximum": 100,
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
@@ -1250,14 +1271,19 @@
             "format": "date-time"
           },
           "minOrderAmount": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "maxUsage": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "status": {
+            "maximum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -1303,23 +1329,81 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginModel": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
             "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NewBooking": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomId": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkInDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "checkOutDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "discountID": {
+            "type": "string",
+            "nullable": true
+          },
+          "adult": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "children": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1342,11 +1426,50 @@
         },
         "additionalProperties": false
       },
+      "Role": {
+        "required": [
+          "createdDate",
+          "roleName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "roleName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRole"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Room": {
         "required": [
+          "createdDate",
           "description",
           "imageUrl",
-          "roomName"
+          "isAvailable",
+          "roomName",
+          "roomTypeID"
         ],
         "type": "object",
         "properties": {
@@ -1355,10 +1478,13 @@
             "format": "uuid"
           },
           "roomName": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
           },
           "roomNumber": {
+            "maximum": 9999,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
@@ -1370,18 +1496,23 @@
             "format": "uuid"
           },
           "description": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
           },
           "imageUrl": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "floor": {
+            "maximum": 100,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "status": {
+            "maximum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -1427,23 +1558,19 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1555,23 +1682,19 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1592,8 +1715,8 @@
             "nullable": true
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "description": {
             "type": "string",
@@ -1665,28 +1788,28 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "Service": {
+        "required": [
+          "createdDate",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1694,18 +1817,23 @@
             "format": "uuid"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
+            "maxLength": 500,
             "type": "string",
             "nullable": true
           },
           "price": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "status": {
+            "maximum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -1751,28 +1879,83 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringApiResponse": {
+        "type": "object",
+        "properties": {
+          "list": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "object": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "int": {
+            "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElement": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "SupportRequest": {
+        "required": [
+          "createdDate",
+          "description",
+          "title",
+          "userEmail"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1780,18 +1963,24 @@
             "format": "uuid"
           },
           "userEmail": {
+            "maxLength": 100,
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "title": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 150,
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
           },
           "status": {
+            "maximum": 3,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -1800,6 +1989,7 @@
             "format": "date-time"
           },
           "response": {
+            "maxLength": 2000,
             "type": "string",
             "nullable": true
           }
@@ -1841,34 +2031,29 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "User": {
+      "UpdateUser": {
+        "required": [
+          "email"
+        ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "fullName": {
             "type": "string",
             "nullable": true
@@ -1879,22 +2064,63 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "phone": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "User": {
+        "required": [
+          "createdDate",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
           },
-          "password": {
+          "fullName": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "phone": {
+            "maxLength": 15,
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "password": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
           "status": {
+            "maximum": 3,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "activeCode": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
@@ -1902,12 +2128,20 @@
             "type": "boolean"
           },
           "forgotPassCode": {
+            "maxLength": 100,
             "type": "string",
             "nullable": true
           },
           "createdDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "userRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRole"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1947,23 +2181,19 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1971,8 +2201,7 @@
       "UserDTO": {
         "required": [
           "email",
-          "roleList",
-          "status"
+          "roleList"
         ],
         "type": "object",
         "properties": {
@@ -1990,16 +2219,15 @@
           },
           "dateOfBirth": {
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "nullable": true
           },
           "phone": {
             "type": "string",
             "nullable": true
           },
-          "status": {
-            "type": "string",
-            "nullable": true
+          "isActive": {
+            "type": "boolean"
           },
           "createdDate": {
             "type": "string",
@@ -2050,23 +2278,19 @@
           },
           "currentPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalPage": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "totalElement": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2084,7 +2308,59 @@
           }
         },
         "additionalProperties": false
+      },
+      "UserRole": {
+        "required": [
+          "createdDate",
+          "idRole",
+          "idUser"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idRole": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idUser": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "maximum": 3,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Nhập JWT token vào đây ( dạng: Bearer {token})",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

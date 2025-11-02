@@ -1,12 +1,75 @@
 [
   {
+    "ContainingType": "behotel.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginModel",
+        "Type": "behotel.DTO.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "behotel.Helper.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "behotel.Controllers.BookingController",
     "Method": "GetAll",
     "RelativePath": "api/Booking",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "currentPage",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.DTO.BookingDTO, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "behotel.Controllers.BookingController",
+    "Method": "CreateBooking",
+    "RelativePath": "api/Booking",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newBooking",
+        "Type": "behotel.DTO.NewBooking",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "behotel.Helper.ApiResponse\u00601[[behotel.DTO.BookingDTO, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -132,7 +195,7 @@
     "Parameters": [
       {
         "Name": "newRoom",
-        "Type": "behotel.Models.RoomRequest",
+        "Type": "behotel.DTO.RoomRequest",
         "IsRequired": true
       }
     ],
@@ -150,7 +213,7 @@
   },
   {
     "ContainingType": "behotel.Controllers.RoomController",
-    "Method": "GetRomById",
+    "Method": "GetRoomById",
     "RelativePath": "api/Room/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -189,7 +252,7 @@
       },
       {
         "Name": "roomRequest",
-        "Type": "behotel.Models.RoomRequest",
+        "Type": "behotel.DTO.RoomRequest",
         "IsRequired": true
       }
     ],
@@ -234,18 +297,18 @@
   {
     "ContainingType": "behotel.Controllers.RoomController",
     "Method": "GetAvailableRoom",
-    "RelativePath": "api/Room/availableroom",
+    "RelativePath": "api/Room/available",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "selectedRoomType",
+        "Name": "selectedRoomTypeId",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "checkIndate",
+        "Name": "checkInDate",
         "Type": "System.DateTime",
         "IsRequired": false
       },
@@ -255,12 +318,12 @@
         "IsRequired": false
       },
       {
-        "Name": "Adult",
+        "Name": "adult",
         "Type": "System.Int32",
         "IsRequired": false
       },
       {
-        "Name": "Children",
+        "Name": "children",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -384,7 +447,7 @@
     "Parameters": [
       {
         "Name": "newSupportRequest",
-        "Type": "behotel.Models.NewSupportRequest",
+        "Type": "behotel.DTO.NewSupportRequest",
         "IsRequired": true
       }
     ],
@@ -542,37 +605,6 @@
   },
   {
     "ContainingType": "behotel.Controllers.UserController",
-    "Method": "UpdateUser",
-    "RelativePath": "api/User/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "userDTO",
-        "Type": "behotel.DTO.UserDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.DTO.UserDTO, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "behotel.Controllers.UserController",
     "Method": "DeleteUser",
     "RelativePath": "api/User/{id}",
     "HttpMethod": "DELETE",
@@ -620,32 +652,6 @@
   },
   {
     "ContainingType": "behotel.Controllers.UserController",
-    "Method": "Login",
-    "RelativePath": "api/User/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userRegistered",
-        "Type": "behotel.Models.UserRegister",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.Models.User, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "behotel.Controllers.UserController",
     "Method": "Register",
     "RelativePath": "api/User/register",
     "HttpMethod": "POST",
@@ -654,13 +660,13 @@
     "Parameters": [
       {
         "Name": "userRegister",
-        "Type": "behotel.Models.UserRegister",
+        "Type": "behotel.DTO.UserRegister",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.Models.User, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.DTO.UserDTO, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -672,21 +678,16 @@
   },
   {
     "ContainingType": "behotel.Controllers.UserController",
-    "Method": "SendActiveCode",
-    "RelativePath": "api/User/sendActiveCode",
-    "HttpMethod": "POST",
+    "Method": "UpdateUser",
+    "RelativePath": "me",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "to",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "activationCode",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "updateUser",
+        "Type": "behotel.DTO.UpdateUser",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [

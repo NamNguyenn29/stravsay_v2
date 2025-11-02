@@ -1,4 +1,5 @@
 ﻿using behotel.DTO;
+using behotel.Helper;
 using behotel.Models;
 namespace behotel.Interface
 {
@@ -6,7 +7,7 @@ namespace behotel.Interface
     {
         Task<IEnumerable<Booking>> GetAllBookingAsync();
         Task<Booking?> GetBookingByIdAsync(Guid id);
-        Task<Booking> CreateBookingAsync(Booking booking);
+        Task<ApiResponse<BookingDTO>> CreateBookingAsync(NewBooking newBooking);
 
         Task<bool> DeleteBookingAsync(Guid id);
 
@@ -14,9 +15,9 @@ namespace behotel.Interface
 
         Task<BookingDTO> GetBookingDTOByIdAsync(Guid id);
 
-        Task<IEnumerable<Booking>?> GetInprogressBookingAsync();
 
+        Task<ApiResponse<BookingDTO>> GetBookingDTOWithPaginationAsync(int currentPage, int pageSize);
 
-        Task<IEnumerable<Booking>?> GetInprogressBookingsForRoom(Guid roomId); 
+       
     }
 }

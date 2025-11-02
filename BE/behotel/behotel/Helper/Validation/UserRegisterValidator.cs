@@ -1,4 +1,4 @@
-﻿using behotel.Models;
+﻿using behotel.DTO;
 using FluentValidation;
 
 namespace behotel.Helper.Validation
@@ -6,11 +6,23 @@ namespace behotel.Helper.Validation
     public class UserRegisterValidator : AbstractValidator<UserRegister>
     {
         public UserRegisterValidator() {
-            RuleFor(x => x.Email).NotEmpty().WithMessage("Email khong dc de trong").EmailAddress().WithMessage("Email khong hop le");
+            // --- Email ---
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("Invalid email format.")
+                .MaximumLength(100).WithMessage("Email must be less than 100 characters.");
 
-            RuleFor(x => x.Password).NotEmpty().WithMessage("Mat khau khong the de trong").MinimumLength(6).WithMessage("Mat khau phai co it nhat 6 ki tu");
+            // --- Password ---
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required.")
+                .MinimumLength(8).WithMessage("Password must be at least 8 characters.")
+                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
+                .Matches(@"\d").WithMessage("Password must contain at least one number.")
+                .Matches(@"[!@#$%^&*]").WithMessage("Password must contain at least one special character.")
+                .MaximumLength(100).WithMessage("Password must be less than 100 characters.");
 
-            
+
         }
 
         

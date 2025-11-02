@@ -14,7 +14,7 @@ export default function Header() {
     ];
 
     const handleClickMemberLogin = (() => {
-        router.push("/profile");
+        router.push("/login");
     })
 
     const handleClickBooknow = (() => {

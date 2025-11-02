@@ -1,4 +1,5 @@
-﻿using behotel.Helper;
+﻿using behotel.DTO;
+using behotel.Helper;
 using behotel.Models;
 namespace behotel.Interface
 {

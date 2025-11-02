@@ -7,5 +7,6 @@ namespace behotel.Interface
         Task<Service?> GetServiceByIdAsync(Guid id);
         Task<Service> CreateServiceAsync(Service service);
         Task<bool> DeleteServiceAsync(Guid id);
+
     }
 }

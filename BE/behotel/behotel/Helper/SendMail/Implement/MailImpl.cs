@@ -1,10 +1,9 @@
-﻿
-using behotel.Models;
-using Microsoft.CodeAnalysis.Options;
+﻿using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using behotel.DTO;
 namespace behotel.Helper.SendMail.Implement
 
 {

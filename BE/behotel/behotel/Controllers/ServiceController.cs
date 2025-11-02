@@ -2,6 +2,7 @@
 using behotel.Helper;
 using behotel.Interface;
 using behotel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +18,15 @@ namespace behotel.Controllers
         {
             _serviceService = serviceService;
         }
-
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet]   
         public async Task<ApiResponse<Service>> GetAll()
         {
             List<Service> services = (List<Service>)await _serviceService.GetAllServiceAsync();
             return new ApiResponse<Service>(services, null, "200", "Get all service successfully", true, 0, 0, 0, services.Count, null, null);
         }
             [HttpGet("{id}")]
+        [Authorize]
         public async Task<ApiResponse<Service>> GetServiceById(string id)
         {
             if (String.IsNullOrWhiteSpace(id))

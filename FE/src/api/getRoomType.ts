@@ -16,8 +16,10 @@ export async function getRoomType(): Promise<ApiResponse<RoomType>> {
         return {
             totalPage: 0,
             currentPage: 0,
+            totalElement: 0,
+            pageSize: 0,
             code: "500",
-            message: "Error fetching room types",
+            message: "Error fetching user",
             list: [],
             object: null,
             isSuccess: null,

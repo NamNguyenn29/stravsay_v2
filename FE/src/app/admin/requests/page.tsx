@@ -2,7 +2,7 @@
 import { Pagination } from "antd";
 import { useState, useEffect } from "react";
 import { Request } from "@/model/Request";
-import { getRequests } from "@/api/getRequest";
+import { getRequests } from "@/api/Request/getRequest";
 export default function UserMangement() {
     const [requests, setRequests] = useState<Request[]>([]);
     useEffect(() => {

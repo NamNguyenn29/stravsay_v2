@@ -1,5 +1,4 @@
-﻿using behotel.Controllers;
-using behotel.Helper.Validation;
+﻿using behotel.Helper.Validation;
 using behotel.Interface;
 using behotel.Interface.Implement;
 using behotel.Models;
@@ -8,6 +7,11 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using behotel.Helper.SendMail.Implement;
 using behotel.Helper.SendMail;
+using behotel.DTO;
+using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,7 +51,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
         options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
-        
+
     });
 
 
@@ -59,13 +63,58 @@ builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingI
 builder.Services.AddScoped<ISupportRequestService, SupportRequestImpl>();
 builder.Services.AddScoped<IServiceService, ServiceImpl>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
-builder.Services.AddScoped<IRoomTypeService,RoomTypeImpl>();
+builder.Services.AddScoped<IRoomTypeService, RoomTypeImpl>();
+builder.Services.AddScoped<IInProgressBookingService, InprogressBookingImpl>();
 
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // 🔐 Cấu hình Swagger để hiển thị nút Authorize (Bearer)
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Nhập JWT token vào đây ( dạng: Bearer {token})",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+                new string[] {}
+            }
+        });
+});
+
+// Add Authentication & JWT
+var key = builder.Configuration["Jwt:Key"];
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(option =>
+    {
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        };
+    });
+
 
 var app = builder.Build();
 app.UseCors("AllowAll");

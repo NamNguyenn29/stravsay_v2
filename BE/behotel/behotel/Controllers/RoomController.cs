@@ -3,6 +3,7 @@ using behotel.Helper;
 using behotel.Interface;
 using behotel.Models;
 using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,19 +20,19 @@ namespace behotel.Controllers
             _roomImpl = roomImpl;
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ApiResponse<RoomDTO>> GetAll(int currentPage, int pageSize)
         {
             return await _roomImpl.GetRoomsWithPaginationAsync(currentPage, pageSize);
         }
 
-      
 
-        [HttpGet("availableroom")]
-        public async Task<ApiResponse<RoomDTO>> GetAvailableRoom(string selectedRoomType,DateTime checkIndate,  DateTime checkOutDate, int Adult,  int Children)
+        [AllowAnonymous]
+        [HttpGet("available")]
+        public async Task<ApiResponse<RoomDTO>> GetAvailableRoom([FromQuery]string? selectedRoomTypeId, [FromQuery] DateTime checkInDate, [FromQuery] DateTime checkOutDate, [FromQuery] int adult, [FromQuery] int children)
         {
-            if (checkIndate < DateTime.Now.Date)
+            if (checkInDate < DateTime.Now.Date)
             {
                 return new ApiResponse<RoomDTO>(
                     null, null, "400",
@@ -40,7 +41,7 @@ namespace behotel.Controllers
                 );
             }
 
-            if (checkOutDate <= checkIndate)
+            if (checkOutDate <= checkInDate)
             {
                 return new ApiResponse<RoomDTO>(
                     null, null, "400",
@@ -49,7 +50,7 @@ namespace behotel.Controllers
                 );
             }
 
-            var availableRooms = await _roomImpl.GetAvailableRoomsAsync(selectedRoomType, checkIndate, checkOutDate, Adult, Children);
+            var availableRooms = await _roomImpl.GetAvailableRoomsAsync(selectedRoomTypeId, checkInDate, checkOutDate, adult, children);
             if (availableRooms == null)
             {
                 return new ApiResponse<RoomDTO>(null, null, "404", "No available room found", false, 0, 0, 0, 0, null, null);
@@ -57,8 +58,9 @@ namespace behotel.Controllers
             return new ApiResponse<RoomDTO>(availableRooms.ToList(), null, "200", "Get room successfully", true, 0, 0, 0, availableRooms.Count(), null, null);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ApiResponse<RoomDTO>> GetRomById(string id)
+        public async Task<ApiResponse<RoomDTO>> GetRoomById(string id)
         {
             if (String.IsNullOrWhiteSpace(id))
             {
@@ -73,7 +75,7 @@ namespace behotel.Controllers
 
             return new ApiResponse<RoomDTO>(null, room, "200", "Get room successfully", true,0,0,0,1, null, null);
         }
-
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public async Task<ApiResponse<RoomDTO>> CreateRoom([FromBody] RoomRequest newRoom)
         {
@@ -91,7 +93,7 @@ namespace behotel.Controllers
             var RoomDTO = await _roomImpl.GetRoomDTOByIdAsync(Room.Id);
             return new ApiResponse<RoomDTO>(null, RoomDTO, "200", "Create room successfully", true,0,0,0,1, null, null);
         }
-
+        [Authorize(Roles ="ADMIN")]
         [HttpPut("{id}")]
         public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromBody] RoomRequest roomRequest)
         {
@@ -115,6 +117,7 @@ namespace behotel.Controllers
             return new ApiResponse<RoomDTO>(null, RoomDTO, "200","Create room successfully", true, 0, 0, 0, 1, null, null);
         }
 
+        [Authorize(Roles ="ADMIN")]
         [HttpDelete("{id}")]
         public async Task<ApiResponse<Room>> DeleteRoom(string id)
         {

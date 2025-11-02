@@ -1,6 +1,8 @@
 import { Room } from "@/model/Room";
-import { Carousel } from 'antd';
+import { Carousel, message } from 'antd';
 import Image from 'next/image';
+import { useRouter } from "next/navigation";
+
 interface MyBookingProps {
     datedif: number;
     start: Date;
@@ -10,6 +12,14 @@ interface MyBookingProps {
 }
 
 export default function MyBooking({ datedif, start, end, room, guest }: MyBookingProps) {
+    const router = useRouter();
+    const handleContinue = () => {
+        if (!room) {
+            message.warning("Please select a room before continuing!");
+            return;
+        }
+        router.push("/payment");
+    };
     // const totalPrice = room ? room.basePrice * datedif : 0;
 
     // Hàm chuyển số tháng sang chữ
@@ -81,7 +91,12 @@ export default function MyBooking({ datedif, start, end, room, guest }: MyBookin
                                 </span>
                             </div>
                         </div>
-                        <div className="bg-rose-400 px-10 py-3 rounded-lg text-white font-bold text-xl cursor-pointer hover:bg-blue-900" >Continue</div>
+                        <div
+                            className="bg-rose-400 px-10 py-3 rounded-lg text-white font-bold text-xl cursor-pointer hover:bg-blue-900 mt-4 transition-all"
+                            onClick={handleContinue}
+                        >
+                            Continue
+                        </div>
                     </div>
                 ) : (
                     <div className="text-gray-500 text-center">No room selected</div>

@@ -16,11 +16,13 @@ export async function deleteRoom(id: string): Promise<ApiResponse<string>> {
         return {
             totalPage: 0,
             currentPage: 0,
+            totalElement: 0,
+            pageSize: 0,
             code: "500",
-            message: "Error deleting room",
+            message: "Error fetching rooms",
             list: [],
             object: null,
-            isSuccess: false,
+            isSuccess: null,
             string: null,
             int: null,
         };

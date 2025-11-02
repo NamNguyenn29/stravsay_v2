@@ -1,6 +1,6 @@
 'use client';
 import { User } from "@/model/User";
-import { getUsers } from "@/api/getUser";
+import { getUsers } from "@/api/UserApi/getUser";
 import { useState, useEffect } from "react";
 import { Pagination } from 'antd';
 import UserDetailModal from "@/components/admin/UserDetailModal";

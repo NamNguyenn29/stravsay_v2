@@ -17,5 +17,7 @@ namespace behotel.DTO
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public List<String>? Services { get; set; }
+        public int Adult { get; set; }
+        public int Children { get; set; }
     }
 }

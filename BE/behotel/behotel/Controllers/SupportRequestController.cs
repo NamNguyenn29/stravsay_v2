@@ -5,6 +5,7 @@ using behotel.Interface;
 using behotel.Models;
 using FluentValidation;
 using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +23,15 @@ namespace behotel.Controllers
             _supportRequestService = supportRequestService;
             _mailService = mailService;
         }
-
+        [Authorize(Roles ="ADMIN")]
         [HttpGet]
         public async Task<ApiResponse<SupportRequest>> GetAll(int currentPage, int pageSize)
         {
             return await _supportRequestService.GetSupportRequestWithPaginaionAsync(currentPage, pageSize);
 
         }
+        [Authorize
+            ]
         [HttpGet("{id}")]
         public async Task<ApiResponse<SupportRequest>> GetResponseById(string id)
         {
@@ -47,6 +50,7 @@ namespace behotel.Controllers
             return _apiResponse;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ApiResponse<SupportRequest>> CreateSupportRequest([FromBody] NewSupportRequest newSupportRequest)
         {
@@ -94,7 +98,7 @@ namespace behotel.Controllers
             return new ApiResponse<SupportRequest>(null, supportRequest, "200", "Create new support request successfully", true, 0, 0, 0, 1, null, null);
 
         }
-
+        [Authorize(Roles ="ADMIN")]
         [HttpPut("{id}")]
         public async Task<ApiResponse<SupportRequest>> ResponseSupportRequest(string id, [FromBody] string response)
         {
@@ -156,7 +160,7 @@ namespace behotel.Controllers
             await _mailService.SendEmailAsync(supportRequest.UserEmail, subject, body);
             return new ApiResponse<SupportRequest>(null, supportRequest, "200", "Response support request successfully", true, 0, 0, 0, 1, null, null);
         }
-
+        [Authorize(Roles ="ADMIN")]
         [HttpDelete("id")]
         public async Task<ApiResponse<SupportRequest>> DeleteSupportRequest(string id)
         {

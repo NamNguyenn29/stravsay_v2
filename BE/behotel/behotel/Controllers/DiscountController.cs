@@ -2,6 +2,7 @@
 using behotel.Helper;
 using behotel.Interface;
 using behotel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace behotel.Controllers
             _discountService = discountService;
         }
 
+        [Authorize(Roles ="ADMIN")]
         [HttpGet]
         public async Task<ApiResponse<Discount>> GetAll()
         {
@@ -25,7 +27,7 @@ namespace behotel.Controllers
             ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>(0, 0, discounts, null, "200", "Get all discount successfully", true, null, 0);
             return _apiResponse;
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ApiResponse<Discount>> GetDiscountById(string id)
         {

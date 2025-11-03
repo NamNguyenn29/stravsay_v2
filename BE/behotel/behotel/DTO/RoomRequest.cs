@@ -7,7 +7,7 @@
         public string RoomTypeID { get; set; }
         public int Status { get; set; }
         public string Description { get; set; }
-        public string[] ImageUrl { get; set; }
+        public List<IFormFile> ImageUrl { get; set; }
         public int Floor { get; set; }
     }
 }

@@ -21,17 +21,20 @@ namespace behotel.Helper.Validation
                 .NotEmpty().WithMessage("Check-out date is required.")
                 .GreaterThan(x => x.CheckInDate).WithMessage("Check-out date must be after check-in date.");
 
-            When(x => x.services != null, () =>
-            {
-                RuleForEach(x => x.services)
-                    .NotEmpty().WithMessage("Service ID cannot be empty.")
-                    .Must(id => Guid.TryParse(id, out _))
-                    .WithMessage("Invalid service ID format.");
-            });
-
-            RuleFor(x => x.DiscountID)
-                .Must(id => string.IsNullOrEmpty(id) || Guid.TryParse(id, out _))
-                .WithMessage("Invalid DiscountID format.");
+            //When(x => x.services != null, () =>
+            //{
+            //    RuleForEach(x => x.services)
+            //        .NotEmpty().WithMessage("Service ID cannot be empty.")
+            //        .Must(id => Guid.TryParse(id, out _))
+            //        .WithMessage("Invalid service ID format.");
+            //});
+            //When(x => x.DiscountID != null, () =>
+            //{
+            //    RuleFor(x=>x.DiscountID)
+            //        .Must(id => string.IsNullOrEmpty(id) || Guid.TryParse(id, out _))
+            //        .WithMessage("Invalid DiscountID format.");
+            //});
+           
 
             RuleFor(x => x.Adult)
                 .GreaterThan(0).WithMessage("There must be at least one adult.");

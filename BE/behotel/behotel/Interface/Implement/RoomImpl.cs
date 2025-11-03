@@ -142,21 +142,9 @@ namespace behotel.Interface.Implement
             roomDTO.ImageUrl = roomOrigin.ImageUrl.Split(",");
             roomDTO.Floor = roomOrigin.Floor;
             roomDTO.RoomTypeID = roomOrigin.RoomTypeID.ToString();
-            string status = "";
-            if (roomOrigin.Status == 0)
-            {
-                status = "Unavailable";
-            }
-            else if (roomOrigin.Status == 1)
-            {
-                status = "Available";
-            }
-            else
-            {
-                status = "Unknow";
-            }
+           
 
-            roomDTO.Status = status;
+            roomDTO.Status = roomOrigin.Status;
 
             roomDTO.CreatedDate = roomOrigin.CreatedDate;
             roomDTO.TypeName = roomType.TypeName;

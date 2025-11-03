@@ -13,19 +13,12 @@ export async function loginUser(loginModel: Partial<LoginModel>): Promise<ApiRes
         return await res.json();
 
     } catch (err) {
-        console.error("Error creating user:", err);
+        console.error("Error login:", err);
         return {
-            totalPage: 0,
-            currentPage: 0,
-            totalElement: 0,
-            pageSize: 0,
             code: "500",
             message: "Error fetching user",
+            isSuccess: false,
             list: [],
-            object: null,
-            isSuccess: null,
-            string: null,
-            int: null,
-        };
+        } as ApiResponse<string>;
     }
 }

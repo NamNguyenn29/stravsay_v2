@@ -46,13 +46,19 @@ export default function UserMenu() {
         setUser(data.object);
 
     }
-    const getInitials = (name: string) => {
-        return name
-            .split(" ")               // tách theo dấu cách
-            .filter(word => word.length > 0)  // bỏ khoảng trắng thừa
-            .map(word => word[0].toUpperCase()) // lấy chữ cái đầu
-            .join("");                // nối lại
-    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("accessToken");
+        router.push('/login')
+    }
+
+    // const getInitials = (name: string) => {
+    //     return name
+    //         .split(" ")               // tách theo dấu cách
+    //         .filter(word => word.length > 0)  // bỏ khoảng trắng thừa
+    //         .map(word => word[0].toUpperCase()) // lấy chữ cái đầu
+    //         .join("");                // nối lại
+    // };
     return (
         <>
             <div className="border border-t-black bg-black w-full"></div>
@@ -60,7 +66,7 @@ export default function UserMenu() {
                 <div className="col-start-9 col-span-4 p-6" >
                     <div className="flex items-center justify-end gap-4">
                         <Avatar size={50}>{user?.roleList[0]}</Avatar>
-                        <div className='text-left text-xl font-semibold underline cursor-pointer '>{getInitials(user?.fullName || "")}</div>
+                        <div className='text-left text-xl font-semibold underline cursor-pointer '>{user?.fullName || ""}</div>
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
@@ -86,7 +92,7 @@ export default function UserMenu() {
                                         >
                                             My Booking
                                         </button>
-                                        <button className="w-full text-left px-4 py-2 hover:gray-100 hover:text-rose-500">
+                                        <button className="w-full text-left px-4 py-2 hover:gray-100 hover:text-rose-500" onClick={handleLogout}>
                                             Log out
                                         </button>
                                     </div>

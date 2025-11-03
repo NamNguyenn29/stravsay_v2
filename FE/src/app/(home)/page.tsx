@@ -70,9 +70,6 @@ export default function Home() {
     if (values) {
       setCheckInDate(dateStrings[0]);
       setCheckOutDate(dateStrings[1]);
-    } else {
-      setCheckInDate(null);
-      setCheckOutDate(null);
     }
   };
   // xu ly su kien chon adult va children

@@ -185,6 +185,35 @@
         }
       }
     },
+    "/userbooking": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Discount": {
       "get": {
         "tags": [
@@ -1606,8 +1635,8 @@
             "format": "int32"
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "createdDate": {
             "type": "string",
@@ -1725,7 +1754,8 @@
           "imageUrl": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "format": "binary"
             },
             "nullable": true
           },

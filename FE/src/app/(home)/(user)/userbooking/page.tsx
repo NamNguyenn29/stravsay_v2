@@ -1,115 +1,166 @@
+"use client";
+import { motion } from "framer-motion";
+import { Input, Button, message, Spin } from "antd";
+import { SearchOutlined, DownloadOutlined } from "@ant-design/icons";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Booking } from "@/model/Booking";
+import { GetBookingForUser } from "@/api/Booking/userBooking";
+import dayjs from "dayjs";
 
-import { Carousel } from 'antd';
-import Image from 'next/image';
+export default function ElegantBookings() {
+    const [loading, setLoading] = useState(true);
+    const [bookings, setBookings] = useState<Booking[]>([]);
 
-export default function UserBooking() {
-    // booking mau
-    const bookings = [{
-
-
-        "id": "1",
-        "userID": "1",
-        "roomID": "1",
-        "checkIn": "01/10/2025",
-        "checkOut": "05/10/2025",
-        "price": 2500000,
-        "discountID": 1,
-        "status": 1,
-        imgUrls: [
-            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
-            "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
-            "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
-            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-        ],
-
-    },]
-
-    // lay mau va ten cho status
-    const getStatusLabel = (status: number) => {
-        switch (status) {
-            case 0:
-                return { text: "Pendding ", color: "bg-yellow-500" }
-            case 1:
-                return { text: "Approved ", color: "bg-green-500" }
-            case 2:
-                return { text: "Cancelled ", color: "bg-red-500" }
-            default:
-                return { text: "Unknown ", color: "bg-gray-500" }
-        }
-    }
+    useEffect(() => {
+        const fetchBookings = async () => {
+            try {
+                setLoading(true);
+                const data = await GetBookingForUser();
+                setBookings(data.list);
+            } catch (err) {
+                message.error("Không thể tải danh sách booking.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBookings();
+    }, []);
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        return dayjs(dateString).format("DD/MM/YYYY : HH:00"); // ✅ format dễ đọc
+    };
 
     return (
-        <>
-            <div className="bg-[rgb(250,247,245)] mx-auto container py-5 rounded-md">
-                <div className="text-4xl mx-10">
-                    My Bookings
-                </div>
-                {/* <div className=" border border-b-1 container mx-auto bg-black mt-2 mb-2"></div> */}
-
-                <div className=" flex justify-start gap-5 container p-10 mb-10 ">
-                    <input type="search"
-                        placeholder="Search by room, Code, ..."
-                        className="w-96 border p-2 rounded-md" />
-                    <button
-                        type="button"
-                        className="bg-rose-500 text-white text-xl font-semibold px-4 py-1 rounded-md hover:bg-blue-600">Search</button>
-                </div>
-                <div>
-                    {bookings.length === 0 ? (
-                        <div className="text-center text-2xl font-semibod py-10">No Booking Fount</div>
-                    ) : (
-                        bookings.map((booking) => {
-                            const status = getStatusLabel(booking.status);
-                            return (
-
-                                <div key={booking.id} className="my-8 rounded-xl shadow-lg bg-white p-6 hover:shadow-2xl transiton-shadow mx-20">
-                                    <div className="flex gap-6  ">
-                                        <div className="w-1/3">
-                                            <Carousel autoplay>
-                                                {booking.imgUrls.map((url, index) => (
-                                                    <div key={index}>
-                                                        <Image src={url} alt='' width={200} height={200}
-                                                            className="w-full h-[200px] object-cover rounded-lg" />
-                                                    </div>
-                                                ))}
-                                            </Carousel>
-                                        </div>
-                                        <div className='w-2/3 flex flex-col justify-between     '>
-                                            <div className='grid grid-cols-2 gap-x-8 gap-y-2'>
-                                                <div>
-                                                    <h2 className='text-2xl font-bold text-rose-500 mb-2'>{booking?.roomID}</h2>
-                                                    <p className="text-gray-700 text-lg mb-2"><span className="font-semibold">Code:</span> {booking.id}</p>
-                                                    <p className="text-gray-700 text-lg mb-2"><span className="font-semibold">Guest:</span> {booking?.userID}</p>
-                                                    <p className="text-gray-700 text-lg mb-2"><span className="font-semibold">Room:</span> {booking?.roomID}</p>
-                                                </div>
-
-                                                <div>
-                                                    <p className="text-gray-700 text-lg mb-2 mt-10"><span className="font-semibold">Check-in:</span> {booking.checkIn} - 14:00</p>
-                                                    <p className="text-gray-700 text-lg mb-2"><span className="font-semibold">Check-out:</span> {booking.checkOut} - 12:00</p>
-                                                    <p className="text-gray-700 text-lg mb-2"><span className="font-semibold">Payment:</span> <span className="text-rose-500">{booking.price.toLocaleString()} đ</span></p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex justify-end items-center gap-4 mt-6">
-                                                <span
-                                                    className={`px-4 py-1 rounded-full text-md font-semibold text-white ${status.color}`} >
-                                                    {status.text}
-                                                </span>
-                                                <button className="px-5 py-2 rounded-md font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-colors">
-                                                    Download Invoice
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })
-                    )}
-                </div>
+        <div className="relative min-h-screen bg-gradient-to-b from-[#f8f5f0] via-[#f4eee6] to-[#efe8de] flex flex-col items-center py-20 overflow-hidden">
+            {/* Background decor */}
+            <div className="absolute inset-0 -z-10">
+                <Image
+                    src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1920"
+                    alt="Luxury background"
+                    fill
+                    className="object-cover opacity-30"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-[#f9f5f2]/80 to-[#f5ece5]/85 backdrop-blur-sm" />
             </div>
 
+            {/* Title */}
+            <motion.h1
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-5xl md:text-6xl font-serif font-bold text-[#5a4634] tracking-wide mb-12"
+            >
+                My Bookings
+            </motion.h1>
 
+            {/* Search bar */}
+            <motion.div
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.7 }}
+                className="flex items-center justify-center gap-3 mb-16"
+            >
+                <Input
+                    size="large"
+                    placeholder="Search by room name or booking code..."
+                    prefix={<SearchOutlined />}
+                    className="rounded-full w-[380x] shadow-md border border-[#d8cfc7] bg-white/80 focus:border-[#c7a17a] focus:shadow-lg transition-all duration-300"
+                />
+                <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    className="bg-[#c7a17a] hover:bg-[#b08b65] border-none shadow-md text-white px-8"
+                >
+                    Search
+                </Button>
+            </motion.div>
 
-        </>
-    )
+            {loading ? (
+                <Spin size="large" />
+            ) : bookings.length === 0 ? (
+                <p className="text-[#7b6b5a] text-lg italic mt-10">No bookings found.</p>
+            ) : (
+                <div className="flex flex-col gap-10 w-[90%] max-w-6xl">
+                    {bookings.map((b, index) => (
+                        <motion.div
+                            key={b.id}
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 * index, duration: 0.6 }}
+                            whileHover={{ scale: 1.02 }}
+                            className="relative flex flex-col md:flex-row bg-white/90 rounded-3xl shadow-2xl overflow-hidden hover:shadow-[#dccbb6]/60 transition-all duration-500"
+                        >
+                            {/* Left image */}
+                            <div className="relative w-full md:w-1/3 min-h-[250px]">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800"
+                                    alt="Room"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+
+                            {/* Right info */}
+                            <div className="w-full md:w-2/3 p-8 flex flex-col justify-between">
+                                <div className="flex flex-col md:flex-row justify-between gap-6">
+                                    <div>
+                                        <h2 className="text-2xl font-semibold text-[#4b3826] mb-3">
+                                            {b.roomName} - {b.roomNumber}
+                                        </h2>
+                                        {/* <p className="text-[#6e6257] mb-1">
+                                            <span className="font-medium text-[#3d2e24]">Booking Code:</span>{" "}
+                                            {b.id}
+                                        </p> */}
+                                        <p className="text-[#6e6257] mb-1">
+                                            <span className="font-medium text-[#3d2e24]">Guest:</span> {b.fullName}
+                                        </p>
+                                        <p className="text-[#6e6257] mb-3">
+                                            <span className="font-medium text-[#3d2e24]">Phone:</span> {b.phone}
+                                        </p>
+                                        <span
+                                            className={`inline-block mt-2 px-3 py-1 rounded-full text-base font-semibold border shadow-sm
+                                                ${b.status === 0
+                                                    ? "bg-[#fff6e5] text-[#8c6a2f] border-[#f0e2c2]"
+                                                    : b.status === 1
+                                                        ? "bg-[#e6fff1] text-[#2f8c56] border-[#b9e5c7]"
+                                                        : "bg-[#ffeaea] text-[#a44b4b] border-[#e5b9b9]"
+                                                }`}
+                                        >
+                                            {b.status === 0
+                                                ? "Pending"
+                                                : b.status === 1
+                                                    ? "Confirmed"
+                                                    : "Cancelled"}
+                                        </span>
+                                    </div>
+
+                                    <div className="text-right">
+                                        <p className="text-[#6e6257] mb-1">
+                                            <strong>Check-in:</strong> {formatDate(b.checkInDate)}
+                                        </p>
+                                        <p className="text-[#6e6257] mb-3">
+                                            <strong>Check-out:</strong> {formatDate(b.checkOutDate)}
+                                        </p>
+                                        <p className="text-2xl font-bold text-[#b58c64] mb-5">
+                                            {b.price.toLocaleString()} <span className="text-lg align-top">₫</span>
+                                        </p>
+                                        <Button
+                                            icon={<DownloadOutlined />}
+                                            shape="round"
+                                            size="large"
+                                            className="bg-[#5a4634] hover:bg-[#3e2f22] text-white border-none shadow-lg px-6"
+                                        >
+                                            Download Invoice
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 }

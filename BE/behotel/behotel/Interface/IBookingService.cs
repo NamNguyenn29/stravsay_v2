@@ -18,6 +18,7 @@ namespace behotel.Interface
 
         Task<ApiResponse<BookingDTO>> GetBookingDTOWithPaginationAsync(int currentPage, int pageSize);
 
+        Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId);
        
     }
 }

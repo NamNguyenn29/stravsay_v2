@@ -16,7 +16,7 @@ export async function registerUser(registerModel: Partial<RegisterModel>): Promi
         console.error("Error creating user:", err);
         return {
             code: "500",
-            message: "Error fetching rooms",
+            message: "Error fetching user",
             isSuccess: false,
             list: [],
         } as ApiResponse<string>;

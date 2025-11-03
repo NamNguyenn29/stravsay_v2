@@ -33,22 +33,41 @@ namespace behotel.Helper.Validation
                 .MaximumLength(500).WithMessage("Description must be less than 500 characters.");
 
             // --- ImageUrl ---
-            RuleFor(x => x.ImageUrl)
-                .NotNull().WithMessage("Image list is required.")
-                .Must(images => images.Length > 0).WithMessage("At least one image URL is required.")
-                .ForEach(rule =>
-                {
-                    rule.NotEmpty().WithMessage("Image URL cannot be empty.")
-                        .Must(url => Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
-                        .WithMessage("Each image URL must be a valid path or URL.") ;
-                });
+            //RuleFor(x => x.ImageUrl)
+            //    .NotNull().WithMessage("Image list is required.")
+            //    .Must(images => images.Length > 0).WithMessage("At least one image URL is required.")
+            //    .ForEach(rule =>
+            //    {
+            //        rule.NotEmpty().WithMessage("Image URL cannot be empty.")
+            //            .Must(url => Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            //            .WithMessage("Each image URL must be a valid path or URL.") ;
+            //    });
+
+            RuleForEach(x => x.ImageUrl)
+                .Must(BeAnImageFile)
+                .WithMessage("Only image files (jpg, jpeg, png, gif) are allowed.");
+
+
+
 
             // --- Floor ---
             RuleFor(x => x.Floor)
-                .NotNull().WithMessage("Floor is required.")
-                .GreaterThanOrEqualTo(1).WithMessage("Floor number must be at least 1.")
-                .LessThanOrEqualTo(100).WithMessage("Floor number must not exceed 100.");
+                    .NotNull().WithMessage("Floor is required.")
+                    .GreaterThanOrEqualTo(1).WithMessage("Floor number must be at least 1.")
+                    .LessThanOrEqualTo(100).WithMessage("Floor number must not exceed 100.");
+        }
+                 private bool BeAnImageFile(IFormFile file)
+        {
+            if (file == null) return false;
 
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = System.IO.Path.GetExtension(file.FileName).ToLower();
+
+            // Ngoài ra kiểm tra MIME type (đảm bảo không bị rename)
+            var allowedMimeTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+
+            return allowedExtensions.Contains(extension) && allowedMimeTypes.Contains(file.ContentType);
         }
     }
+
 }

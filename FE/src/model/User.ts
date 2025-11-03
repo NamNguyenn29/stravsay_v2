@@ -5,9 +5,9 @@ export type User = {
     dateOfBirth: string;
     phone: string;
     // password: string;
-    status: string;
+    // status: number;
     // activeCode?: string;
-    // isActive: boolean;
+    isActive: boolean;
     // forgotPasswordcode?: string;
     // isDeleted: false;
     createdDate: string;

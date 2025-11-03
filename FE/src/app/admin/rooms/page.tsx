@@ -17,21 +17,26 @@ export default function RoomManagement() {
 
     // get rooms
     const [rooms, setRooms] = useState<Room[]>([]);
+    const [totalPage, setTotalPage] = useState(1);
+    const [totalElement, setTotalElement] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     useEffect(() => {
         loadRoom();
         loadRoomType();
-    }, []);
+    }, [currentPage, pageSize]);
 
     const loadRoom = async () => {
-        const data = await getRooms();
+        const data = await getRooms(currentPage, pageSize);
         setRooms(data.list);
+        setTotalPage(data.totalPage ? data.totalPage : 0);
+        setTotalElement(data.totalElement);
     }
     const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
     const loadRoomType = async () => {
         const data = await getRoomType();
         setRoomTypes(data.list);
     }
-
 
 
     // edit 
@@ -48,7 +53,7 @@ export default function RoomManagement() {
             roomName: room.roomName,
             roomNumber: room.roomNumber,
             description: room.description,
-            roomType: room.roomTypeID, // ✅ lấy đúng id loại phòng
+            roomType: room.roomTypeID,
             floor: room.floor,
             imageUrl: room.imageUrl || [],
             status: room.status
@@ -70,7 +75,7 @@ export default function RoomManagement() {
                 roomName: values.roomName,
                 roomNumber: values.roomNumber,
                 description: values.description,
-                roomTypeID: values.roomType, // ✅ backend dùng RoomTypeID
+                roomTypeID: values.roomType, //
                 floor: values.floor,
                 imageUrl: values.imageUrl || [],
                 status: values.status
@@ -157,25 +162,19 @@ export default function RoomManagement() {
 
 
 
-    // curetnpage 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
 
 
 
 
 
-    // Tính toán dữ liệu hiển thị
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentRooms = rooms.slice(indexOfFirst, indexOfLast);
 
-    const getStatusLabel = (status: string) => {
-        if (status.includes("Unavailable")) {
+
+    const getStatusLabel = (status: number) => {
+        if (status == 0) {
 
             return { text: "Unavailable", color: "bg-yellow-500" };
         }
-        else if (status.includes("Available")) {
+        else if (status == 1) {
             return { text: "Available", color: "bg-green-500" };
         }
         else {
@@ -258,15 +257,15 @@ export default function RoomManagement() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 !text-base">
-                        {currentRooms.map((room, index) => {
+                        {rooms.map((room, index) => {
                             const status = getStatusLabel(room.status);
                             return (
                                 <tr key={room.id} className="hover:bg-gray-50 transition">
-                                    <td className="px-6 py-3">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                                    <td className="px-6 py-3">{index + 1 + (currentPage - 1) * pageSize}</td>
                                     <td className="px-6 py-3 font-medium text-gray-800"><div>{room.roomName} - {room.roomNumber}</div>
                                     </td>
                                     <td className="px-6 py-3 font-semibold text-blue-600">
-                                        {room.basePrice.toLocaleString("vi-VN")} đ
+                                        {room.price} đ
                                     </td>
                                     <td className="px-6 py-3">
                                         <span
@@ -301,13 +300,13 @@ export default function RoomManagement() {
 
             <Pagination
                 current={currentPage}                // Trang hiện tại
-                pageSize={itemsPerPage}              // Số item mỗi trang
-                total={currentRooms.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
+                pageSize={pageSize}              // Số item mỗi trang
+                total={totalElement}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
                 showSizeChanger                      // Cho phép chọn số item/trang
                 pageSizeOptions={[5, 10, 20, 50]}    // Tùy chọn số dòng mỗi trang
                 onChange={(page, pageSize) => {
                     setCurrentPage(page);
-                    setItemsPerPage(pageSize);
+                    setPageSize(pageSize);
                 }}
                 className="text-center flex justify-end !text-lg"
                 showTotal={(total) => `Total ${total} items`}

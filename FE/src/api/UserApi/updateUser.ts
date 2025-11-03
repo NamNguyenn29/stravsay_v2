@@ -16,10 +16,10 @@ export async function updateUser(updateUser: UpdateUser): Promise<ApiResponse<Us
         return await res.json();
 
     } catch (err) {
-        console.error("Error creating user:", err);
+        console.error("Error update user:", err);
         return {
             code: "500",
-            message: "Error fetching rooms",
+            message: "Error update user",
             isSuccess: false,
             list: [],
         } as ApiResponse<User>;

@@ -5,11 +5,12 @@ export type Room = {
     description: string;
     imageUrl: string[];
     floor: number;
-    status: string;
+    status: number;
     createdDate: string;
     typeName: string;
     roomTypeID: string;
-    basePrice: number;
+    // basePrice: number;
+    price: number;
     bedType: string;
     space: number;
     hasBreakFast: boolean;

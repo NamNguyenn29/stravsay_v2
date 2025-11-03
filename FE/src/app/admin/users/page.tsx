@@ -1,7 +1,7 @@
 'use client';
 import { User } from "@/model/User";
 import { getUsers } from "@/api/UserApi/getUser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Pagination } from 'antd';
 import UserDetailModal from "@/components/admin/UserDetailModal";
 
@@ -20,9 +20,7 @@ export default function UserMangement() {
     const loadUsers = async () => {
         const data = await getUsers(currentPage, pageSize);
         setUsers(data.list);
-        console.log(data.totalPage);
-        console.log(currentPage);
-        console.log(pageSize);
+
         setTotalPage(data.totalPage ? data.totalPage : 0);
         setTotalElement(data.totalElement)
     };
@@ -30,14 +28,13 @@ export default function UserMangement() {
 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-    const getStatusStyles = (status: string) => {
-        switch (status) {
-            case "Active":
-                return "bg-green-100 text-green-700 border-green-400";
-            case "Inactive":
-                return "bg-yellow-100 text-yellow-700 border-yellow-400";
-            default:
-                return "bg-gray-100 text-gray-700 border-gray-400";
+    const getStatusStyles = (isActive: boolean) => {
+        if (isActive) {
+
+            return "bg-green-100 text-green-700 border-green-400";
+        }
+        else {
+            return "bg-yellow-100 text-yellow-700 border-yellow-400";
         }
     }
 
@@ -70,7 +67,7 @@ export default function UserMangement() {
                         <span className="w-8 h-8 bg-blue-300 rounded-full inline-block"></span>
                         <span className="inline-block w-32 ">Total User</span>
                     </div>
-                    <span className="text-xl font-bold">{100}</span>
+                    <span className="text-xl font-bold">{totalElement}</span>
                 </div>
                 <div
                     className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transtiton  "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}>
@@ -115,8 +112,8 @@ export default function UserMangement() {
                                     </td>
                                     <td className="px-6 py-3 ">{user.roleList.toString()}</td>
                                     <td className="px-6 py-3 ">
-                                        <div className={`ont-semibold border rounded-md p-3 w-24 text-center ${getStatusStyles(user.status)}`}>
-                                            {user.status}
+                                        <div className={`ont-semibold border rounded-md p-3 w-24 text-center ${getStatusStyles(user.isActive)}`}>
+                                            {user.isActive ? "Active" : "Inactive"}
                                         </div>
                                     </td>
                                     <td className="px-6 py-3 ">{user.createdDate}</td>

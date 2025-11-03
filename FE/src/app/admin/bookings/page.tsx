@@ -18,16 +18,21 @@ export default function BookingMangement() {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
     const [form] = Form.useForm();
-
+    const [totalPage, setTotalPage] = useState(1);
+    const [totalElement, setTotalElement] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
         loadingBooking();
-    }, []);
+    }, [currentPage, pageSize]);
 
     const loadingBooking = async () => {
-        const data = await getBookings();
+        const data = await getBookings(currentPage, pageSize);
         setBookings(data.list);
+        setTotalPage(data.totalPage ? data.totalPage : 0);
+        setTotalElement(data.totalElement);
     }
 
     // useEffect(() => {
@@ -45,16 +50,10 @@ export default function BookingMangement() {
     //     });
     // }, [bookings]);
 
-    const [activeFilter, setActiveFilter] = useState<"all" | 0 | 1 | 2>("all");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
-
-    const filteredByStatus =
-        activeFilter === "all" ? bookings : bookings.filter(b => b.status === activeFilter);
-
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentBooking = filteredByStatus.slice(indexOfFirst, indexOfLast);
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        return dayjs(dateString).format("DD/MM/YYYY "); //
+    };
 
     const getStatusLabel = (status: number) => {
         switch (status) {
@@ -123,11 +122,11 @@ export default function BookingMangement() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {currentBooking.map((booking, index) => {
+                        {bookings.map((booking, index) => {
                             const status = getStatusLabel(booking.status);
                             return (
                                 <tr key={booking.id} className="hover:bg-gray-50 transition">
-                                    <td className="px-6 py-4">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                                    <td className="px-6 py-4">{index + 1 + (currentPage - 1) * pageSize}</td>
                                     <td className="px-6 py-4">
                                         <div>{booking.fullName || "Loading..."}</div>
                                         <div className="text-gray-500 text-sm">{booking.phone || "-"}</div>
@@ -145,11 +144,11 @@ export default function BookingMangement() {
                                     <td className="px-6 py-4 text-center flex gap-5">
                                         <button
                                             onClick={() => openEditModal(booking)}
-                                            className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow"
+                                            className="px-4 py-2 text-sm font-medium !text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow"
                                         >
                                             Edit
                                         </button>
-                                        <button className="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg shadow">
+                                        <button className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow">
                                             Remove
                                         </button>
                                     </td>
@@ -163,13 +162,13 @@ export default function BookingMangement() {
             {/* Pagination */}
             <Pagination
                 current={currentPage}
-                pageSize={itemsPerPage}
-                total={filteredByStatus.length}
+                pageSize={pageSize}
+                total={totalElement}
                 showSizeChanger
                 pageSizeOptions={[5, 10, 20, 50]}
                 onChange={(page, pageSize) => {
                     setCurrentPage(page);
-                    setItemsPerPage(pageSize);
+                    setPageSize(pageSize);
                 }}
                 className="text-center flex justify-end"
                 showTotal={(total) => `Total ${total} bookings`}

@@ -25,7 +25,7 @@ namespace behotel.Interface.Implement
         {
             Guid idGuid = Guid.NewGuid();
             var user = await _userService.GetUserByIdAsync(Guid.Parse(newBooking.UserId));
-            if (user == null || user.Status != 1)
+            if (user == null || !user.IsActived )
             {
                 return new ApiResponse<BookingDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
             }
@@ -160,6 +160,26 @@ namespace behotel.Interface.Implement
             bookingDTO.Children = bookingOrigin.Children;
             return bookingDTO;
 
+        }
+
+        public async Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId) 
+        
+        {
+            var userBookings = await _context.Booking.Where(b => b.UserId == userId).ToListAsync(); 
+            var bookingDTOs = new List<BookingDTO>();
+            foreach (var booking in userBookings)
+            {
+                var bookingDTO = await GetBookingDTOByIdAsync(booking.Id);
+                if(bookingDTO != null)
+                {
+                    bookingDTOs.Add(bookingDTO);
+                }
+            }
+            if(bookingDTOs.Count == 0)
+            {
+                return new ApiResponse<BookingDTO>(null, null, "404", "No booking found for user", false, 0, 0, 0, 0, null, 0);
+            }
+            return new ApiResponse<BookingDTO>(bookingDTOs, null, "200", "Get bookings for user successfully", true, 0, 0, 0, 0,null, 0);
         }
 
         public async Task<ApiResponse<BookingDTO>> GetBookingDTOWithPaginationAsync(int currentPage, int pageSize)

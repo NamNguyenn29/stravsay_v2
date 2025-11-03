@@ -4,6 +4,7 @@ using behotel.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace behotel.Controllers
 {
@@ -17,7 +18,7 @@ namespace behotel.Controllers
         {
             _bookingService = bookingService;
         }
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public async Task<ApiResponse<BookingDTO>> GetAll(int currentPage, int pageSize) {
             return  await _bookingService.GetBookingDTOWithPaginationAsync(currentPage,pageSize);
@@ -41,10 +42,17 @@ namespace behotel.Controllers
             }
             return new ApiResponse<BookingDTO>(null, booking, "200", "Get booking successfully", true,0,0,0,1, null, null);
         }
+        [Authorize]
+        [HttpGet("/userbooking")]
+        public async Task<ApiResponse<BookingDTO>> GetBookingsByUserId()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid idGuid = Guid.Parse(id);
+            return await _bookingService.GetBookingDTOsForUserAsync(idGuid);
+        }
 
         [Authorize]
         [HttpPost]
-
         public async Task<ApiResponse<BookingDTO>> CreateBooking([FromBody] NewBooking newBooking)
         {
             if(!ModelState.IsValid)

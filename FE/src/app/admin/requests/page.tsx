@@ -3,45 +3,30 @@ import { Pagination } from "antd";
 import { useState, useEffect } from "react";
 import { Request } from "@/model/Request";
 import { getRequests } from "@/api/Request/getRequest";
+import dayjs from "dayjs";
 export default function UserMangement() {
     const [requests, setRequests] = useState<Request[]>([]);
+    const [totalPage, setTotalPage] = useState(1);
+    const [totalElement, setTotalElement] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     useEffect(() => {
         loadRequest();
-    }, [])
+    }, [currentPage, pageSize])
 
     const loadRequest = async () => {
-        const data = await getRequests();
+        const data = await getRequests(currentPage, pageSize);
         setRequests(data.list);
+        setTotalPage(data.totalPage ? data.totalPage : 0);
+        setTotalElement(data.totalElement);
     }
-    const totalRequests = requests.length;
-    const respondedCount = requests.filter(b => b.status === 0).length;
-    const pendingCount = requests.filter(b => b.status === 1).length;
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
-
-    const [activeFilter, setActiveFilter] = useState<"all" | 1 | 0>("all");
-
-
-    // Tính toán dữ liệu hiển thị
-    const filteredByStatus =
-        activeFilter === "all" ? requests : requests.filter(r => r.status === activeFilter);
-
-    // lọc thêm theo search
-
-
-    // phân trang
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentRequests = filteredByStatus.slice(indexOfFirst, indexOfLast);
-
-    const handleFilterClick = (filter: "all" | 1 | 0) => {
-        setActiveFilter(filter);
-        setCurrentPage(1);
-    };
 
     const [selectedRequestResponse, setSelectedRequestResponse] = useState<Request | null>(null);
     const [selectedRequestView, setSelectedRequestView] = useState<Request | null>(null);
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        return dayjs(dateString).format("DD/MM/YYYY "); //
+    };
 
     return (
         <>
@@ -62,39 +47,39 @@ export default function UserMangement() {
                 {/* Summary box */}
                 <div className="flex gap-5 container mx-auto mb-10">
                     <div
-                        onClick={() => handleFilterClick("all")}
+
                         className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition
-                        ${activeFilter === "all" ? "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}
+                         "bg-blue-100 border-blue-500" : "hover:bg-gray-50"}`}
                     >
                         <div className="flex items-center gap-3">
                             <span className="w-8 h-8 bg-blue-300 rounded-full inline-block "></span>
                             <span className="inline-block w-32">Total Requests</span>
                         </div>
-                        <span className="text-xl font-bold">{totalRequests}</span>
+                        <span className="text-xl font-bold">{ }</span>
                     </div>
 
                     <div
-                        onClick={() => handleFilterClick(1)}
+
                         className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-40 transition
-                        ${activeFilter === 1 ? "bg-green-100 border-green-500" : "hover:bg-gray-50"}`}
+                         "bg-green-100 border-green-500" : "hover:bg-gray-50"}`}
                     >
                         <div className="flex items-center gap-3">
                             <span className="w-8 h-8 bg-green-300 rounded-full inline-block "></span>
                             <span>Responsed</span>
                         </div>
-                        <span className="text-xl font-bold">{respondedCount}</span>
+                        <span className="text-xl font-bold">{ }</span>
                     </div>
 
                     <div
-                        onClick={() => handleFilterClick(0)}
+
                         className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-40 transition
-                        ${activeFilter === 0 ? "bg-yellow-100 border-yellow-500" : "hover:bg-gray-50"}`}
+                       "bg-yellow-100 border-yellow-500" : "hover:bg-gray-50"}`}
                     >
                         <div className="flex items-center gap-3">
                             <span className="w-8 h-8 bg-yellow-300 rounded-full inline-block "></span>
                             <span>Pending</span>
                         </div>
-                        <span className="text-xl font-bold">{pendingCount}</span>
+                        <span className="text-xl font-bold">{ }</span>
                     </div>
 
 
@@ -113,10 +98,10 @@ export default function UserMangement() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentRequests.map((request, index) => {
+                        {requests.map((request, index) => {
                             return (
                                 <tr key={request.id}>
-                                    <td className="px-4 py-2">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                                    <td className="px-4 py-2">{index + 1 + (currentPage - 1) * pageSize}</td>
                                     <td className="px-4 py-2">
                                         {request.userEmail}
                                     </td>
@@ -133,7 +118,7 @@ export default function UserMangement() {
                                             {(request.status === 1) ? "Responsed" : "Pendding"}
                                         </div>
                                     </td>
-                                    <td className="px-4 py-2">{request.createdDate}</td>
+                                    <td className="px-4 py-2">{formatDate(request.createdDate)}</td>
                                     <td className="flex gap-5 px-4 py-2  ">
                                         {/* <div
                                             className="bg-emerald-400 p-2 px-4 text-white rounded cursor-pointer"
@@ -160,13 +145,13 @@ export default function UserMangement() {
                 </table>
                 <Pagination
                     current={currentPage}                // Trang hiện tại
-                    pageSize={itemsPerPage}              // Số item mỗi trang
-                    total={currentRequests.length}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
+                    pageSize={pageSize}              // Số item mỗi trang
+                    total={totalElement}      // Tổng item (có thể là rooms.length hoặc filteredByStatus.length)
                     showSizeChanger                      // Cho phép chọn số item/trang
                     pageSizeOptions={[5, 10, 20, 50]}    // Tùy chọn số dòng mỗi trang
                     onChange={(page, pageSize) => {
                         setCurrentPage(page);
-                        setItemsPerPage(pageSize);
+                        setPageSize(pageSize)
                     }}
                     className="text-center flex justify-end !text-lg"
                     showTotal={(total) => `Total ${total} items`}

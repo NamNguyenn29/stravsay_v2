@@ -92,6 +92,13 @@ export default function LoginPage() {
                 });
 
                 await new Promise((resolve) => setTimeout(resolve, 500));
+                const redirectPath = sessionStorage.getItem("redirectAfterLogin");
+                sessionStorage.removeItem("redirectAfterLogin");
+
+                if (redirectPath) {
+                    router.replace(redirectPath);
+                    return;
+                }
 
                 if (roles.includes("ADMIN")) {
                     router.push("/admin");

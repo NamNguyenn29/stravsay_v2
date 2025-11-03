@@ -701,5 +701,25 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "behotel.Controllers.BookingController",
+    "Method": "GetBookingsByUserId",
+    "RelativePath": "userbooking",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "behotel.Helper.ApiResponse\u00601[[behotel.DTO.BookingDTO, behotel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

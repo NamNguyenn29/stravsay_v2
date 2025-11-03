@@ -17,17 +17,10 @@ export async function getUserById(id: string): Promise<ApiResponse<User>> {
     } catch (err) {
         console.error("Error get user:", err);
         return {
-            totalPage: 0,
-            currentPage: 0,
-            totalElement: 0,
-            pageSize: 0,
             code: "500",
             message: "Error fetching user",
+            isSuccess: false,
             list: [],
-            object: null,
-            isSuccess: null,
-            string: null,
-            int: null,
-        };
+        } as ApiResponse<User>;
     }
 }

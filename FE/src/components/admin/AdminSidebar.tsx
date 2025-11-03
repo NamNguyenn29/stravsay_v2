@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { Menu, Button } from "antd";
 import type { MenuProps } from "antd";
+import { useRouter } from "next/navigation";
 import {
   DashboardOutlined,
   UserOutlined,
@@ -61,9 +62,9 @@ function toAntdItems(items: AdminMenuItem[]): MenuProps["items"] {
     }));
 }
 
-export default function AdminSidebar({ selectedKey, collapsed = false, onLogout }: Props) {
+export default function AdminSidebar({ selectedKey, collapsed = false }: Props) {
   const items = useMemo(() => toAntdItems(MENU), []);
-
+  const router = useRouter();
   return (
     <aside
       role="navigation"
@@ -127,17 +128,8 @@ export default function AdminSidebar({ selectedKey, collapsed = false, onLogout 
           danger
           icon={<LogoutOutlined />}
           onClick={() => {
-            if (onLogout) {
-              onLogout();
-            } else {
-              // default logout: clear token and redirect to /login
-              try {
-                localStorage.removeItem("token");
-              } catch (e) {
-                /* ignore */
-              }
-              window.location.href = "/login";
-            }
+            sessionStorage.removeItem("accessToken");
+            router.push('/login')
           }}
           style={{ width: "100%", textAlign: "left" }}
         >

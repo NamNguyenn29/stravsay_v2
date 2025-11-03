@@ -12,20 +12,13 @@ export async function getRoomType(): Promise<ApiResponse<RoomType>> {
         if (!res.ok) throw new Error("Failed to fetch room types");
         return await res.json();
     } catch (err) {
-        console.error("Error fetching room types:", err);
+        console.error("Error get room type:", err);
         return {
-            totalPage: 0,
-            currentPage: 0,
-            totalElement: 0,
-            pageSize: 0,
             code: "500",
-            message: "Error fetching user",
+            message: "Error fetching room types",
+            isSuccess: false,
             list: [],
-            object: null,
-            isSuccess: null,
-            string: null,
-            int: null,
-        };
+        } as ApiResponse<RoomType>;
     }
 
 }

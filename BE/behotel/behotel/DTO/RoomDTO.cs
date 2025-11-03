@@ -8,7 +8,7 @@
         public string Description { get; set; }
         public string[] ImageUrl { get; set; }
         public int Floor { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public string TypeName { get; set; }
 

@@ -38,5 +38,9 @@ namespace behotel.Controllers
             return _apiResponse;
 
         }
+
+        // create 
+        // update 
+        // remove
     }
 }

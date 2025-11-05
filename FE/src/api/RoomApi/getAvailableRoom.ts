@@ -3,7 +3,7 @@ import { Room } from "@/model/Room";
 import { SearchRoom } from "@/model/SearchRoom";
 export async function getAvailableRoom(searchRoom: SearchRoom): Promise<ApiResponse<Room>> {
     try {
-        console.log(searchRoom);
+        // console.log(searchRoom);
         let url = "";
         if (searchRoom.roomTypeId == null) {
             url = `https://localhost:7020/api/Room/available?checkInDate=${encodeURIComponent(searchRoom.checkInDate)}&checkOutDate=${encodeURIComponent(searchRoom.checkOutDate)}&adult=${searchRoom.noAdult}&children=${searchRoom.noChildren}`;

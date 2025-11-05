@@ -43,6 +43,7 @@ export default function BookingPaymentLayout({ children }: { children: React.Rea
                                 start={new Date(checkInDate as string)}
                                 end={new Date(checkOutDate as string)}
                                 guest={(noAdult as number) + (noChildren as number)}
+                                isContinue={false}
                             />
                         </div>
                     </div>

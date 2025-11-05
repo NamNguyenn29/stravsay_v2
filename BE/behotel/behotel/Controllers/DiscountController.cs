@@ -44,5 +44,9 @@ namespace behotel.Controllers
 
             return new ApiResponse<Discount>(null, discount, "200", "Get discount successfully", true,0,0,0,1, null, null);
         }
+
+        // create 
+        // update
+        // remove
     }
 }

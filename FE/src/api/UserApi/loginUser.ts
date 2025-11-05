@@ -7,8 +7,11 @@ export async function loginUser(loginModel: Partial<LoginModel>): Promise<ApiRes
             headers: {
                 "Content-Type": "application/json",
             },
+
             body: JSON.stringify(loginModel),
+            credentials: "include",
         });
+
         if (!res.ok) throw new Error("Failed to create user");
         return await res.json();
 

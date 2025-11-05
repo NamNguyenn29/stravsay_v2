@@ -4,13 +4,14 @@ import { Booking } from "@/model/Booking";
 export async function GetBookingForUser(): Promise<ApiResponse<Booking>> {
     try {
 
-        const token = sessionStorage.getItem("accessToken");
+        // const token = sessionStorage.getItem("accessToken");
         const res = await fetch(`https://localhost:7020/userbooking`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                // "Authorization": `Bearer ${token}`
             },
+            credentials: "include"
         });
         if (!res.ok) throw new Error("Failed to get booking for user");
         return await res.json();

@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/api/UserApi/loginUser";
 import { LoginModel } from "@/model/LoginModel";
-import { jwtDecode } from "jwt-decode";
-import { DecodedToken } from "@/model/DecodedToken";
 import { notification } from "antd";
+import { GetMyUser } from "@/api/UserApi/GetMyUser";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -17,38 +18,33 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [api, contextHolder] = notification.useNotification();
+    const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        const token = sessionStorage.getItem("accessToken");
-        if (token) {
-            try {
-                const decoded: DecodedToken = jwtDecode(token);
-                const exp = decoded.exp; // thời điểm hết hạn (giây)
-                const now = Date.now() / 1000; // thời gian hiện tại (giây)
+        const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+        if (justLoggedOut) {
+            sessionStorage.removeItem("justLoggedOut");
+            setChecking(false);
+            return;
+        }
 
-                // Nếu token đã hết hạn
-                if (exp && exp < now) {
-                    console.warn("Token expired — clearing session");
-                    sessionStorage.removeItem("accessToken");
-                    router.push("/login");
-                    return;
-                }
-
-                const rawRole =
-                    decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-                const roles = Array.isArray(rawRole) ? rawRole : [rawRole];
-
-                if (roles.includes("ADMIN")) {
-                    router.push("/admin");
-                } else if (roles.includes("USER")) {
-                    router.push("/profile"); // hoặc "/userbooking"
-                }
-            } catch (error) {
-                console.error("Invalid token:", error);
-                sessionStorage.removeItem("accessToken");
+        const userCookie = getCookie("CURRENT_USER");
+        if (userCookie) {
+            const user = JSON.parse(userCookie);
+            if (user.roleList.includes("ADMIN")) {
+                router.replace("/admin");
+                return;
+            } else if (user.roleList.includes("USER")) {
+                router.replace("/user/profile");
+                return;
+            } else {
+                router.replace("/");
+                return;
             }
         }
+        setChecking(false);
     }, [router]);
+
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -69,21 +65,14 @@ export default function LoginPage() {
             };
 
             const res = await loginUser(loginModel);
-            console.log("Login response:", res);
-
-
 
             if (res.isSuccess && res.object) {
-                //  Lưu token vào sessionStorage (client-side)
-                const token = res.object;
-                if (typeof window !== "undefined") {
-                    sessionStorage.setItem("accessToken", token);
+                const resGetUser = await GetMyUser();
+                if (resGetUser.isSuccess && resGetUser.object) {
+                    const jsonString = JSON.stringify(resGetUser.object);
+
+                    document.cookie = `CURRENT_USER=${encodeURIComponent(jsonString)}; path=/; max-age=${1 * 60 * 60}`
                 }
-                const decoded: DecodedToken = jwtDecode(token);
-                console.log(decoded);
-                // console.log("Decoded token:", decoded);
-                const rawRole = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-                const roles = Array.isArray(rawRole) ? rawRole : [rawRole];
 
                 api.success({
                     message: "Welcome back!",
@@ -91,19 +80,21 @@ export default function LoginPage() {
                     placement: "topRight",
                 });
 
-                await new Promise((resolve) => setTimeout(resolve, 500));
-                const redirectPath = sessionStorage.getItem("redirectAfterLogin");
-                sessionStorage.removeItem("redirectAfterLogin");
-
-                if (redirectPath) {
-                    router.replace(redirectPath);
+                const redirectUrl = getCookie("redirectAfterLogin");
+                if (redirectUrl != null) {
+                    document.cookie = "redirectAfterLogin=; path=/; max-age=0";
+                    router.push(redirectUrl);
                     return;
                 }
 
-                if (roles.includes("ADMIN")) {
+
+
+
+
+                if (resGetUser.object?.roleList.includes("ADMIN")) {
                     router.push("/admin");
-                } else if (roles.includes("USER")) {
-                    router.push("/userbooking");
+                } else if (resGetUser.object?.roleList.includes("USER")) {
+                    router.push("/user/profile");
                 } else {
                     router.push("/");
                 }
@@ -117,8 +108,42 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
-
-
+    function getCookie(name: string): string | null {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+    if (checking) {
+        return (
+            <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white">
+                <motion.div
+                    className="relative flex justify-center items-center"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 120, damping: 15 }}
+                >
+                    <motion.div
+                        className="w-20 h-20 border-4 border-t-transparent border-white rounded-full animate-spin"
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1 }}
+                    />
+                    <motion.span
+                        className="absolute text-xl font-semibold"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                        Loading
+                    </motion.span>
+                </motion.div>
+                <motion.p
+                    className="mt-6 text-sm tracking-widest uppercase text-white/80"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                >
+                    Checking
+                </motion.p>
+            </div>
+        );
+    }
     return (
         <>
             {contextHolder}
@@ -202,7 +227,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`w-full text-white font-semibold py-2.5 rounded-md shadow-md transition-all ${loading
+                            className={`w-full !text-white font-semibold py-2.5 rounded-md shadow-md transition-all ${loading
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-blue-600 hover:bg-blue-700"
                                 }`}

@@ -14,10 +14,12 @@ namespace behotel.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IUserSoftDeleteService _userSoftDeleteService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService,IUserSoftDeleteService userSoftDelete)
         {
             _userService = userService;
+            _userSoftDeleteService = userSoftDelete;
             
         }
         [Authorize(Roles = "ADMIN")]
@@ -108,21 +110,42 @@ namespace behotel.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpDelete("{id}")]
-        public async Task<ApiResponse<User>> DeleteUser(string Id)
+        public async Task<ApiResponse<string>> DeleteUser(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return new ApiResponse<User>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<string>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, null);
             }
-            Guid guidId = Guid.Parse(Id);
-            bool isDeleteSuccess = await _userService.DeleteUserAsync(guidId);
-            if (!isDeleteSuccess)
+            if (!Guid.TryParse(id, out Guid guidId))
             {
-                return new ApiResponse<User>(null, null, "400", "Failed to delete user", false, 0, 0, 0, 0, null, null);
-
+                return new ApiResponse<string>(null, null, "400", "Invalid GUID format", false, 0, 0, 0, 0, null, null);
             }
-            return new ApiResponse<User>(null, null, "200", "Delete User successfully", true,0,0,0,0, null, null);
+            return await _userSoftDeleteService.SoftDeleteUser(guidId);
+            
         }
+
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<ApiResponse<UserDTO>> GetUser()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (String.IsNullOrWhiteSpace(id))
+            {
+                return new ApiResponse<UserDTO>(null, null, "400", "Id is required", false, 0, 0, 0, 0, null, null);
+            }
+            Guid idGuid = Guid.Parse(id);
+            var user = await _userService.GetUserDTOAsync(idGuid);
+            if (user == null)
+            {
+                return new ApiResponse<UserDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
+            }
+
+            return new ApiResponse<UserDTO>(null, user, "200", "Get user successfully", true, 0, 0, 0, 1, null, null);
+
+        }
+
+
 
 
 

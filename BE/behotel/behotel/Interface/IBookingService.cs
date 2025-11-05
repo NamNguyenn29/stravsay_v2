@@ -19,6 +19,12 @@ namespace behotel.Interface
         Task<ApiResponse<BookingDTO>> GetBookingDTOWithPaginationAsync(int currentPage, int pageSize);
 
         Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId);
+
+        Task<ApiResponse<BookingDTO>> ApproveBookingAsync(Guid id);
+
+        Task<ApiResponse<string>> CancelBookingAsync(Guid id,Guid userId);
+
+        Task<ApiResponse<string>> SoftDeleteBookingAsync(Guid id);
        
     }
 }

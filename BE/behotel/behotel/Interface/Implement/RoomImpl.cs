@@ -2,18 +2,23 @@
 using behotel.Helper;
 using behotel.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace behotel.Interface.Implement
 {
     public class RoomImpl : IRoomService
     {
         private readonly HotelManagementContext _context;
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
 
         private readonly IInProgressBookingService _inProgressBookingService;
-        public RoomImpl(HotelManagementContext context, IInProgressBookingService inProgressBookingService)
+        public RoomImpl(HotelManagementContext context, IInProgressBookingService inProgressBookingService, IWebHostEnvironment webHostEnvironment,IConfiguration config)
         {
             _context = context;
             _inProgressBookingService = inProgressBookingService;
+            _env = webHostEnvironment;
+            _config = config;
         }
         public async Task<Room?> CreateRoomAsync(RoomRequest newRoom)
         {
@@ -27,6 +32,12 @@ namespace behotel.Interface.Implement
             {
                 status = 1;
             }
+            string imageUrls = "";
+            foreach (var img in newRoom.ImageUrl)
+            {
+                var relativPath = await SaveFile(img, "room_images");
+                imageUrls += $",{relativPath}";
+            }
             Room room = new Room()
             {
                 Id = new Guid(),
@@ -35,14 +46,30 @@ namespace behotel.Interface.Implement
                 IsAvailable = true,
                 RoomTypeID = Guid.Parse(newRoom.RoomTypeID),
                 Description = newRoom.Description,
-                ImageUrl = String.Join(",", newRoom.ImageUrl),
                 Floor = newRoom.Floor,
+                ImageUrl = imageUrls,
                 Status = status,
                 CreatedDate = DateTime.Now
             };
+            
             _context.Room.Add(room);
             await _context.SaveChangesAsync();
             return room;
+        }
+
+        private async Task<string> SaveFile(IFormFile file, string folderName)
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, folderName);
+
+            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+            fileName = fileName.Replace(" ", "_").Replace("#", "");
+            var savePath = Path.Combine(folderPath, fileName);
+            using (var stream = new FileStream(savePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return $"/{folderName}/{fileName}";
         }
 
         public async Task<bool> DeleteRoomAsync(Guid id)
@@ -78,7 +105,7 @@ namespace behotel.Interface.Implement
 
                 if (!string.IsNullOrEmpty(selectedTypeId))
                 {
-                    if (roomDTO.RoomTypeID != selectedTypeId )
+                    if (roomDTO.RoomTypeID != selectedTypeId)
                     {
                         continue;
                     }
@@ -104,13 +131,13 @@ namespace behotel.Interface.Implement
                         }
                     }
                 }
-                if(isAvailable)
+                if (isAvailable)
                 {
                     filterRooms.Add(roomDTO);
                 }
 
             }
-            if(filterRooms.Count == 0)
+            if (filterRooms.Count == 0)
             {
                 return null;
             }
@@ -134,15 +161,24 @@ namespace behotel.Interface.Implement
             {
                 return null;
             }
+            var baseUrl = _config["ImagePath"];
+
+            // Tách chuỗi ảnh và thêm đường dẫn phía trước
+
             var roomDTO = new RoomDTO();
             roomDTO.Id = roomOrigin.Id;
             roomDTO.RoomNumber = roomOrigin.RoomNumber;
             roomDTO.RoomName = roomOrigin.RoomName;
             roomDTO.Description = roomOrigin.Description;
-            roomDTO.ImageUrl = roomOrigin.ImageUrl.Split(",");
+            roomDTO.ImageUrl =
+            roomDTO.ImageUrl = roomOrigin.ImageUrl
+                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                .Select(fileName => $"{baseUrl}{fileName.Trim()}")
+                .ToList();
+
             roomDTO.Floor = roomOrigin.Floor;
             roomDTO.RoomTypeID = roomOrigin.RoomTypeID.ToString();
-           
+
 
             roomDTO.Status = roomOrigin.Status;
 
@@ -192,10 +228,16 @@ namespace behotel.Interface.Implement
             {
                 status = 1;
             }
+            string imageUrls = "";
+            foreach (var img in roomRequest.ImageUrl)
+            {
+                var relativPath = await SaveFile(img, "room_images");
+                imageUrls += $",{relativPath}";
+            }
             roomOrigin.RoomNumber = roomRequest.RoomNumber;
             roomOrigin.RoomName = roomRequest.RoomName;
             roomOrigin.Description = roomRequest.Description;
-            roomOrigin.ImageUrl = String.Join(",", roomRequest.ImageUrl);
+            roomOrigin.ImageUrl = imageUrls;
             roomOrigin.Floor = roomRequest.Floor;
             roomOrigin.RoomTypeID = Guid.Parse(roomRequest.RoomTypeID);
             roomOrigin.Status = status;

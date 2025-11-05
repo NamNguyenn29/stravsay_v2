@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
 using System.ComponentModel;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace behotel.Controllers
 {
@@ -22,7 +24,7 @@ namespace behotel.Controllers
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
 
-        public AuthController(IConfiguration config,IUserService userService)
+        public AuthController(IConfiguration config, IUserService userService)
         {
             _config = config;
             _userService = userService;
@@ -54,28 +56,67 @@ namespace behotel.Controllers
                 return new ApiResponse<string>(null, null, "400", "InCorrect Information", false, 0, 0, 0, 0, null, null);
             }
             var userDTO = await _userService.GetUserDTOAsync(userByEmail.Id);
-            if(userDTO == null)
+            if (userDTO == null)
             {
                 return new ApiResponse<string>(null, null, "400", "Failed to load Information", false, 0, 0, 0, 0, null, null);
             }
             loginModel.Roles = userDTO.RoleList;
 
             var token = GenerateToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
-            return new ApiResponse<string>(null, token , "200", "Login successfully", true, 0, 0, 0, 0, null, null);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddHours(1)
+            };
+            var roleJson = JsonSerializer.Serialize(userDTO.RoleList);
+            Response.Cookies.Append("accessToken", token, cookieOptions);
+            Response.Cookies.Append("roles", roleJson, new CookieOptions
+            {
+                HttpOnly = false, // middleware Edge runtime có thể đọc
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"
+            });
+            Console.WriteLine($"Cookie set: {Response.Cookies}");
+            return new ApiResponse<string>(null, token, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
         }
 
-        private string GenerateToken(string id,string email, List<string> roles )
+        [Authorize]
+        [HttpPost("logout")]
+        public ApiResponse<string> Logout()
+        {
+            Response.Cookies.Delete("accessToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+            Response.Cookies.Delete("roles", new CookieOptions
+            {
+                HttpOnly = false,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"
+            });
+            return new ApiResponse<string>(null, null, "200", "Logout successfully", true, 0, 0, 0, 0, null, null);
+        }
+
+
+        private string GenerateToken(string id, string email, List<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, id),
                 new Claim(ClaimTypes.Email , email)
             };
-                 foreach (var role in roles)
+            foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            };
+            }
+            ;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -84,12 +125,12 @@ namespace behotel.Controllers
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddHours(30),
                 signingCredentials: creds
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
 
-    }
+        }
     }
 
 }

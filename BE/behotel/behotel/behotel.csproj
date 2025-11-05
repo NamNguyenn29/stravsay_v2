@@ -37,6 +37,7 @@
   <ItemGroup>
     <Folder Include="Core\" />
     <Folder Include="Server\" />
+    <Folder Include="wwwroot\room_images\" />
 	  
   </ItemGroup>
 

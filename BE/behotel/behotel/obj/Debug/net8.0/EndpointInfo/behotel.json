@@ -53,6 +53,35 @@
         }
       }
     },
+    "/api/Auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Booking": {
       "get": {
         "tags": [
@@ -144,6 +173,42 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/Booking/{id}": {
@@ -207,6 +272,84 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Booking/{id}/approve": {
+      "patch": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Booking/{id}/cancel": {
+      "patch": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
@@ -334,19 +477,62 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
+                "type": "object",
+                "properties": {
+                  "RoomName": {
+                    "type": "string"
+                  },
+                  "RoomNumber": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "RoomTypeID": {
+                    "type": "string"
+                  },
+                  "Status": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "ImageUrl": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "Floor": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "RoomName": {
+                  "style": "form"
+                },
+                "RoomNumber": {
+                  "style": "form"
+                },
+                "RoomTypeID": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "ImageUrl": {
+                  "style": "form"
+                },
+                "Floor": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -499,19 +685,62 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoomRequest"
+                "type": "object",
+                "properties": {
+                  "RoomName": {
+                    "type": "string"
+                  },
+                  "RoomNumber": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "RoomTypeID": {
+                    "type": "string"
+                  },
+                  "Status": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "ImageUrl": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "Floor": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "RoomName": {
+                  "style": "form"
+                },
+                "RoomNumber": {
+                  "style": "form"
+                },
+                "RoomTypeID": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "ImageUrl": {
+                  "style": "form"
+                },
+                "Floor": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -991,7 +1220,7 @@
         ],
         "parameters": [
           {
-            "name": "Id",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1005,17 +1234,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserApiResponse"
+                  "$ref": "#/components/schemas/StringApiResponse"
                 }
               }
             }
@@ -1123,6 +1352,35 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTOApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1455,42 +1713,6 @@
         },
         "additionalProperties": false
       },
-      "Role": {
-        "required": [
-          "createdDate",
-          "roleName"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "roleName": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "status": {
-            "maximum": 1,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userRoles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRole"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Room": {
         "required": [
           "createdDate",
@@ -1722,44 +1944,6 @@
             "format": "int32"
           },
           "totalElement": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RoomRequest": {
-        "type": "object",
-        "properties": {
-          "roomName": {
-            "type": "string",
-            "nullable": true
-          },
-          "roomNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "roomTypeID": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "binary"
-            },
-            "nullable": true
-          },
-          "floor": {
             "type": "integer",
             "format": "int32"
           }
@@ -2104,130 +2288,6 @@
         },
         "additionalProperties": false
       },
-      "User": {
-        "required": [
-          "createdDate",
-          "email",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "fullName": {
-            "maxLength": 100,
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "phone": {
-            "maxLength": 15,
-            "type": "string",
-            "format": "tel",
-            "nullable": true
-          },
-          "password": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "status": {
-            "maximum": 3,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "activeCode": {
-            "maxLength": 100,
-            "type": "string",
-            "nullable": true
-          },
-          "isActived": {
-            "type": "boolean"
-          },
-          "forgotPassCode": {
-            "maxLength": 100,
-            "type": "string",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userRoles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserRole"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserApiResponse": {
-        "type": "object",
-        "properties": {
-          "list": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            },
-            "nullable": true
-          },
-          "object": {
-            "$ref": "#/components/schemas/User"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "isSuccess": {
-            "type": "boolean"
-          },
-          "string": {
-            "type": "string",
-            "nullable": true
-          },
-          "int": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPage": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElement": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "UserDTO": {
         "required": [
           "email",
@@ -2335,45 +2395,6 @@
           "password": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserRole": {
-        "required": [
-          "createdDate",
-          "idRole",
-          "idUser"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "idRole": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "idUser": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "status": {
-            "maximum": 3,
-            "minimum": 0,
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false

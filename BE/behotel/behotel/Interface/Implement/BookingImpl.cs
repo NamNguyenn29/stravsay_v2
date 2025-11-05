@@ -21,11 +21,50 @@ namespace behotel.Interface.Implement
             _discountService = discountService;
         }
 
+        public async Task<ApiResponse<BookingDTO>> ApproveBookingAsync(Guid id)
+        {
+            var booking = await _context.Booking.FindAsync(id);
+            if (booking == null)
+            {
+                return new ApiResponse<BookingDTO>(null, null, "404", "Booking not found", false, 0, 0, 0, 0, null, 0);
+            }
+            booking.Status = 1;
+            await _context.SaveChangesAsync();
+            var bookingDTO = await GetBookingDTOByIdAsync(id);
+            if (bookingDTO == null)
+            {
+                return new ApiResponse<BookingDTO>(null, null, "400", "Failed to get booking information", false, 0, 0, 0, 0, null, 0);
+            }
+            return new ApiResponse<BookingDTO>(null, bookingDTO, "200", "Approve booking successfully", true, 0, 0, 0, 0, null, 0);
+
+        }
+
+        public async Task<ApiResponse<string>> CancelBookingAsync(Guid id, Guid userId)
+        {
+            var booking = await _context.Booking.FindAsync(id);
+            var user = await _context.User.FindAsync(userId);
+            if (booking == null || user == null)
+            {
+                return new ApiResponse<string>(null, null, "404", "Booking or user not found", false, 0, 0, 0, 0, null, 0);
+            }
+            if (user.Id != booking.UserId)
+            {
+                return new ApiResponse<string>(null, null, "400", "Can not cancel booking of other user", false, 0, 0, 0, 0, null, 0);
+            }
+            if (booking.CheckInDate >= DateTime.Now)
+            {
+                return new ApiResponse<string>(null, null, "400", "Can not cancel on progress booking ", false, 0, 0, 0, 0, null, 0);
+            }
+            booking.Status = 2;
+            await _context.SaveChangesAsync();
+            return new ApiResponse<string>(null, null, "200", "Cancel booking successfully", true, 0, 0, 0, 0, null, 0);
+        }
+
         public async Task<ApiResponse<BookingDTO>> CreateBookingAsync(NewBooking newBooking)
         {
             Guid idGuid = Guid.NewGuid();
             var user = await _userService.GetUserByIdAsync(Guid.Parse(newBooking.UserId));
-            if (user == null || !user.IsActived )
+            if (user == null || !user.IsActived)
             {
                 return new ApiResponse<BookingDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
             }
@@ -162,24 +201,24 @@ namespace behotel.Interface.Implement
 
         }
 
-        public async Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId) 
-        
+        public async Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId)
+
         {
-            var userBookings = await _context.Booking.Where(b => b.UserId == userId).ToListAsync(); 
+            var userBookings = await _context.Booking.Where(b => b.UserId == userId).ToListAsync();
             var bookingDTOs = new List<BookingDTO>();
             foreach (var booking in userBookings)
             {
                 var bookingDTO = await GetBookingDTOByIdAsync(booking.Id);
-                if(bookingDTO != null)
+                if (bookingDTO != null)
                 {
                     bookingDTOs.Add(bookingDTO);
                 }
             }
-            if(bookingDTOs.Count == 0)
+            if (bookingDTOs.Count == 0)
             {
                 return new ApiResponse<BookingDTO>(null, null, "404", "No booking found for user", false, 0, 0, 0, 0, null, 0);
             }
-            return new ApiResponse<BookingDTO>(bookingDTOs, null, "200", "Get bookings for user successfully", true, 0, 0, 0, 0,null, 0);
+            return new ApiResponse<BookingDTO>(bookingDTOs, null, "200", "Get bookings for user successfully", true, 0, 0, 0, 0, null, 0);
         }
 
         public async Task<ApiResponse<BookingDTO>> GetBookingDTOWithPaginationAsync(int currentPage, int pageSize)
@@ -207,6 +246,75 @@ namespace behotel.Interface.Implement
 
         }
 
+        public async Task<ApiResponse<string>> SoftDeleteBookingAsync(Guid id)
+        {
+            var booking = await _context.Booking.FindAsync(id);
+            if (booking == null)
+            {
+                return new ApiResponse<string>(null, null, "404", "No booking found", false, 0, 0, 0, 0, null, null);
+            }
+            var bookingServices = await _context.BookingService
+                                 .Where(bs => bs.BookingId == id)
+                                 .ToListAsync();
 
+            if (bookingServices == null)
+                bookingServices = new List<BookingService>();
+
+            List<BookingService_Deleted> bookingService_Deleteds = new List<BookingService_Deleted>();
+            var booking_Deleted = new Booking_Deleted()
+            {
+                Id = booking.Id,
+                CheckInDate = booking.CheckInDate,
+                CheckOutDate = booking.CheckOutDate,
+                Adult = booking.Adult,
+                Children = booking.Children,
+                CreatedDate = booking.CreatedDate,
+                Price = booking.Price,
+                RoomId = booking.RoomId,
+                Status = booking.Status,
+                UserId = booking.UserId,
+            };
+
+            foreach (var bookingService in bookingServices)
+            {
+                bookingService_Deleteds.Add(new BookingService_Deleted()
+                {
+                    Id = bookingService.Id,
+                    Status = bookingService.Status,
+                    BookingId = bookingService.BookingId,
+                    CreatedDate = bookingService.CreatedDate,
+                    Quantity = bookingService.Quantity,
+                    ServiceId = bookingService.ServiceId,
+
+                });
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _context.Booking_Deleted.AddAsync(booking_Deleted);
+                await _context.BookingService_Deleted.AddRangeAsync(bookingService_Deleteds);
+
+                _context.Booking.Remove(booking);
+                _context.BookingService.RemoveRange(bookingServices);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return new ApiResponse<string>(null, null, "200", "Delete booking successfully", true, 0, 0, 0, 0, null, 0); ;
+
+            }
+            catch (Exception ex)
+            {
+
+                await transaction.RollbackAsync();
+                return new ApiResponse<string>(null, ex.Message, "400", "Failed to delete booking", false, 0, 0, 0, 0, null, 0);
+            }
+
+
+
+
+
+        }
     }
 }
+

@@ -3,7 +3,8 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { Menu, Button } from "antd";
-import type { MenuProps } from "antd";
+import type { MenuProps, message } from "antd";
+import { logOut } from "@/api/UserApi/logOut";
 import { useRouter } from "next/navigation";
 import {
   DashboardOutlined,
@@ -127,9 +128,14 @@ export default function AdminSidebar({ selectedKey, collapsed = false }: Props) 
           type="text"
           danger
           icon={<LogoutOutlined />}
-          onClick={() => {
-            sessionStorage.removeItem("accessToken");
-            router.push('/login')
+          onClick={async () => {
+            const result = await logOut();
+            if (result.isSuccess) {
+              document.cookie = "CURRENT_USER=; path=/; max-age=0";
+              sessionStorage.setItem("justLoggedOut", "true");
+              router.push("/login");
+
+            }
           }}
           style={{ width: "100%", textAlign: "left" }}
         >

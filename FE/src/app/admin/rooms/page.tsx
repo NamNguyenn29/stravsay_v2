@@ -8,7 +8,6 @@ import TextArea from "antd/es/input/TextArea";
 import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
 import { createRoom } from "@/api/RoomApi/createRoom";
-import { updateRoom } from "@/api/RoomApi/updateRoom";
 import { deleteRoom } from "@/api/RoomApi/deleteRoom";
 import "@/css/modal.css"
 
@@ -61,41 +60,6 @@ export default function RoomManagement() {
         setEditModalVisible(true);
     };
 
-    const handleEditSubmit = async () => {
-        try {
-            const values = await form.validateFields();
-
-            if (!selectedRoom) {
-                messageApi.error("No room selected!");
-                return;
-            }
-
-            // Backend yêu cầu RoomRequest
-            const updatedData = {
-                roomName: values.roomName,
-                roomNumber: values.roomNumber,
-                description: values.description,
-                roomTypeID: values.roomType, //
-                floor: values.floor,
-                imageUrl: values.imageUrl || [],
-                status: values.status
-            };
-
-            const response = await updateRoom(selectedRoom.id, updatedData);
-
-            if (response.isSuccess) {
-                messageApi.success("Room updated successfully!");
-                setEditModalVisible(false);
-                form.resetFields();
-                await loadRoom(); // ✅ reload lại danh sách sau khi update
-            } else {
-                messageApi.error(response.message || "Failed to update room!");
-            }
-        } catch (err) {
-            console.error("Error updating room:", err);
-            messageApi.error("Error updating room!");
-        }
-    };
 
 
     const handleCancle = () => {
@@ -206,39 +170,6 @@ export default function RoomManagement() {
                 </button>
             </div>
 
-            {/*summary box */}
-            {/* <div className="flex gap-5 container mx-auto mb-10">
-                <div
-
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${} ? "bg-blue-100 border-blue-500 " : "hover:bg-gray-50"}`}>
-                    <div className="flex item-center gap-3">
-                        <span className="w-8 h-8 bg-blue-300 rounded-full inline-block"></span>
-                        <span className="inline-block w-32 ">Total Room</span>
-                    </div>
-                    <span>{ }</span>
-
-                </div>
-                <div
-
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${ } ? "bg-green-100 border-green-500 " : "hover:bg-gray-50"}`}>
-                    <div className="flex item-center gap-3">
-                        <span className="w-8 h-8 bg-green-300 rounded-full inline-block"></span>
-                        <span className="inline-block w-32 ">Available</span>
-                    </div>
-                    <span>{ }</span>
-
-                </div>
-                <div
-
-                    className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition ${} ? "bg-yellow-100 border-yellow-500 " : "hover:bg-gray-50"}`}>
-                    <div className="flex item-center gap-3">
-                        <span className="w-8 h-8 bg-yellow-300 rounded-full inline-block"></span>
-                        <span className="inline-block w-32 ">Unavailable</span>
-                    </div>
-                    <span>{ }</span>
-
-                </div>
-            </div> */}
 
             {/* Table */}
             <div className="container mx-auto my-10 bg-white rounded-xl shadow-lg overflow-hidden">
@@ -264,8 +195,8 @@ export default function RoomManagement() {
                                     <td className="px-6 py-3">{index + 1 + (currentPage - 1) * pageSize}</td>
                                     <td className="px-6 py-3 font-medium text-gray-800"><div>{room.roomName} - {room.roomNumber}</div>
                                     </td>
-                                    <td className="px-6 py-3 font-semibold text-blue-600">
-                                        {room.price} đ
+                                    <td className="px-6 py-3 font-semibold  !text-black text-blue-600">
+                                        {room.basePrice?.toLocaleString()} đ
                                     </td>
                                     <td className="px-6 py-3">
                                         <span
@@ -277,7 +208,7 @@ export default function RoomManagement() {
                                     </td>
 
                                     <td className="px-6 py-3 text-gray-500  max-w-[150px]">
-                                        {room.description || "-"}
+                                        {room?.description ? room.description : "-"}
                                     </td>
                                     <td className="px-6 py-3">{room.bedType}</td>
                                     <td className="px-6 py-3">
@@ -321,7 +252,7 @@ export default function RoomManagement() {
                 centered
                 footer={[
                     <Button key="cancle" onClick={handleCancle}>Cancel</Button>,
-                    <Button key="save" type="primary" className="bg-blue-600" onClick={handleEditSubmit}>Save Changes</Button>
+                    <Button key="save" type="primary" className="bg-blue-600" >Save Changes</Button>
                 ]}
 
             >

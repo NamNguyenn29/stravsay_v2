@@ -7,18 +7,17 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { message } from "antd";
 import { User } from "@/model/User";
-import { jwtDecode } from "jwt-decode";
-import { DecodedToken } from "@/model/DecodedToken";
-import { getUserById } from "@/api/UserApi/getUserById";
+import { logOut } from "@/api/UserApi/logOut";
 export default function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const menuRef = useRef<HTMLDivElement>(null);
-    const [user, setUser] = useState<User | null>(null);
+    // const [user, setUser] = useState<User | null>(null);
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
 
     useEffect(() => {
-
-        decodeTokenAndLoadUser();
+        loadUser();
         const handleClickOutside = (e: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
                 setIsOpen(false);
@@ -29,44 +28,52 @@ export default function UserMenu() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
 
+
     }, []);
 
-    const decodeTokenAndLoadUser = async () => {
-        const storedToken = sessionStorage.getItem("accessToken");
-        if (!storedToken) {
-            message.error("Chưa đăng nhập hoặc thiếu token.");
-            return;
+    const loadUser = () => {
+        try {
+            const userCookie = getCookie("CURRENT_USER");
+            if (userCookie) {
+                const user = JSON.parse(userCookie);
+                setName(user.fullName);
+                if (user.roleList.includes("USER")) {
+                    setRole("USER");
+                }
+            }
+        } catch (err) {
+            console.log(err);
         }
-
-        const decoded: DecodedToken = jwtDecode(storedToken);
-
-        const rawId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
-
-        const data = await getUserById(rawId);
-        setUser(data.object);
-
     }
 
-    const handleLogout = () => {
-        sessionStorage.removeItem("accessToken");
-        router.push('/login')
+
+    function getCookie(name: string): string | null {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
     }
 
-    // const getInitials = (name: string) => {
-    //     return name
-    //         .split(" ")               // tách theo dấu cách
-    //         .filter(word => word.length > 0)  // bỏ khoảng trắng thừa
-    //         .map(word => word[0].toUpperCase()) // lấy chữ cái đầu
-    //         .join("");                // nối lại
-    // };
+    const handleLogout = async () => {
+        const result = await logOut();
+        if (result.isSuccess) {
+            message.success("Logged out successfully!");
+            document.cookie = "CURRENT_USER=; path=/; max-age=0";
+            sessionStorage.setItem("justLoggedOut", "true");
+            router.push("/login");
+
+        } else {
+            message.error("Failed to log out!");
+        }
+    };
+
+
     return (
         <>
             <div className="border border-t-black bg-black w-full"></div>
             <div className="grid grid-cols-12  mr-[50px] ">
                 <div className="col-start-9 col-span-4 p-6" >
                     <div className="flex items-center justify-end gap-4">
-                        <Avatar size={50}>{user?.roleList[0]}</Avatar>
-                        <div className='text-left text-xl font-semibold underline cursor-pointer '>{user?.fullName || ""}</div>
+                        <Avatar size={50}>{role}</Avatar>
+                        <div className='text-left text-xl font-semibold underline cursor-pointer '>{name || ""}</div>
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
@@ -81,13 +88,13 @@ export default function UserMenu() {
                                 <div className=" w-[250px] absolute right-0 mt-2 bg-white rounded-md shadow-lg border py-2 z-50">
                                     <div>
                                         <button
-                                            onClick={() => router.push("/profile")}
+                                            onClick={() => router.push("/user/profile")}
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-rose-500"
                                         >
                                             Profile
                                         </button>
                                         <button
-                                            onClick={() => router.push("/userbooking")}
+                                            onClick={() => router.push("/user/userbooking")}
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-rose-500"
                                         >
                                             My Booking

@@ -65,8 +65,58 @@ namespace behotel.Controllers
 
         }
 
+        [Authorize(Roles ="ADMIN")]
+        [HttpPatch("{id}/approve")]
+        public async Task<ApiResponse<BookingDTO>> ApproveBooking(string id)
+        {
+            if(string.IsNullOrEmpty(id))
+            {
+                return new ApiResponse<BookingDTO>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, 0);
+            }
+            if (!Guid.TryParse(id, out Guid guidId))
+            {
+                return new ApiResponse<BookingDTO>(null, null, "400", "Invalid GUID format", false, 0, 0, 0, 0, null, null);
+            }
+            return await _bookingService.ApproveBookingAsync(guidId);
 
-       
+        }
+
+        [Authorize]
+        [HttpPatch("{id}/cancel")]
+        public async Task<ApiResponse<string>> CancelBooking(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return new ApiResponse<string>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, 0);
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid userIdGuid = Guid.Parse(userId);
+            if (!Guid.TryParse(id, out Guid guidId))
+            {
+                return new ApiResponse<string>(null, null, "400", "Invalid GUID format", false, 0, 0, 0, 0, null, null);
+            }
+            return await _bookingService.CancelBookingAsync(guidId,userIdGuid);
+
+        }
+
+
+        [Authorize (Roles ="ADMIN")]
+        [HttpDelete]
+        public async Task<ApiResponse<string>> DeleteBooking(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return new ApiResponse<string>(null, null, "400", "Id is require", false, 0, 0, 0, 0, null, 0);
+            }
+            if (!Guid.TryParse(id, out Guid guidId))
+            {
+                return new ApiResponse<string>(null, null, "400", "Invalid GUID format", false, 0, 0, 0, 0, null, null);
+            }
+            return await _bookingService.SoftDeleteBookingAsync(guidId);
+
+        }
+
+
 
 
     }

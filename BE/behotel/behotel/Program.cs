@@ -1,17 +1,18 @@
-﻿using behotel.Helper.Validation;
+﻿using behotel.DTO;
+using behotel.Helper.SendMail;
+using behotel.Helper.SendMail.Implement;
+using behotel.Helper.Validation;
 using behotel.Interface;
 using behotel.Interface.Implement;
 using behotel.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.EntityFrameworkCore;
-using behotel.Helper.SendMail.Implement;
-using behotel.Helper.SendMail;
-using behotel.DTO;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,12 +32,13 @@ builder.Services.AddTransient<IMailService, MailImpl>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFE", policy =>
     {
         policy
-            .AllowAnyOrigin()    // Cho phép tất cả origin (frontend)
+            .WithOrigins("https://localhost:3000", "https://localhost")    
             .AllowAnyMethod()    // Cho phép mọi method: GET, POST, PUT, DELETE...
-            .AllowAnyHeader();   // Cho phép mọi header
+            .AllowAnyHeader()   // Cho phép mọi header
+            .AllowCredentials();
     });
 });
 
@@ -65,6 +67,7 @@ builder.Services.AddScoped<IServiceService, ServiceImpl>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeImpl>();
 builder.Services.AddScoped<IInProgressBookingService, InprogressBookingImpl>();
+builder.Services.AddScoped<IUserSoftDeleteService,UserSoftDelete>();
 
 
 
@@ -100,10 +103,14 @@ builder.Services.AddSwaggerGen(c =>
 
 // Add Authentication & JWT
 var key = builder.Configuration["Jwt:Key"];
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(option =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
     {
-        option.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -113,11 +120,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Cookies["accessToken"];
+                if (!string.IsNullOrEmpty(token))
+                    context.Token = token;
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                {
+                    context.Response.StatusCode = 401;
+                    context.Response.ContentType = "application/json";
+                    return context.Response.WriteAsync("{\"message\":\"Token expired\"}");
+                }
+                return Task.CompletedTask;
+            }
+        };
+
     });
 
 
 var app = builder.Build();
-app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -127,7 +155,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseCors("AllowFE");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -3,60 +3,136 @@
   "WorkspaceRootPath": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\helper\\validation\\newroomvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\helper\\validation\\newroomvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\roomrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\roomrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\newbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\newbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\roomdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\roomdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\supportrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\supportrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\newsupportrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\newsupportrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\implement\\roomimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\implement\\roomimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\implement\\usersoftdelete.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\implement\\usersoftdelete.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\iusersoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\iusersoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\implement\\bookingimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\implement\\bookingimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\helper\\validation\\newbookingvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\helper\\validation\\newbookingvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\implement\\userimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\implement\\userimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\hotelmanagementcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\roomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\ibookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\ibookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\emailsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\emailsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\bookingservice_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\bookingservice_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\booking_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\booking_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\userrole_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\userrole_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\models\\user_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\models\\user_deleted.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\supportrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\supportrequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\servicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\roomtypecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\roomtypecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\controllers\\discountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\controllers\\discountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\interface\\implement\\roomimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\interface\\implement\\roomimpl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\roomrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\roomrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\roomdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\roomdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\helper\\validation\\newroomvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\helper\\validation\\newroomvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\newbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\newbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\dto\\newsupportrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\dto\\newsupportrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|c:\\users\\nam22\\onedrive\\desktop\\project2\\stravsay_v2\\be\\behotel\\behotel\\helper\\validation\\newbookingvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DE6FA61-57E6-4116-BA0B-188B40AE2B17}|behotel\\behotel.csproj|solutionrelative:behotel\\helper\\validation\\newbookingvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,7 +142,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -75,79 +151,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:3:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NewRoomValidation.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Helper\\Validation\\NewRoomValidation.cs",
-              "RelativeDocumentMoniker": "behotel\\Helper\\Validation\\NewRoomValidation.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Helper\\Validation\\NewRoomValidation.cs",
-              "RelativeToolTip": "behotel\\Helper\\Validation\\NewRoomValidation.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAASwEcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T00:54:12.682Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "NewBooking.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewBooking.cs",
-              "RelativeDocumentMoniker": "behotel\\DTO\\NewBooking.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewBooking.cs",
-              "RelativeToolTip": "behotel\\DTO\\NewBooking.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T00:52:55.228Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "BookingDTO.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\BookingDTO.cs",
-              "RelativeDocumentMoniker": "behotel\\DTO\\BookingDTO.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\BookingDTO.cs",
-              "RelativeToolTip": "behotel\\DTO\\BookingDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T00:52:50.722Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "NewSupportRequest.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewSupportRequest.cs",
-              "RelativeDocumentMoniker": "behotel\\DTO\\NewSupportRequest.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewSupportRequest.cs",
-              "RelativeToolTip": "behotel\\DTO\\NewSupportRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:47:56.846Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SupportRequestController.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\SupportRequestController.cs",
-              "RelativeDocumentMoniker": "behotel\\Controllers\\SupportRequestController.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\SupportRequestController.cs",
-              "RelativeToolTip": "behotel\\Controllers\\SupportRequestController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABkAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:24:51.492Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "UserDTO.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\UserDTO.cs",
-              "RelativeDocumentMoniker": "behotel\\DTO\\UserDTO.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\UserDTO.cs",
-              "RelativeToolTip": "behotel\\DTO\\UserDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:12:30.037Z"
             },
             {
               "$type": "Bookmark",
@@ -159,19 +162,400 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IUserSoftDeleteService.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IUserSoftDeleteService.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\IUserSoftDeleteService.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IUserSoftDeleteService.cs",
+              "RelativeToolTip": "behotel\\Interface\\IUserSoftDeleteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-05T10:29:23.491Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IUserService.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\IUserService.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IUserService.cs",
+              "RelativeToolTip": "behotel\\Interface\\IUserService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T09:44:01.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BookingImpl.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\BookingImpl.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\BookingImpl.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\BookingImpl.cs",
+              "RelativeToolTip": "behotel\\Interface\\Implement\\BookingImpl.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T12:15:48.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\UserController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAswHoAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T14:39:13.495Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UserImpl.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\UserImpl.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\UserImpl.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\UserImpl.cs",
+              "RelativeToolTip": "behotel\\Interface\\Implement\\UserImpl.cs",
+              "ViewState": "AgIAAHYAAAAAAAAAAAAAAIcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T09:04:36.476Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Program.cs",
+              "RelativeDocumentMoniker": "behotel\\Program.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Program.cs",
+              "RelativeToolTip": "behotel\\Program.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAnwJMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T03:40:23.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAqwGYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T13:56:28.824Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "BookingController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\BookingController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\BookingController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\BookingController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\BookingController.cs",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAqwHIAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T11:24:32.385Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UserSoftDelete.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\UserSoftDelete.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\UserSoftDelete.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\UserSoftDelete.cs",
+              "RelativeToolTip": "behotel\\Interface\\Implement\\UserSoftDelete.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAuwBcAAAB1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-05T10:33:46.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BookingDTO.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\BookingDTO.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\BookingDTO.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\BookingDTO.cs",
+              "RelativeToolTip": "behotel\\DTO\\BookingDTO.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T00:52:50.722Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RoomController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\RoomController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\RoomController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\RoomController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\RoomController.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAwwHcAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T03:43:21.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\appsettings.json",
+              "RelativeDocumentMoniker": "behotel\\appsettings.json",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\appsettings.json",
+              "RelativeToolTip": "behotel\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-03T04:42:42.109Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "HotelManagementContext.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\HotelManagementContext.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\HotelManagementContext.cs",
+              "RelativeToolTip": "behotel\\Models\\HotelManagementContext.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA3wBgAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T10:08:19.912Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IBookingService.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IBookingService.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\IBookingService.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IBookingService.cs",
+              "RelativeToolTip": "behotel\\Interface\\IBookingService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAqwBgAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T12:14:49.497Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Booking_Deleted.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Booking_Deleted.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\Booking_Deleted.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Booking_Deleted.cs",
+              "RelativeToolTip": "behotel\\Models\\Booking_Deleted.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T11:14:52.079Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "EmailSetting.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\EmailSetting.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\EmailSetting.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\EmailSetting.cs",
+              "RelativeToolTip": "behotel\\DTO\\EmailSetting.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T14:39:10.908Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UserDTO.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\UserDTO.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\UserDTO.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\UserDTO.cs",
+              "RelativeToolTip": "behotel\\DTO\\UserDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T14:12:30.037Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Booking.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\Booking.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\Booking.cs",
+              "RelativeToolTip": "behotel\\Models\\Booking.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAB0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T11:15:16.209Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BookingService_Deleted.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\BookingService_Deleted.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\BookingService_Deleted.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\BookingService_Deleted.cs",
+              "RelativeToolTip": "behotel\\Models\\BookingService_Deleted.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T11:20:00.363Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "DiscountController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\DiscountController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\DiscountController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\DiscountController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\DiscountController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwDEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T08:48:51.978Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "RoomTypeController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\RoomTypeController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\RoomTypeController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\RoomTypeController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\RoomTypeController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwCsAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T08:50:37.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ServiceController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\ServiceController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\ServiceController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\ServiceController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\ServiceController.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAzwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T08:50:51.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "User_Deleted.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\User_Deleted.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\User_Deleted.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\User_Deleted.cs",
+              "RelativeToolTip": "behotel\\Models\\User_Deleted.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T08:59:33.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "UserRole_Deleted.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\UserRole_Deleted.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\UserRole_Deleted.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\UserRole_Deleted.cs",
+              "RelativeToolTip": "behotel\\Models\\UserRole_Deleted.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T09:03:31.033Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "UserRole.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\UserRole.cs",
+              "RelativeDocumentMoniker": "behotel\\Models\\UserRole.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Models\\UserRole.cs",
+              "RelativeToolTip": "behotel\\Models\\UserRole.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T09:03:37.089Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "SupportRequestController.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\SupportRequestController.cs",
+              "RelativeDocumentMoniker": "behotel\\Controllers\\SupportRequestController.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\SupportRequestController.cs",
+              "RelativeToolTip": "behotel\\Controllers\\SupportRequestController.cs",
+              "ViewState": "AgIAAKQAAAAAAAAAAAA9wBkAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T14:24:51.492Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
               "Title": "RoomRequest.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomRequest.cs",
               "RelativeDocumentMoniker": "behotel\\DTO\\RoomRequest.cs",
               "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomRequest.cs",
               "RelativeToolTip": "behotel\\DTO\\RoomRequest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T00:53:11.389Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 26,
+              "Title": "RoomImpl.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\RoomImpl.cs",
+              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\RoomImpl.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\RoomImpl.cs",
+              "RelativeToolTip": "behotel\\Interface\\Implement\\RoomImpl.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAuwNoAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T14:48:25.037Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "RoomDTO.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomDTO.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\RoomDTO.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomDTO.cs",
+              "RelativeToolTip": "behotel\\DTO\\RoomDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T14:47:57.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "NewRoomValidation.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Helper\\Validation\\NewRoomValidation.cs",
+              "RelativeDocumentMoniker": "behotel\\Helper\\Validation\\NewRoomValidation.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Helper\\Validation\\NewRoomValidation.cs",
+              "RelativeToolTip": "behotel\\Helper\\Validation\\NewRoomValidation.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAASwEIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T00:54:12.682Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "NewSupportRequest.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewSupportRequest.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\NewSupportRequest.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewSupportRequest.cs",
+              "RelativeToolTip": "behotel\\DTO\\NewSupportRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T14:47:56.846Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "NewBooking.cs",
+              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewBooking.cs",
+              "RelativeDocumentMoniker": "behotel\\DTO\\NewBooking.cs",
+              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\NewBooking.cs",
+              "RelativeToolTip": "behotel\\DTO\\NewBooking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T00:52:55.228Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
               "Title": "NewBookingValidation.cs",
               "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Helper\\Validation\\NewBookingValidation.cs",
               "RelativeDocumentMoniker": "behotel\\Helper\\Validation\\NewBookingValidation.cs",
@@ -180,78 +564,6 @@
               "ViewState": "AgIAAAcAAAAAAAAAAAAgwCMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-02T12:26:24.202Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BookingImpl.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\BookingImpl.cs",
-              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\BookingImpl.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\BookingImpl.cs",
-              "RelativeToolTip": "behotel\\Interface\\Implement\\BookingImpl.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAADwv7gAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T12:15:48.94Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "IBookingService.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IBookingService.cs",
-              "RelativeDocumentMoniker": "behotel\\Interface\\IBookingService.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\IBookingService.cs",
-              "RelativeToolTip": "behotel\\Interface\\IBookingService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T12:14:49.497Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "RoomDTO.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomDTO.cs",
-              "RelativeDocumentMoniker": "behotel\\DTO\\RoomDTO.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\DTO\\RoomDTO.cs",
-              "RelativeToolTip": "behotel\\DTO\\RoomDTO.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAowAoAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:47:57.63Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "RoomImpl.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\RoomImpl.cs",
-              "RelativeDocumentMoniker": "behotel\\Interface\\Implement\\RoomImpl.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Interface\\Implement\\RoomImpl.cs",
-              "RelativeToolTip": "behotel\\Interface\\Implement\\RoomImpl.cs",
-              "ViewState": "AgIAAIcAAAAAAAAAAAArwJIAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T14:48:25.037Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "behotel\\Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\UserController.cs",
-              "RelativeToolTip": "behotel\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAIwFMAAABGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T12:12:22.431Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "BookingController.cs",
-              "DocumentMoniker": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\BookingController.cs",
-              "RelativeDocumentMoniker": "behotel\\Controllers\\BookingController.cs",
-              "ToolTip": "C:\\Users\\nam22\\OneDrive\\Desktop\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\Controllers\\BookingController.cs",
-              "RelativeToolTip": "behotel\\Controllers\\BookingController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T12:12:20.275Z"
             }
           ]
         }

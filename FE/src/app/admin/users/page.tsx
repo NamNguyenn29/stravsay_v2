@@ -4,7 +4,7 @@ import { getUsers } from "@/api/UserApi/getUser";
 import { useState, useEffect, use } from "react";
 import { Pagination } from 'antd';
 import UserDetailModal from "@/components/admin/UserDetailModal";
-
+import dayjs from "dayjs";
 
 
 export default function UserMangement() {
@@ -41,7 +41,10 @@ export default function UserMangement() {
 
 
 
-
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "-";
+        return dayjs(dateString).format("DD/MM/YYYY "); //
+    };
 
 
 
@@ -116,7 +119,7 @@ export default function UserMangement() {
                                             {user.isActive ? "Active" : "Inactive"}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-3 ">{user.createdDate}</td>
+                                    <td className="px-6 py-3 ">{formatDate(user.createdDate)}</td>
                                     <td className="px-6 py-3 "></td>
                                     <td className="px-6 py-3 flex gap-5">
                                         <div className="bg-slate-500 hover:bg-slate-800 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer " onClick={() => setSelectedUser(user)}>More Detail</div>

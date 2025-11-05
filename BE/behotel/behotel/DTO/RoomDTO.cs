@@ -6,7 +6,7 @@
         public string RoomName { get; set; }
         public int RoomNumber { get; set; }
         public string Description { get; set; }
-        public string[] ImageUrl { get; set; }
+        public List<String> ImageUrl { get; set; }
         public int Floor { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }

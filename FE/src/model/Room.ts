@@ -9,11 +9,13 @@ export type Room = {
     createdDate: string;
     typeName: string;
     roomTypeID: string;
-    // basePrice: number;
-    price: number;
+    basePrice: number;
+    // price: number;
     bedType: string;
     space: number;
     hasBreakFast: boolean;
     adult: number;
     children: number;
 }
+
+

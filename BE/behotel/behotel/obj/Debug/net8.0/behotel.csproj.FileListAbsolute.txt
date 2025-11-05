@@ -355,3 +355,4 @@ C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debu
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\nam22\OneDrive\Desktop\Project2\stravsay_v2\BE\behotel\behotel\bin\Debug\net8.0\behotel.staticwebassets.runtime.json

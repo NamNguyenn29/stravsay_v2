@@ -77,7 +77,7 @@ namespace behotel.Controllers
         }
         [Authorize(Roles = "ADMIN")]
         [HttpPost]
-        public async Task<ApiResponse<RoomDTO>> CreateRoom([FromBody] RoomRequest newRoom)
+        public async Task<ApiResponse<RoomDTO>> CreateRoom([FromForm] RoomRequest newRoom)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace behotel.Controllers
         }
         [Authorize(Roles ="ADMIN")]
         [HttpPut("{id}")]
-        public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromBody] RoomRequest roomRequest)
+        public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromForm] RoomRequest roomRequest)
         {
             if (string.IsNullOrEmpty(id))
             {

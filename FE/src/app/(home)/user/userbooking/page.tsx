@@ -35,11 +35,13 @@ export default function ElegantBookings() {
         <div className="relative min-h-screen bg-gradient-to-b from-[#f8f5f0] via-[#f4eee6] to-[#efe8de] flex flex-col items-center py-20 overflow-hidden">
             {/* Background decor */}
             <div className="absolute inset-0 -z-10">
+
                 <Image
-                    src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1920"
+                    src="https://localhost:7020/room_images/de778cd6-1b63-4ed2-92a2-b78e2430024f_imageRoom_3.jpg"
                     alt="Luxury background"
                     fill
                     className="object-cover opacity-30"
+                    unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-[#f9f5f2]/80 to-[#f5ece5]/85 backdrop-blur-sm" />
             </div>
@@ -94,10 +96,17 @@ export default function ElegantBookings() {
                         >
                             {/* Left image */}
                             <div className="relative w-full md:w-1/3 min-h-[250px]">
-                                <Image
+                                {/* <Image
                                     src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800"
                                     alt="Room"
                                     fill
+                                    className="object-cover"
+                                /> */}
+                                <Image
+                                    src="https://localhost:7020/room_images/de778cd6-1b63-4ed2-92a2-b78e2430024f_imageRoom_3.jpg"
+                                    alt="Room"
+                                    fill
+                                    unoptimized
                                     className="object-cover"
                                 />
                             </div>

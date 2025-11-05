@@ -37,10 +37,9 @@ const logColumns: ColumnsType<typeof userLogs[0]> = [
 
 export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Props) {
     const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState<string[]>(selectedUser?.roles || []);
+    const [roles, setRoles] = useState<string[]>(selectedUser?.roleList || []);
     const [status, setStatus] = useState<UserStatus>(() => {
         if (!selectedUser) return "Inactive";
-        if (selectedUser.isDeleted) return "Deleted";
         if (selectedUser.isActive) return "Active";
         return "Inactive";
     });
@@ -94,8 +93,7 @@ export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Pr
                             <Tag color={selectedUser.isActive ? "green" : "volcano"}>
                                 {selectedUser.isActive ? "Active" : "Inactive"}
                             </Tag>
-                            {selectedUser.isDeleted && <Tag color="red">Deleted</Tag>}
-                            {selectedUser.roles.map((r) => (
+                            {selectedUser.roleList.map((r) => (
                                 <Tag color="blue" key={r}>{r}</Tag>
                             ))}
                         </div>

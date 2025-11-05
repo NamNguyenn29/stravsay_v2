@@ -7,8 +7,6 @@ import {
 import dayjs from "dayjs";
 import { User } from "@/model/User";
 import { getUserById } from "@/api/UserApi/getUserById";
-import { jwtDecode } from "jwt-decode";
-import { DecodedToken } from "@/model/DecodedToken";
 import { UpdateUser } from "@/model/UpdateUser";
 import { updateUser } from "@/api/UserApi/updateUser";
 import { motion } from "framer-motion";
@@ -21,36 +19,37 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [api, contextHolder] = notification.useNotification();
     useEffect(() => {
-        decodeTokenAndLoadUser();
+        loadUser();
     }, []);
 
-    const decodeTokenAndLoadUser = async () => {
+    const loadUser = async () => {
         try {
-            const storedToken = sessionStorage.getItem("accessToken");
-            if (!storedToken) {
-                message.error("Chưa đăng nhập hoặc thiếu token.");
-                return;
+            const userCookie = getCookie("CURRENT_USER");
+
+            if (userCookie) {
+                const user = JSON.parse(userCookie);
+
+                const data = await getUserById(user.id);
+                setUser(data.object);
+
+                form.setFieldsValue({
+                    email: data.object?.email,
+                    fullname: data.object?.fullName,
+                    phone: data.object?.phone,
+                    dob: data.object?.dateOfBirth ? dayjs(data.object.dateOfBirth) : null,
+                });
             }
 
-            const decoded: DecodedToken = jwtDecode(storedToken);
-
-            const rawId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
-
-            const data = await getUserById(rawId);
-            setUser(data.object);
-
-            form.setFieldsValue({
-                email: data.object?.email,
-                fullname: data.object?.fullName,
-                phone: data.object?.phone,
-                dob: data.object?.dateOfBirth ? dayjs(data.object.dateOfBirth) : null,
-            });
-
         } catch (err) {
-            console.error("Lỗi khi giải mã token:", err);
-            message.error("Token không hợp lệ hoặc hết hạn.");
+            console.error("Erro: ", err);
+
         }
     }
+    function getCookie(name: string): string | null {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+
 
 
 
@@ -67,7 +66,7 @@ export default function Profile() {
             }
 
             const result = await updateUser(updatePayload);
-            await new Promise(resolve => setTimeout(resolve, 800));
+            // await new Promise(resolve => setTimeout(resolve, 800));
             api.success({
                 message: "Update information successfully!",
                 description: "You have updated information.",
@@ -75,7 +74,7 @@ export default function Profile() {
             });
             if (result.isSuccess) {
                 message.success("Update user successfully!");
-                decodeTokenAndLoadUser(); // load lại user mới
+                loadUser();
             } else {
                 message.error(result.message || "Fail to update user!");
             }
@@ -120,12 +119,6 @@ export default function Profile() {
                                             <Form
                                                 layout="vertical"
                                                 form={form}
-                                                // initialValues={{
-                                                //     email: "exasmple@gmail.com",
-                                                //     fullname: "Your fullame",
-                                                //     phone: "phone number",
-                                                //     dob: dayjs("2000-01-01"),
-                                                // }}
                                                 style={{ fontSize: "18px" }}
                                             >
                                                 <div className="grid grid-cols-2 gap-8">

@@ -9,16 +9,17 @@ interface MyBookingProps {
     end: Date;
     room?: Room;
     guest?: number;
+    isContinue?: boolean;
 }
 
-export default function MyBooking({ datedif, start, end, room, guest }: MyBookingProps) {
+export default function MyBooking({ datedif, start, end, room, guest, isContinue }: MyBookingProps) {
     const router = useRouter();
     const handleContinue = () => {
         if (!room) {
             message.warning("Please select a room before continuing!");
             return;
         }
-        router.push("/payment");
+        router.push("/user/payment");
     };
     // const totalPrice = room ? room.basePrice * datedif : 0;
 
@@ -65,6 +66,7 @@ export default function MyBooking({ datedif, start, end, room, guest }: MyBookin
                                             alt={`Room image ${index}`}
                                             width={200}
                                             height={150}
+                                            unoptimized
                                             className="object-cover rounded-lg w-[200px] h-[150px]"
                                         />
                                     </div>
@@ -81,22 +83,27 @@ export default function MyBooking({ datedif, start, end, room, guest }: MyBookin
 
                         <div className="mt-4 w-full border-t pt-3 text-right">
                             <div className="text-lg text-gray-500">Price per night</div>
-                            <div className="text-rose-500 font-bold text-lg line-through">
+                            {/* <div className="text-rose-500 font-bold text-lg line-through">
                                 {room.basePrice.toLocaleString()} đ
-                            </div>
+                            </div> */}
                             <div className="text-lg mt-2">
                                 Total:{" "}
                                 <span className="font-semibold">
-                                    {(room.basePrice * 0.9).toLocaleString()} đ
+                                    {/* {(room.basePrice * 0.9).toLocaleString()} đ */}
+                                    {room.basePrice.toLocaleString()} đ
                                 </span>
                             </div>
                         </div>
-                        <div
-                            className="bg-rose-400 px-10 py-3 rounded-lg text-white font-bold text-xl cursor-pointer hover:bg-blue-900 mt-4 transition-all"
-                            onClick={handleContinue}
-                        >
-                            Continue
-                        </div>
+
+                        {isContinue &&
+                            <div
+                                className="bg-rose-400 px-10 py-3 rounded-lg text-white font-bold text-xl cursor-pointer hover:bg-blue-900 mt-4 transition-all"
+                                onClick={handleContinue}
+                            >
+                                Continue
+                            </div>
+
+                        }
                     </div>
                 ) : (
                     <div className="text-gray-500 text-center">No room selected</div>

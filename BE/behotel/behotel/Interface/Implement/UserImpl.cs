@@ -14,7 +14,7 @@ namespace behotel.Interface.Implement
         private readonly IMailService _mailService;
 
 
-        public UserImpl(HotelManagementContext context, IMailService mailService    )
+        public UserImpl(HotelManagementContext context, IMailService mailService)
         {
             _context = context;
             _mailService = mailService;
@@ -68,8 +68,8 @@ namespace behotel.Interface.Implement
 
                 await transaction.CommitAsync();
 
-                var userDTO = await  GetUserDTOAsync(user.Id);
-                if(userDTO == null)
+                var userDTO = await GetUserDTOAsync(user.Id);
+                if (userDTO == null)
                 {
                     return null;
                 }
@@ -134,30 +134,7 @@ namespace behotel.Interface.Implement
         }
 
 
-        public async Task<bool> DeleteUserAsync(Guid id)
-        {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return false;
-            }
-            User_Deleted user_Deleted = new User_Deleted(user.Id, user.FullName, user.Email, user.DateOfBirth, user.Phone, user.Password, user.Status, user.ActiveCode, user.IsActived, user.ForgotPassCode, user.CreatedDate);
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                await _context.User_Deleted.AddAsync(user_Deleted);
-                _context.User.Remove(user);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return true;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return false;
-            }
-
-        }
+      
         //userDTO
         public async Task<UserDTO?> GetUserDTOAsync(Guid id)
         {
@@ -282,6 +259,6 @@ namespace behotel.Interface.Implement
             await _mailService.SendEmailAsync(to, subject, body);
             return new ApiResponse<UserDTO>(null, null, "200", "Send mail successfully", true, 0, 0, 0, 0, null, null);
         }
-      
+
     }
 }

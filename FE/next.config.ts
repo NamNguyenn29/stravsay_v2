@@ -6,10 +6,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "localhost",
+        port: "7020",
+        pathname: "/room_images/**",
       },
     ],
+    domains: ["localhost"],
   },
+
 };
+
 
 export default nextConfig;

@@ -19,6 +19,9 @@ namespace behotel.Models
 
         public DbSet<User_Deleted> User_Deleted { get; set; }
 
+        public DbSet<UserRole_Deleted> UserRole_Deleted { get; set; }
 
+        public DbSet<BookingService_Deleted> BookingService_Deleted { get;set; }
+        public DbSet<Booking_Deleted> Booking_Deleted { get; set; }
     }
 }

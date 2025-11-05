@@ -16,7 +16,7 @@ namespace behotel.Interface
         Task<ApiResponse<UserDTO>> GetUsersWithPaginationAsync(int currentPage, int pageSize);
         Task<User?> GetUserByIdAsync(Guid id);
         Task<User> CreateUserAsync(User user);
-        Task<bool> DeleteUserAsync(Guid id);
+        //Task<ApiResponse<string>> DeleteUserAsync(Guid id);
 
         Task<User?> UpdateUserAsync( Guid id ,UpdateUser update);
 

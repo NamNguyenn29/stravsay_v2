@@ -1,8 +1,13 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Models;
+using behotel.Query;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Configuration;
+using System.Data;
 
 namespace behotel.Interface.Implement
 {
@@ -13,7 +18,7 @@ namespace behotel.Interface.Implement
         private readonly IConfiguration _config;
 
         private readonly IInProgressBookingService _inProgressBookingService;
-        public RoomImpl(HotelManagementContext context, IInProgressBookingService inProgressBookingService, IWebHostEnvironment webHostEnvironment,IConfiguration config)
+        public RoomImpl(HotelManagementContext context, IInProgressBookingService inProgressBookingService, IWebHostEnvironment webHostEnvironment, IConfiguration config)
         {
             _context = context;
             _inProgressBookingService = inProgressBookingService;
@@ -51,7 +56,7 @@ namespace behotel.Interface.Implement
                 Status = status,
                 CreatedDate = DateTime.Now
             };
-            
+
             _context.Room.Add(room);
             await _context.SaveChangesAsync();
             return room;
@@ -206,7 +211,7 @@ namespace behotel.Interface.Implement
             var roomDTOsWithPagination = new List<RoomDTO>();
             foreach (Room room in roomsWithPagination)
             {
-                RoomDTO roomDTO = await GetRoomDTOByIdAsync(room.Id);
+                var roomDTO = await GetRoomDTOByIdAsync(room.Id);
                 if (roomDTO != null)
                 {
                     roomDTOsWithPagination.Add(roomDTO);
@@ -243,6 +248,43 @@ namespace behotel.Interface.Implement
             roomOrigin.Status = status;
             await _context.SaveChangesAsync();
             return roomOrigin;
+        }
+
+        public async Task<ApiResponse<RoomDTO>> SearchRoomByKeyword(string filter, int currentPage, int pageSize)
+        {
+
+            if (string.IsNullOrEmpty(filter))
+            {
+                return new ApiResponse<RoomDTO>(null, null, "400", "Keyword  is required", false, 0, 0, 0, 0, null, null);
+            }
+            if (currentPage <= 0 || pageSize <= 0)
+            {
+                return new ApiResponse<RoomDTO>(null, null, "400", "Current page and page Size is required", false, 0, 0, 0, 0, null, null);
+            }
+            using IDbConnection connection = new SqlConnection(_config.GetConnectionString("DBConnection"));
+            connection.Open();
+
+            var rooms = (await connection.QueryAsync<Room>(
+            RoomSqlQuery.searchRoom,
+            new { Keyword = $"%{filter.Trim()}%" }
+            )).ToList();
+
+            int totalElement = rooms.Count;
+            int totalPage = (int)Math.Ceiling((double)totalElement / pageSize);
+
+            int skip = (currentPage - 1) * pageSize;
+            var pagedRooms = rooms.Skip(skip).Take(pageSize).ToList();
+
+            var roomDTOsWithPagination = new List<RoomDTO>();
+            foreach (Room room in pagedRooms) 
+            {
+                var roomDTO = await GetRoomDTOByIdAsync(room.Id);
+                if (roomDTO != null)
+                    roomDTOsWithPagination.Add(roomDTO);
+            }
+
+            return new ApiResponse<RoomDTO>(roomDTOsWithPagination, null, "200", "Filter room successfully", true, currentPage, pageSize, totalPage, totalElement, null, null);
+
         }
     }
 }

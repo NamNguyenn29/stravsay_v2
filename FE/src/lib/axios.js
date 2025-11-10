@@ -1,19 +1,22 @@
 import axios from "axios";
-
-// Base URL của backend ASP.NET Core
+import Router from "next/router";
 const api = axios.create({
-    baseURL: "https://localhost:7020/api", // backend URL
-    withCredentials: true, // gửi cookie httpOnly
+    baseURL: "https://localhost:7020/api",
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
 });
+
+
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response?.status === 401) {
             console.log("Token expired, redirect to login");
-            router.push("/login");
+            document.cookie = "CURRENT_USER=; path=/; max-age=0";
+            Router.push("/login");
+
         }
         return Promise.reject(error);
     }
@@ -21,3 +24,67 @@ api.interceptors.response.use(
 
 
 export default api;
+
+
+
+// import axios from "axios";
+
+// const axiosClient = axios.create({
+//     baseURL: "https://localhost:7020", // chỉnh base của bạn
+//     withCredentials: true,             // gửi kèm cookies HttpOnly
+// });
+
+// // Flag tránh việc lặp vô hạn
+// let isRefreshing = false;
+// let failedQueue = [];
+
+// const processQueue = (error, token = null) => {
+//     failedQueue.forEach(p => {
+//         if (error) p.reject(error);
+//         else p.resolve(token);
+//     });
+
+//     failedQueue = [];
+// };
+
+// axiosClient.interceptors.response.use(
+//     (response) => response,
+//     async (error) => {
+//         const originalRequest = error.config;
+
+//         // Nếu không phải lỗi 401 → trả về lỗi
+//         if (error.response.status !== 401) {
+//             return Promise.reject(error);
+//         }
+
+//         // Nếu đã refresh rồi thì xếp request này vào hàng chờ
+//         if (isRefreshing) {
+//             return new Promise((resolve, reject) => {
+//                 failedQueue.push({ resolve, reject });
+//             })
+//                 .then(() => axiosClient(originalRequest))
+//                 .catch((err) => Promise.reject(err));
+//         }
+
+//         // Chưa refresh → refresh
+//         isRefreshing = true;
+
+//         try {
+//             const res = await axios.post(
+//                 "/auth/refresh",
+//                 {},
+//                 { withCredentials: true }
+//             );
+
+//             processQueue(null);
+//             return axiosClient(originalRequest);
+//         } catch (err) {
+//             processQueue(err, null);
+//             return Promise.reject(err);
+//         } finally {
+//             isRefreshing = false;
+//         }
+//     }
+// );
+
+// export default axiosClient;

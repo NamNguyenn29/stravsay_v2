@@ -1,7 +1,9 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace behotel.Interface.Implement
 {
@@ -12,6 +14,7 @@ namespace behotel.Interface.Implement
         private readonly IRoomService _roomService;
         private readonly IServiceService _serviceService;
         private readonly IDiscountService _discountService;
+
         public BookingImpl(HotelManagementContext context, IUserService userService, IRoomService roomService, IServiceService serviceService, IDiscountService discountService)
         {
             _context = context;
@@ -51,7 +54,7 @@ namespace behotel.Interface.Implement
             {
                 return new ApiResponse<string>(null, null, "400", "Can not cancel booking of other user", false, 0, 0, 0, 0, null, 0);
             }
-            if (booking.CheckInDate >= DateTime.Now)
+            if (booking.CheckInDate <= DateTime.Now)
             {
                 return new ApiResponse<string>(null, null, "400", "Can not cancel on progress booking ", false, 0, 0, 0, 0, null, 0);
             }
@@ -204,7 +207,7 @@ namespace behotel.Interface.Implement
         public async Task<ApiResponse<BookingDTO>> GetBookingDTOsForUserAsync(Guid userId)
 
         {
-            var userBookings = await _context.Booking.Where(b => b.UserId == userId).ToListAsync();
+            var userBookings = await _context.Booking.Where(b => b.UserId == userId).OrderByDescending(b => b.CreatedDate).ToListAsync();
             var bookingDTOs = new List<BookingDTO>();
             foreach (var booking in userBookings)
             {
@@ -243,6 +246,55 @@ namespace behotel.Interface.Implement
                 }
             }
             return new ApiResponse<BookingDTO>(bookingDTOs, null, "200", "Get bookings successfully", true, currentPage, pageSize, totalPage, totalElement, null, null);
+
+        }
+
+        public async Task<ApiResponse<BookingDTO>> SearchBookingById(string filter, int currentPage, int pageSize)
+        {
+            if (string.IsNullOrEmpty(filter))
+            {
+                return new ApiResponse<BookingDTO>(null, null, "400", "Keyword  is required", false, 0, 0, 0, 0, null, null);
+            }
+            if (currentPage <= 0 || pageSize <= 0)
+            {
+                return new ApiResponse<BookingDTO>(null, null, "400", "Current page and page Size is required", false, 0, 0, 0, 0, null, null);
+            }
+            filter = filter.Trim().ToLower();
+
+            var query = from b in _context.Booking
+                        join u in _context.User on b.UserId equals u.Id
+                        join r in _context.Room on b.RoomId equals r.Id
+                        where u.FullName.ToLower().Contains(filter)
+                           || u.Phone.ToLower().Contains(filter)
+                           || r.RoomName.ToLower().Contains(filter)
+                           || r.RoomNumber.ToString().Contains(filter)
+                        orderby b.CreatedDate descending
+                        select new BookingDTO
+                        {
+                            Id = b.Id,
+                            FullName = u.FullName,
+                            Phone = u.Phone,
+                            RoomNumber = r.RoomNumber,
+                            RoomName = r.RoomName,
+                            CheckInDate = b.CheckInDate,
+                            CheckOutDate = b.CheckOutDate,
+                            Price = b.Price,
+                            discountCode = null,
+                            Status = b.Status,
+                            CreatedDate = b.CreatedDate,
+                            Adult = b.Adult,
+                            Children = b.Children,
+                            Services = null 
+                        };
+
+            var totalItem = await query.CountAsync();
+            var totalPage = (int)Math.Ceiling((double)totalItem / pageSize);
+
+            var pagedResult = await query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new ApiResponse<BookingDTO>(pagedResult, null, "200", "Filter bookings successfully", true, currentPage, pageSize, totalPage, totalItem, null, null);
 
         }
 

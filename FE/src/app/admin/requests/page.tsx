@@ -1,37 +1,55 @@
 "use client"
-import { Pagination } from "antd";
-import { useState, useEffect } from "react";
+import { Button, message, Pagination } from "antd";
+import { useState, useEffect, useCallback } from "react";
 import { Request } from "@/model/Request";
 import { getRequests } from "@/api/Request/getRequest";
 import dayjs from "dayjs";
+import { PoweroffOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import { supportService } from "@/services/supportRequestService";
 export default function UserMangement() {
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [requests, setRequests] = useState<Request[]>([]);
     const [totalPage, setTotalPage] = useState(1);
     const [totalElement, setTotalElement] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
-    useEffect(() => {
-        loadRequest();
-    }, [currentPage, pageSize])
+    const [response, setResponse] = useState<string>("");
 
-    const loadRequest = async () => {
+    const loadRequest = useCallback(async () => {
         const data = await getRequests(currentPage, pageSize);
         setRequests(data.list);
         setTotalPage(data.totalPage ? data.totalPage : 0);
         setTotalElement(data.totalElement);
-    }
+    }, [currentPage, pageSize]);
+    useEffect(() => {
+        loadRequest();
+    }, [currentPage, loadRequest, pageSize]);
+
+
 
     const [selectedRequestResponse, setSelectedRequestResponse] = useState<Request | null>(null);
-    const [selectedRequestView, setSelectedRequestView] = useState<Request | null>(null);
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
         return dayjs(dateString).format("DD/MM/YYYY "); //
     };
+    const [messageApi, contexHolder] = message.useMessage();
+    const handleReponse = async (id: string, response: string) => {
+        setLoading(true);
+        const res = await supportService.responseRequest(id, response);
+        if (res.data.isSuccess) {
+            messageApi.success(res.data.message);
+        } else {
+            message.error(res.data.message);
+        }
+        setLoading(false);
+
+    }
 
     return (
         <>
             <>
-
+                {contexHolder}
                 <div className=" font-semibold text-lg">View All Request</div>
                 <div className="my-3 border border-b-1 container  bg-black "></div>
 
@@ -43,9 +61,12 @@ export default function UserMangement() {
                         className="w-96 border p-2  rounded-md "
 
                     />
+                    <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large">
+                        Search
+                    </Button>
                 </div>
                 {/* Summary box */}
-                <div className="flex gap-5 container mx-auto mb-10">
+                {/* <div className="flex gap-5 container mx-auto mb-10">
                     <div
 
                         className={`cursor-pointer flex flex-col items-center gap-2 border rounded-lg px-10 py-5 w-64 transition
@@ -83,7 +104,7 @@ export default function UserMangement() {
                     </div>
 
 
-                </div>
+                </div> */}
                 {/* --- TABLE --- */}
                 <table className=" w-full container mx-auto my-10 text-lg">
                     <thead >
@@ -164,13 +185,19 @@ export default function UserMangement() {
                 {/* --- MODAL RESPONSE --- */}
                 {selectedRequestResponse && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-40">
-                        <div className="bg-white text-gray-800 rounded-xl shadow-2xl p-6 w-[420px]">
+                        <div className="bg-white text-gray-800 rounded-xl shadow-2xl p-6 w-[520px]">
                             <div className="mb-4 border-b pb-2">
                                 <h2 className="text-xl font-bold">Response</h2>
                                 <p className="text-sm text-gray-500 mt-1">
                                     Request ID:{" "}
                                     <span className="font-semibold text-blue-600">
                                         #{selectedRequestResponse.id}
+                                    </span>
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    Email:{" "}
+                                    <span className="font-semibold text-blue-600">
+                                        {selectedRequestResponse.userEmail}
                                     </span>
                                 </p>
                             </div>
@@ -188,69 +215,34 @@ export default function UserMangement() {
                                 <label className="block text-sm font-medium mb-1">Message</label>
                                 <textarea
                                     placeholder="Type your response here..."
-                                    className="w-full h-24 p-2 rounded-md border border-gray-300 outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="w-full h-50 p-2 rounded-md border border-gray-300 outline-none focus:ring-2 focus:ring-blue-400"
+                                    defaultValue={(selectedRequestResponse.response ? selectedRequestResponse.response : undefined)}
+                                    onChange={e => setResponse(e.target.value)}
                                 />
                             </div>
 
                             <div className="flex justify-end gap-3 ">
-                                <button className="px-5 py-2 bg-green-500 hover:bg-green-600 !text-white rounded-full shadow">
+                                <Button
+                                    type="primary"
+                                    icon={<PoweroffOutlined />}
+                                    loading={loading && { icon: <SyncOutlined spin /> }}
+                                    onClick={() => handleReponse(selectedRequestResponse.id, response)}
+                                >
                                     Send
-                                </button>
-                                <button
+                                </Button>
+                                <Button
+                                    color="danger" variant="solid"
                                     onClick={() => setSelectedRequestResponse(null)}
-                                    className="px-5 py-2 bg-red-500 hover:bg-red-600 !text-white rounded-full shadow"
                                 >
                                     Cancel
-                                </button>
+                                </Button>
+
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* --- MODAL VIEW --- */}
-                {selectedRequestView && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40">
-                        <div className="bg-white text-gray-800 rounded-xl shadow-2xl p-6 w-[420px]">
-                            <div className="mb-4 border-b pb-2">
-                                <h2 className="text-xl font-bold">View Request</h2>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Request ID:{" "}
-                                    <span className="font-semibold text-blue-600">
-                                        #{selectedRequestView.id}
-                                    </span>
-                                </p>
-                            </div>
 
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-1">Title</label>
-                                <input
-                                    type="text"
-                                    value={selectedRequestView.title}
-                                    disabled
-                                    className="w-full p-2 rounded-md border border-gray-300 bg-gray-100"
-                                />
-                            </div>
-
-                            <div className="mb-6">
-                                <label className="block text-sm font-medium mb-1">Description</label>
-                                <textarea
-                                    value={selectedRequestView.description}
-                                    disabled
-                                    className="w-full h-32 p-2 rounded-md border border-gray-300 bg-gray-100"
-                                />
-                            </div>
-
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={() => setSelectedRequestView(null)}
-                                    className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </ >
         </>
     )

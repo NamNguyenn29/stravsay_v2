@@ -1,5 +1,5 @@
 export type Request = {
-    id: number,
+    id: string,
     userEmail: string,
     title: string,
     status: number,

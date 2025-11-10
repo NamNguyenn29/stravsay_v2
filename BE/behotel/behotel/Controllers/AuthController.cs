@@ -1,13 +1,9 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Interface;
-using behotel.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Common;
-using System.ComponentModel;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
@@ -30,7 +26,6 @@ namespace behotel.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ApiResponse<string>> Login([FromBody] LoginModel loginModel)
         {
@@ -77,9 +72,9 @@ namespace behotel.Controllers
                 HttpOnly = false, // middleware Edge runtime có thể đọc
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Path = "/"
+                Path = "/",
+                Expires = DateTime.UtcNow.AddHours(1)
             });
-            Console.WriteLine($"Cookie set: {Response.Cookies}");
             return new ApiResponse<string>(null, token, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
         }
@@ -125,7 +120,7 @@ namespace behotel.Controllers
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddHours(30),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);

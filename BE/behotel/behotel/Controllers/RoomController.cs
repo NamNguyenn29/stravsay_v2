@@ -133,5 +133,12 @@ namespace behotel.Controllers
             }
             return new ApiResponse<Room>(null, null, "200", "Delete room successfully", true, 0, 0, 0, 0, null, null);
         }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("search")]
+        public async Task<ApiResponse<RoomDTO>> SearchRoom([FromQuery]string filter, [FromQuery]int currentPage, [FromQuery]int pageSize)
+        {
+            return await _roomImpl.SearchRoomByKeyword(filter, currentPage,pageSize);
         }
+    }
 }

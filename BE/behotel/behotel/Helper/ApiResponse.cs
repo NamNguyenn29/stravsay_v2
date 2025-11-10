@@ -17,18 +17,7 @@
         public int TotalElement { get; set; }
  
 
-        public ApiResponse(int TotalPage, int CurrentPage, List<T>? List, T? Object, string Code, string Message, bool IsSuccess, string? String, int Int)
-        {
-            this.TotalPage = TotalPage;
-            this.CurrentPage = CurrentPage;
-            this.List = List;
-            this.Object = Object;
-            this.Code = Code;
-            this.Message = Message;
-            this.IsSuccess = IsSuccess;
-            this.String = String;
-            this.Int = Int;
-        }
+       
 
         public ApiResponse(List<T>? List, T?Object, string Code , string Message, bool IsSuccess,int CurrentPage,int PageSize, int TotalPage, int TotalElement ,string? String , int? Int ) {
             this.List = List;

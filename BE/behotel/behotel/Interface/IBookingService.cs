@@ -25,6 +25,7 @@ namespace behotel.Interface
         Task<ApiResponse<string>> CancelBookingAsync(Guid id,Guid userId);
 
         Task<ApiResponse<string>> SoftDeleteBookingAsync(Guid id);
-       
+
+        Task<ApiResponse<BookingDTO>> SearchBookingById(string filter, int currentPage, int pageSize);
     }
 }

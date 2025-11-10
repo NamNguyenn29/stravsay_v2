@@ -14,6 +14,7 @@ namespace behotel.Interface
         Task<SupportRequest?> ResponseRequestAsync(Guid id, string response);
         Task<bool> DeleteSupportRequestAsync(Guid id);
 
+        Task<ApiResponse<SupportRequest>> SerchSupportRequestByKeyword(string filter, int currentPage, int pageSize);
 
     }
 }

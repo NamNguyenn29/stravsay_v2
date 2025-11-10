@@ -2,14 +2,14 @@
 import { useEffect, useState } from "react";
 import { Room } from "@/model/Room";
 import { getRooms } from "@/api/RoomApi/getRoom";
-import { Pagination } from 'antd';
+import { Pagination, Upload } from 'antd';
 import { Modal, Form, Input, Select, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
-import { createRoom } from "@/api/RoomApi/createRoom";
 import { deleteRoom } from "@/api/RoomApi/deleteRoom";
 import "@/css/modal.css"
+import { roomService } from "@/services/roomService";
 
 
 export default function RoomManagement() {
@@ -20,10 +20,11 @@ export default function RoomManagement() {
     const [totalElement, setTotalElement] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
-    useEffect(() => {
-        loadRoom();
-        loadRoomType();
-    }, [currentPage, pageSize]);
+    const [createLoaing, setCreateLoading] = useState(false);
+
+    const [formAdd] = Form.useForm();
+    const [formEdit] = Form.useForm();
+
 
     const loadRoom = async () => {
         const data = await getRooms(currentPage, pageSize);
@@ -31,6 +32,11 @@ export default function RoomManagement() {
         setTotalPage(data.totalPage ? data.totalPage : 0);
         setTotalElement(data.totalElement);
     }
+    useEffect(() => {
+        loadRoom();
+        loadRoomType();
+    }, [currentPage, pageSize]);
+
     const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
     const loadRoomType = async () => {
         const data = await getRoomType();
@@ -75,29 +81,42 @@ export default function RoomManagement() {
     };
 
     const handleAddSubmit = async () => {
+
         try {
-            const values = await form.validateFields();
+            setCreateLoading(true);
+            const values = await formAdd.validateFields();
 
-            const payload = {
-                roomName: values.roomName,
-                roomNumber: values.roomNumber,
-                description: values.description,
-                roomTypeID: values.roomType,
-                floor: values.floor,
-                imageUrl: values.imageUrl || [],
-                status: values.status
-            };
-            const res = await createRoom(payload);
 
-            if (res.isSuccess) {
-                messageApi.success("Room added successfully!");
-                setAddModalVisible(false);
-                form.resetFields();
-                await loadRoom();
+            const formData = new FormData();
+
+            formData.append("RoomName", values.roomName);
+            formData.append("RoomNumber", values.roomNumber);
+            formData.append("RoomTypeID", values.roomType);
+            console.log(values.roomTypeID)
+
+            formData.append("Status", values.status);
+            formData.append("Description", values.description);
+            formData.append("Floor", values.floor);
+
+
+            values.ImageUrl.forEach((file: string | Blob) => {
+                formData.append("ImageUrl", file);
+            });
+
+            const res = await roomService.createRoom(formData);
+            if (res.data.isSuccess) {
+                messageApi.success(res.data.message);
+            } else {
+                messageApi.error(res.data.message);
             }
+            setCreateLoading(false);
+            setAddModalVisible(false);
+            formAdd.resetFields();
+            loadRoom();
+
         } catch (err) {
-            console.error("Error adding room:", err);
-            messageApi.error("Failed to add room!");
+            messageApi.error("Failed to add room! : " + err);
+            setCreateLoading(false);
         }
     };
     const [modal, modalContextHolder] = Modal.useModal();
@@ -257,7 +276,7 @@ export default function RoomManagement() {
 
             >
                 <Form
-                    form={form}
+                    form={formEdit}
                     layout="vertical"
                     className="mt-4">
 
@@ -280,8 +299,8 @@ export default function RoomManagement() {
 
                         <Form.Item name="status" label="Status" rules={[{ required: true }]}>
                             <Select>
-                                <Select.Option value={"Unavailable"}>Unavailable</Select.Option>
-                                <Select.Option value={"Available"}>Available</Select.Option>
+                                <Select.Option value={0}>Unavailable</Select.Option>
+                                <Select.Option value={1}>Available</Select.Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
@@ -300,28 +319,52 @@ export default function RoomManagement() {
                         <Form.Item name="floor" label="Floor " className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
                     <div className="mb-2 font-medium">Image URLs</div>
-                    <Form.List name="imageUrl">
+                    <Form.List name="images">
                         {(fields, { add, remove }) => (
                             <div className="flex flex-col gap-2">
                                 {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className="flex items-center gap-3 mb-2">
+                                    <div key={key} className="flex items-center gap-3 mb-3">
                                         <Form.Item
                                             {...restField}
                                             name={name}
-                                            className="flex-1 !mb-0"
-                                            rules={[{ required: true, message: "Please enter image URL" }]}
+                                            valuePropName="fileList"
+                                            getValueFromEvent={(e) => e?.fileList}
+                                            rules={[{ required: true, message: "Please upload an image!" }]}
+                                            className="!mb-0"
                                         >
-                                            <Input placeholder="Enter image URL" />
+                                            <Upload
+                                                listType="picture-card"
+                                                beforeUpload={() => false} // Không upload lên server, chỉ preview local
+                                                onPreview={async (file) => {
+                                                    let src: string = file.url || "";
+
+                                                    if (!src && file.originFileObj instanceof Blob) {
+                                                        src = URL.createObjectURL(file.originFileObj);
+                                                    }
+
+                                                    const img = new Image();
+                                                    img.src = src;
+
+                                                    const w = window.open(src);
+                                                    w?.document.write(img.outerHTML);
+                                                }}
+
+                                            >
+                                                + Upload
+                                            </Upload>
                                         </Form.Item>
+
                                         <Button danger onClick={() => remove(name)}>Remove</Button>
                                     </div>
                                 ))}
+
                                 <Button type="dashed" onClick={() => add()} block>
-                                    + Add Image URL
+                                    + Add Image
                                 </Button>
                             </div>
                         )}
                     </Form.List>
+
 
 
                 </Form>
@@ -330,7 +373,7 @@ export default function RoomManagement() {
 
             {/*Add room modal*/}
             < Modal
-                title={< span className="text-xl font-semibold text-green-600" > Add Room</span >}
+                title={< span className="text-xl font-semibold text-blue-900" > Add Room</span >}
                 open={addModalVisible}
                 onCancel={handleCancle}
                 centered
@@ -340,7 +383,7 @@ export default function RoomManagement() {
                         <Button key="add" type="primary" className="bg-green-600" onClick={handleAddSubmit}>Add Room</Button>
                     ]}
             >
-                <Form form={form} layout="vertical" className="mt-4">
+                <Form form={formAdd} layout="vertical" className="mt-4">
                     <div className="flex gap-3">
                         <Form.Item name="roomName" label="Room Name" className="w-2/3" rules={[{ required: true }]}><Input /></Form.Item>
                         <Form.Item name="roomNumber" label="Room Number" className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
@@ -362,8 +405,8 @@ export default function RoomManagement() {
                         </Form.Item>
                         <Form.Item name="status" label="Status" rules={[{ required: true }]} className="w-[100px]"  >
                             <Select>
-                                <Select.Option value={"Unavailable"}>Unavailable</Select.Option>
-                                <Select.Option value={"Available"}>Available</Select.Option>
+                                <Select.Option value={0}>Unavailable</Select.Option>
+                                <Select.Option value={1}>Available</Select.Option>
                             </Select>
                         </Form.Item>
 
@@ -372,26 +415,75 @@ export default function RoomManagement() {
                     </div>
 
                     <div className="mb-2 font-medium">Image URLs</div>
-                    <Form.List name="imageUrl">
-                        {(fields, { add, remove }) => (
-                            <div className="flex flex-col gap-2 ">
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className="flex gap-2 items-center mb-2">
-                                        <Form.Item
-                                            {...restField}
-                                            name={name}
-                                            className="flex-1 !mb-0"
-                                            rules={[{ required: true, message: "Please enter image URL" }]}
-                                        >
-                                            <Input placeholder="Enter image URL" />
-                                        </Form.Item>
-                                        <Button danger onClick={() => remove(name)}>Remove</Button>
+                    <Form.Item label="Images">
+                        <Form.List name="ImageUrl">
+                            {(fields, { add, remove }) => (
+                                <div className="flex flex-col gap-3">
+
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {fields.map((field, index) => {
+                                            const fileList = formAdd.getFieldValue("ImageUrl") || [];
+                                            const file = fileList[index];
+
+                                            return (
+                                                <div key={field.key} className="p-3 border rounded-xl bg-gray-50">
+
+                                                    {/* Hidden chứa file */}
+                                                    <Form.Item {...field} className="!mb-2">
+                                                        <Input type="hidden" />
+                                                    </Form.Item>
+
+                                                    {/* Preview */}
+                                                    <div className="w-full h-32 border rounded flex items-center justify-center overflow-hidden">
+                                                        {file && (
+                                                            <img
+                                                                src={URL.createObjectURL(file)}
+                                                                className="object-cover w-full h-full"
+                                                            />
+                                                        )}
+                                                    </div>
+
+                                                    {/* Upload */}
+                                                    <Upload
+                                                        accept="image/*"
+                                                        showUploadList={false}
+                                                        beforeUpload={(fileUpload) => {
+                                                            const clone = [...fileList];
+                                                            clone[index] = fileUpload;
+                                                            formAdd.setFieldsValue({ ImageUrl: clone });
+                                                            return false;
+                                                        }}
+                                                    >
+                                                        <Button className="mt-2" block>
+                                                            Upload
+                                                        </Button>
+                                                    </Upload>
+
+                                                    <Button className="mt-2" danger block onClick={() => {
+                                                        const clone = [...fileList];
+                                                        clone.splice(index, 1);
+                                                        formAdd.setFieldsValue({ ImageUrl: clone });
+                                                        remove(field.name);
+                                                    }}>
+                                                        Remove
+                                                    </Button>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                ))}
-                                <Button type="dashed" onClick={() => add()} block>+ Add Image URL</Button>
-                            </div>
-                        )}
-                    </Form.List>
+
+                                    <Button type="dashed" block onClick={() => add()}>
+                                        + Add Image
+                                    </Button>
+                                </div>
+                            )}
+                        </Form.List>
+                    </Form.Item>
+
+
+
+
+
                 </Form>
             </Modal >
 

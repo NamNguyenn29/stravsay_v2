@@ -124,7 +124,6 @@ export default function BookingPage() {
 
     return (
         <div>
-            <div className="text-center text-5xl text-white bg-black font-semibold  p-10">Booking Room</div>
             <div className="bg-[rgb(250,247,245)] mx-auto container py-5 ">
                 <div className="mx-[20px]  h-[120px] bg-white flex justify-start gap-20 p-[50px] k h-[180px] ">
                     <div className="relative text-xl">

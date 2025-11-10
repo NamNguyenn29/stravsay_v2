@@ -43,7 +43,7 @@ namespace behotel.Controllers
             return new ApiResponse<BookingDTO>(null, booking, "200", "Get booking successfully", true,0,0,0,1, null, null);
         }
         [Authorize]
-        [HttpGet("/userbooking")]
+        [HttpGet("userbooking")]
         public async Task<ApiResponse<BookingDTO>> GetBookingsByUserId()
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -101,7 +101,8 @@ namespace behotel.Controllers
 
 
         [Authorize (Roles ="ADMIN")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        
         public async Task<ApiResponse<string>> DeleteBooking(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -115,7 +116,12 @@ namespace behotel.Controllers
             return await _bookingService.SoftDeleteBookingAsync(guidId);
 
         }
-
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("search")]
+        public async Task<ApiResponse<BookingDTO>> SearchBooking([FromQuery] string filter, [FromQuery] int currentPage, [FromQuery]int pageSize)
+        {
+            return await _bookingService.SearchBookingById(filter, currentPage, pageSize);
+        }
 
 
 

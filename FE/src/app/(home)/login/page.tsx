@@ -41,6 +41,7 @@ export default function LoginPage() {
                 router.replace("/");
                 return;
             }
+            return;
         }
         setChecking(false);
     }, [router]);
@@ -71,7 +72,8 @@ export default function LoginPage() {
                 if (resGetUser.isSuccess && resGetUser.object) {
                     const jsonString = JSON.stringify(resGetUser.object);
 
-                    document.cookie = `CURRENT_USER=${encodeURIComponent(jsonString)}; path=/; max-age=${1 * 60 * 60}`
+                    document.cookie = `CURRENT_USER=${encodeURIComponent(jsonString)}; path=/; max-age=${1 * 60 * 60}`;
+                    await new Promise(r => setTimeout(r, 100)); // 
                 }
 
                 api.success({
@@ -86,18 +88,14 @@ export default function LoginPage() {
                     router.push(redirectUrl);
                     return;
                 }
-
-
-
-
-
                 if (resGetUser.object?.roleList.includes("ADMIN")) {
-                    router.push("/admin");
+                    router.replace("/admin");
                 } else if (resGetUser.object?.roleList.includes("USER")) {
-                    router.push("/user/profile");
+                    router.replace("/user/profile");
                 } else {
-                    router.push("/");
+                    router.replace("/");
                 }
+
             } else {
                 setError(res.message || "Invalid email or password.");
             }

@@ -14,8 +14,8 @@ import type { InputNumberProps } from 'antd';
 import { InputNumber } from 'antd';
 import { useState, useEffect } from "react";
 import "antd/dist/reset.css";
-import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
+import { roomTypeService } from "@/services/roomTypeService";
 export default function Home() {
   const router = useRouter();
   const { RangePicker } = DatePicker;
@@ -41,8 +41,8 @@ export default function Home() {
     loadRoomType();
   }, [])
   const loadRoomType = async () => {
-    const data = await getRoomType();
-    const list: RoomType[] = data.list;
+    const res = await roomTypeService.getRoomType();
+    const list: RoomType[] = res.data.list;
 
     setRoomTypes(list);
 

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { userService } from "@/services/userService";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,8 @@ export default function ForgotPasswordPage() {
 
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 700));
+      const res = await userService.forgotPassword(email);
+      setMessage(res.data.message);
       setSent(true);
     } catch {
       setError("Failed to send verification code. Please try again.");
@@ -91,7 +94,7 @@ export default function ForgotPasswordPage() {
 
             {sent && (
               <div className="p-3 rounded-md bg-green-50 border border-green-100 text-sm text-green-800">
-                Verification code sent to <span className="font-medium">{email}</span>. Check your inbox.
+                {message}
               </div>
             )}
 

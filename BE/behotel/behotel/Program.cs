@@ -52,7 +52,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
-        options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
+        //options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
 
     });
 
@@ -118,7 +118,10 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+            ClockSkew = TimeSpan.Zero,
+
+
         };
 
         options.Events = new JwtBearerEvents

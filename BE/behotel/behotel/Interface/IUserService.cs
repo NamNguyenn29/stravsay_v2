@@ -35,9 +35,18 @@ namespace behotel.Interface
 
         Task<ApiResponse<String>> ActiveUser(string email, string activeCode);
 
+        Task<ApiResponse<UserDTO>> ChangePassword(Guid userId, ChangePasswordModel changePasswordModel);
 
 
+        Task<ApiResponse<string>> CheckEmailExists(string email);
+
+        Task<ApiResponse<string>> SendResetLink(string email,string resetToken);
+
+        Task<ApiResponse<string>> CheckResetToken(string email,string resetToken);
+
+        Task<ApiResponse<string>> ResetPassword(ResetPasswordModel resetPasswordModel);
 
 
+        Task<ApiResponse<UserDTO>> SearchUserKeyword(string filter, int currentPage, int pageSize);
     }
 }

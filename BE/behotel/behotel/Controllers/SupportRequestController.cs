@@ -179,5 +179,14 @@ namespace behotel.Controllers
 
         }
 
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("search")]
+        public async Task<ApiResponse<SupportRequest>> SearchSupportRequest([FromQuery]string filter, [FromQuery]int currentPage,[FromQuery] int pageSize)
+        {
+            return await _supportRequestService.SerchSupportRequestByKeyword(filter, currentPage, pageSize);
+        }
+
+
+
     }
 }

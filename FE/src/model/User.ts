@@ -7,7 +7,7 @@ export type User = {
     // password: string;
     // status: number;
     // activeCode?: string;
-    isActive: boolean;
+    isActived: boolean;
     // forgotPasswordcode?: string;
     // isDeleted: false;
     createdDate: string;

@@ -5,8 +5,7 @@ import { Box, Button } from "@mui/material";
 import { UserOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { User } from "@/model/User";
-// import { updateUser } from "@/api/updateUser"; // API update user
-
+import dayjs from "dayjs";
 type Props = {
     selectedUser: User | null;
     onClose: () => void;
@@ -35,9 +34,14 @@ const logColumns: ColumnsType<typeof userLogs[0]> = [
     { title: "Device", dataIndex: "device", key: "device" },
 ];
 
+const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
+    return dayjs(dateString).format("DD/MM/YYYY ");
+};
+
 export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Props) {
     const [loading, setLoading] = useState(false);
-    const [roles, setRoles] = useState<string[]>(selectedUser?.roleList || []);
+    // const [roles, setRoles] = useState<string[]>(selected    User?.roleList || []);
     const [status, setStatus] = useState<UserStatus>(() => {
         if (!selectedUser) return "Inactive";
         if (selectedUser.isActive) return "Active";
@@ -49,11 +53,7 @@ export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Pr
     const handleSave = async () => {
         try {
             setLoading(true);
-            const updatedUser = {
-                ...selectedUser,
-                roles,
-                ...statusMap[status],
-            };
+
             // await updateUser(updatedUser);
             setLoading(false);
             onUpdated();
@@ -117,10 +117,10 @@ export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Pr
                                         <div className="mb-4">{selectedUser.id}</div>
 
                                         <div className="font-semibold text-gray-600 mb-1">Created Date</div>
-                                        <div className="mb-4">{selectedUser.createdDate}</div>
+                                        <div className="mb-4">{formatDate(selectedUser.createdDate)}</div>
 
                                         <div className="font-semibold text-gray-600 mb-1">Date of Birth</div>
-                                        <div className="mb-4">{selectedUser.dateOfBirth ?? "—"}</div>
+                                        <div className="mb-4">{formatDate(selectedUser.dateOfBirth) ?? "—"}</div>
 
                                         <div className="font-semibold text-gray-600 mb-1">Status</div>
                                         <Select

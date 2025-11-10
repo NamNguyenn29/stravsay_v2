@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, Avatar, Form, Input, Button, DatePicker, Tabs, message } from "antd";
 import {
     UserOutlined, MailOutlined, PhoneOutlined, CalendarOutlined, LockOutlined,
@@ -11,18 +11,21 @@ import { UpdateUser } from "@/model/UpdateUser";
 import { updateUser } from "@/api/UserApi/updateUser";
 import { motion } from "framer-motion";
 import { notification } from "antd";
+import { ChangePasswordModel } from "@/model/ChangePassword";
+import useMessage from "antd/es/message/useMessage";
+import { userService } from "@/services/userService";
 
 
 export default function Profile() {
-    const [form] = Form.useForm();
+    const [inforForm] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [api, contextHolder] = notification.useNotification();
-    useEffect(() => {
-        loadUser();
-    }, []);
-
-    const loadUser = async () => {
+    const [message, contextMessHolder] = useMessage();
+    const [curPassword, setCurPassword] = useState("");
+    const [nPassword, setNPassword] = useState("");
+    const [confpassword, setConfPassword] = useState("");
+    const loadUser = useCallback(async () => {
         try {
             const userCookie = getCookie("CURRENT_USER");
 
@@ -32,7 +35,7 @@ export default function Profile() {
                 const data = await getUserById(user.id);
                 setUser(data.object);
 
-                form.setFieldsValue({
+                inforForm.setFieldsValue({
                     email: data.object?.email,
                     fullname: data.object?.fullName,
                     phone: data.object?.phone,
@@ -41,10 +44,15 @@ export default function Profile() {
             }
 
         } catch (err) {
-            console.error("Erro: ", err);
+            console.error("Error: ", err);
 
         }
-    }
+    }, []);
+    useEffect(() => {
+        loadUser();
+    }, [loadUser]);
+
+
     function getCookie(name: string): string | null {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         return match ? decodeURIComponent(match[2]) : null;
@@ -56,7 +64,7 @@ export default function Profile() {
     const handleUpdate = async () => {
         try {
             setLoading(true);
-            const values = await form.validateFields();
+            const values = await inforForm.validateFields();
 
             const updatePayload: UpdateUser = {
                 fullName: values.fullname,
@@ -88,8 +96,31 @@ export default function Profile() {
 
     };
 
+    const handleChangepassword = async () => {
+        if (curPassword === "" || nPassword === "" || confpassword === "") {
+            message.error("Please fill all filed");
+        }
+        if (nPassword != confpassword) {
+            message.error("New password and confirm password must be the same");
+        }
+        const changePasswordModel: ChangePasswordModel = {
+            currentPassword: curPassword,
+            newPasswords: nPassword,
+        }
+
+        const res = await userService.changePassword(changePasswordModel);
+        if (!res.data.isSuccess) {
+            message.error(res.data.message);
+        } else {
+            message.success(res.data.message);
+        }
+        loadUser();
+
+    }
+
     return (
         <>{contextHolder}
+            {contextMessHolder}
             <div className="min-h-screen bg-gray-50 flex flex-col items-center p-10">
                 <h1 className="text-4xl font-bold text-gray-700 mb-10">My Profile</h1>
 
@@ -118,7 +149,7 @@ export default function Profile() {
                                         children: (
                                             <Form
                                                 layout="vertical"
-                                                form={form}
+                                                form={inforForm}
                                                 style={{ fontSize: "18px" }}
                                             >
                                                 <div className="grid grid-cols-2 gap-8">
@@ -203,11 +234,13 @@ export default function Profile() {
                                                 <Form.Item
                                                     label={<span className="text-lg font-semibold">Current Password</span>}
                                                     name="current"
+
                                                 >
                                                     <Input.Password
                                                         prefix={<LockOutlined style={{ fontSize: 18 }} />}
                                                         size="large"
                                                         style={{ fontSize: "16px", padding: "12px" }}
+                                                        onChange={(e) => setCurPassword(e.target.value)}
                                                     />
                                                 </Form.Item>
 
@@ -219,6 +252,7 @@ export default function Profile() {
                                                         prefix={<LockOutlined style={{ fontSize: 18 }} />}
                                                         size="large"
                                                         style={{ fontSize: "16px", padding: "12px" }}
+                                                        onChange={(e) => setNPassword(e.target.value)}
                                                     />
                                                 </Form.Item>
 
@@ -230,6 +264,7 @@ export default function Profile() {
                                                         prefix={<LockOutlined style={{ fontSize: 18 }} />}
                                                         size="large"
                                                         style={{ fontSize: "16px", padding: "12px" }}
+                                                        onChange={(e) => setConfPassword(e.target.value)}
                                                     />
                                                 </Form.Item>
 
@@ -238,6 +273,7 @@ export default function Profile() {
                                                         type="primary"
                                                         size="large"
                                                         className="px-16 py-2 text-lg rounded-md bg-blue-600 hover:bg-blue-700"
+                                                        onClick={handleChangepassword}
                                                     >
                                                         Change Password
                                                     </Button>

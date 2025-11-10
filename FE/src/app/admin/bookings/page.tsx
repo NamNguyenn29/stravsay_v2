@@ -1,58 +1,39 @@
 'use client';
 import { Booking } from "@/model/Booking";
-import { User } from "@/model/User";
-import { Room } from "@/model/Room";
 import { getBookings } from "@/api/Booking/getBooking";
-import { useState, useEffect } from "react";
-import { getUserById } from "@/api/UserApi/getUserById";
-import { getRoomById } from "@/api/RoomApi/getRoomById";
-import { Pagination, Modal, Form, Input, Select, DatePicker, Button, message } from "antd";
+import { useState, useEffect, useCallback } from "react";
+import { Pagination, Modal, Form, Input, DatePicker, Button, message } from "antd";
 import dayjs from "dayjs";
+import { SearchOutlined } from "@ant-design/icons";
+import { BookingService } from "@/services/bookingService";
 
 export default function BookingMangement() {
     const [bookings, setBookings] = useState<Booking[]>([]);
-    const [users, setUsers] = useState<Record<string, User>>({});
-    const [rooms, setRooms] = useState<Record<string, Room>>({});
-    const roomList = Object.values(rooms);
 
-    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [viewModalVisible, setviewModalVisible] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
     const [form] = Form.useForm();
-    const [totalPage, setTotalPage] = useState(1);
     const [totalElement, setTotalElement] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [messageApi, contextHolder] = message.useMessage();
+    const [loading, setLoading] = useState<boolean>(false);
+
+
+    const loadingBooking = useCallback(async () => {
+        const data = await getBookings(currentPage, pageSize);
+        setBookings(data.list);
+        setTotalElement(data.totalElement);
+    }, [currentPage, pageSize]);
 
     useEffect(() => {
         loadingBooking();
-    }, [currentPage, pageSize]);
+    }, [currentPage, loadingBooking, pageSize]);
 
-    const loadingBooking = async () => {
-        const data = await getBookings(currentPage, pageSize);
-        setBookings(data.list);
-        setTotalPage(data.totalPage ? data.totalPage : 0);
-        setTotalElement(data.totalElement);
-    }
-
-    // useEffect(() => {
-    //     bookings.forEach((b) => {
-    //         if (!users[b.userId]) {
-    //             getUserById(b.userId).then((u) => {
-    //                 if (u) setUsers((prev) => ({ ...prev, [b.userId]: u }));
-    //             });
-    //         }
-    //         if (!rooms[b.roomId]) {
-    //             getRoomById(b.roomId).then((r) => {
-    //                 if (r) setRooms((prev) => ({ ...prev, [b.roomId]: r }));
-    //             });
-    //         }
-    //     });
-    // }, [bookings]);
 
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
-        return dayjs(dateString).format("DD/MM/YYYY "); //
+        return dayjs(dateString).format("DD/MM/YYYY - HH:MM "); //
     };
 
     const getStatusLabel = (status: number) => {
@@ -64,48 +45,62 @@ export default function BookingMangement() {
         }
     };
 
-    const openEditModal = (booking: Booking) => {
+    const openviewModal = (booking: Booking) => {
         setSelectedBooking(booking);
         form.setFieldsValue({
             ...booking,
             checkInDate: dayjs(booking.checkInDate),
             checkOutDate: dayjs(booking.checkOutDate),
+            status: getStatusLabel(booking.status).text
         });
-        setEditModalVisible(true);
-    };
-
-    const handleEditSubmit = async () => {
-        try {
-            const values = await form.validateFields();
-            const updated = {
-                ...selectedBooking,
-                ...values,
-                checkInDate: values.checkInDate.format("YYYY-MM-DD"),
-                checkOutDate: values.checkOutDate.format("YYYY-MM-DD"),
-            };
-
-            // call API update booking (ví dụ)
-            // await updateBooking(updated);
-
-            setBookings(prev => prev.map(b => b.id === updated.id ? updated : b));
-            setEditModalVisible(false);
-            messageApi.success("Booking updated successfully!");
-        } catch (err) {
-            messageApi.error("Please fill out the form correctly!");
-        }
+        setviewModalVisible(true);
     };
 
     const handleCancel = () => {
-        setEditModalVisible(false);
+        setviewModalVisible(false);
         form.resetFields();
     };
+
+    const approveBooking = async (id: string) => {
+        setLoading(true);
+        const res = await BookingService.approveBooking(id);
+        if (res.data.isSuccess) {
+            messageApi.success(res.data.message);
+        } else {
+            messageApi.error(res.data.message);
+        }
+        loadingBooking();
+        setLoading(false);
+
+    }
+
+    const removeBooking = async (id: string) => {
+        const res = await BookingService.deleteBooking(id);
+        if (res.data.isSuccess) {
+            messageApi.success(res.data.message);
+        } else {
+            messageApi.error(res.data.message);
+        }
+        loadingBooking();
+    }
 
     return (
         <>
             {contextHolder}
             <div className="font-semibold text-lg">Booking Management</div>
             <div className="my-3 border-b border-gray-300"></div>
+            {/* Search */}
+            <div className="flex justify-start gap-5   container  mb-10">
+                <input
+                    type="search"
+                    placeholder="Search by room number, guest name, or phone"
+                    className="w-96 border p-2  rounded-md "
 
+                />
+                <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large">
+                    Search
+                </Button>
+            </div>
             <div className="mb-5 bg-white shadow-md rounded-xl overflow-hidden container mx-auto">
                 <table className="min-w-full text-base">
                     <thead className="bg-gray-100 text-gray-700 text-left font-semibold">
@@ -132,8 +127,8 @@ export default function BookingMangement() {
                                         <div className="text-gray-500 text-sm">{booking.phone || "-"}</div>
                                     </td>
                                     <td className="px-6 py-4">{booking.roomNumber || "Loading..."}</td>
-                                    <td className="px-6 py-4">{booking.checkInDate}</td>
-                                    <td className="px-6 py-4">{booking.checkOutDate}</td>
+                                    <td className="px-6 py-4">{formatDate(booking.checkInDate)}</td>
+                                    <td className="px-6 py-4">{formatDate(booking.checkOutDate)}</td>
                                     <td className="px-6 py-4 text-right">{booking.price.toLocaleString()}₫</td>
                                     <td className="px-6 py-4">{booking.discountCode || "-"}</td>
                                     <td className="px-6 py-4">
@@ -143,12 +138,12 @@ export default function BookingMangement() {
                                     </td>
                                     <td className="px-6 py-4 text-center flex gap-5">
                                         <button
-                                            onClick={() => openEditModal(booking)}
+                                            onClick={() => openviewModal(booking)}
                                             className="px-4 py-2 text-sm font-medium !text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow"
                                         >
-                                            Edit
+                                            View
                                         </button>
-                                        <button className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow">
+                                        <button className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow" onClick={() => removeBooking(booking.id)}>
                                             Remove
                                         </button>
                                     </td>
@@ -174,18 +169,22 @@ export default function BookingMangement() {
                 showTotal={(total) => `Total ${total} bookings`}
             />
 
-            {/*  Edit Booking Modal */}
+            {/*  view Booking Modal */}
             <Modal
-                title={<span className="text-xl font-semibold text-blue-600">Edit Booking</span>}
-                open={editModalVisible}
+                title={<span className="text-xl font-semibold text-blue-600">view Booking</span>}
+                open={viewModalVisible}
                 onCancel={handleCancel}
                 centered
                 footer={[
-                    <Button key="cancel" onClick={handleCancel}>Cancel</Button>,
-                    <Button key="save" type="primary" className="bg-blue-600" onClick={handleEditSubmit}>
-                        Save Changes
-                    </Button>,
-                ]}
+                    (selectedBooking?.status == 0 &&
+                        <Button key="save" type="primary" className="bg-blue-600" onClick={() => approveBooking(selectedBooking.id)} loading={loading} >
+                            Approve
+                        </Button>
+                    ),
+                    < Button key="cancel" onClick={handleCancel} > Close</Button >,
+
+                ]
+                }
             >
                 <Form
                     form={form}
@@ -193,60 +192,41 @@ export default function BookingMangement() {
                     className="mt-4"
                 >
                     <Form.Item label="User Name">
-                        <Input value={selectedBooking?.fullName} disabled />
+                        <Input value={selectedBooking?.fullName} />
                     </Form.Item>
 
                     <Form.Item
-                        name="roomId"
                         label="Room"
-                        rules={[{ required: true, message: "Please select a room" }]}
                     >
-                        <Select
-                            placeholder="Select a room"
-                            showSearch
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
-                            }
-                        >
-                            {roomList.map((r) => (
-                                <Select.Option key={r.id} value={r.id}>
-                                    {r.roomNumber} — {r.roomName}
-                                </Select.Option>
-                            ))}
-                        </Select>
+                        <Input value={selectedBooking?.roomNumber} />
                     </Form.Item>
 
 
                     <div className="flex gap-3">
-                        <Form.Item name="checkInDate" label="Check In" className="w-1/2" rules={[{ required: true }]}>
+                        <Form.Item name="checkInDate" label="Check In" className="w-1/2" >
                             <DatePicker className="w-full" format="YYYY-MM-DD" />
                         </Form.Item>
 
-                        <Form.Item name="checkOutDate" label="Check Out" className="w-1/2" rules={[{ required: true }]}>
+                        <Form.Item name="checkOutDate" label="Check Out" className="w-1/2" >
                             <DatePicker className="w-full" format="YYYY-MM-DD" />
                         </Form.Item>
                     </div>
 
                     <div className="flex gap-3">
-                        <Form.Item name="price" label="Price" className="w-1/2" rules={[{ required: true, message: "Price is required" }]}>
+                        <Form.Item name="price" label="Price" className="w-1/2" >
                             <Input type="number" suffix="₫" />
                         </Form.Item>
 
                         <Form.Item name="discountCode" label="Discount Code" className="w-1/2">
-                            <Input placeholder="Optional" />
+                            <Input placeholder="" />
                         </Form.Item>
                     </div>
 
-                    <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-                        <Select>
-                            <Select.Option value={0}>Pending</Select.Option>
-                            <Select.Option value={1}>Approved</Select.Option>
-                            <Select.Option value={2}>Cancelled</Select.Option>
-                        </Select>
+                    <Form.Item name="status" label="Status" >
+                        <Input placeholder="" />
                     </Form.Item>
                 </Form>
-            </Modal>
+            </Modal >
         </>
     );
 }

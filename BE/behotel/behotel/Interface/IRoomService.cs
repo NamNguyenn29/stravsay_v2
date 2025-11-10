@@ -18,6 +18,8 @@ namespace behotel.Interface
         Task<Room?> UpdateRoomAsync(Guid id,RoomRequest roomRequest);
 
         Task<IEnumerable<RoomDTO>?> GetAvailableRoomsAsync(string? selectedTypeId, DateTime checkInDate , DateTime checkOutDate, int Adult, int Children);
+
+        Task<ApiResponse<RoomDTO>> SearchRoomByKeyword(string filter, int currentPage , int pageSize);
     }
 
 

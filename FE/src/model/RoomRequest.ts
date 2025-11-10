@@ -1,10 +1,10 @@
 
 export type RoomRequest = {
-    roomName: string;
-    roomNumber: number;
-    roomTypeID: string;
-    description: string;
-    imageUrl: string[];
-    floor: number;
-    status: string;
+    RoomName: string;
+    RoomNumber: number;
+    RoomTypeID: string;
+    Description: string;
+    ImageUrl: string[];
+    Floor: number;
+    Status: string;
 }

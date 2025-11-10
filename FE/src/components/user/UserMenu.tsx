@@ -6,7 +6,6 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { message } from "antd";
-import { User } from "@/model/User";
 import { logOut } from "@/api/UserApi/logOut";
 export default function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);

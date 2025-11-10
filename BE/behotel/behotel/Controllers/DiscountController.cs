@@ -24,7 +24,7 @@ namespace behotel.Controllers
         {
             // update with panigation
             List<Discount> discounts = (List<Discount>)await _discountService.GetAllDiscountAsync();
-            ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>(0, 0, discounts, null, "200", "Get all discount successfully", true, null, 0);
+            ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>( discounts, null, "200", "Get all discount successfully", true,0,0,0,0, null, 0);
             return _apiResponse;
         }
         [Authorize]

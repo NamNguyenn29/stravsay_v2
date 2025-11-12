@@ -1,16 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HotelBooking.Models
+﻿namespace behotel.DTO
 {
-
-    [Table("PaymentMethod")]
-    public class PaymentMethod
-
+    public class PaymentMethodDTO
     {
-
-        [Key]
         public Guid PaymentMethodID { get; set; }
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
@@ -19,11 +10,5 @@ namespace HotelBooking.Models
         public int Status { get; set; }
         public string? Details { get; set; }
         public DateTime CreatedDate { get; set; }
-
-        // Navigation property
-        public ICollection<Payment>? Payments { get; set; }
-        public ICollection<PaymentMethodConfig>? Configs { get; set; }
     }
-
-   
 }

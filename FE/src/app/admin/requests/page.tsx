@@ -1,5 +1,5 @@
 "use client"
-import { Button, message, Pagination } from "antd";
+import { Button, message, Modal, Pagination } from "antd";
 import { useState, useEffect, useCallback } from "react";
 import { Request } from "@/model/Request";
 import { getRequests } from "@/api/Request/getRequest";
@@ -8,32 +8,63 @@ import { PoweroffOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icon
 import { supportService } from "@/services/supportRequestService";
 export default function UserMangement() {
     const [loading, setLoading] = useState<boolean>(false);
-
     const [requests, setRequests] = useState<Request[]>([]);
-    const [totalPage, setTotalPage] = useState(1);
     const [totalElement, setTotalElement] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [response, setResponse] = useState<string>("");
+    const [keyword, setKeyword] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+
+    const [messageApi, contexHolder] = message.useMessage();
+    const [modal, modalContextHolder] = Modal.useModal();
 
     const loadRequest = useCallback(async () => {
         const data = await getRequests(currentPage, pageSize);
         setRequests(data.list);
-        setTotalPage(data.totalPage ? data.totalPage : 0);
         setTotalElement(data.totalElement);
     }, [currentPage, pageSize]);
+
+    const searchRequest = useCallback(async (filter: string, page: number, size: number) => {
+        const res = await supportService.searchRequest(filter, page, size);
+
+        if (res.data.isSuccess) {
+            setRequests(res.data.list);
+            setTotalElement(res.data.totalElement);
+        } else {
+            messageApi.error(res.data.message);
+        }
+    }, [messageApi]);
+
+
     useEffect(() => {
-        loadRequest();
-    }, [currentPage, loadRequest, pageSize]);
+        if (!isSearching) {
+            loadRequest();
+        } else {
+            searchRequest(keyword, currentPage, pageSize);
+        }
+    }, [currentPage, pageSize, isSearching, loadRequest, searchRequest]);
 
+    const handleSearch = async () => {
+        if (keyword.trim() === "") {
+            setIsSearching(false);
+            setCurrentPage(1);
+            loadRequest();
+            return;
+        }
 
+        setIsSearching(true);
+        setCurrentPage(1);
+
+        searchRequest(keyword, 1, pageSize);
+    };
 
     const [selectedRequestResponse, setSelectedRequestResponse] = useState<Request | null>(null);
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
-        return dayjs(dateString).format("DD/MM/YYYY "); //
+        return dayjs(dateString).format("DD/MM/YYYY ");
     };
-    const [messageApi, contexHolder] = message.useMessage();
+
     const handleReponse = async (id: string, response: string) => {
         setLoading(true);
         const res = await supportService.responseRequest(id, response);
@@ -46,9 +77,34 @@ export default function UserMangement() {
 
     }
 
+
+    const handleDeleteRequest = (id: string) => {
+        modal.confirm({
+            title: "Are you sure you want to delete this request?",
+            content: "This action cannot be undone.",
+            centered: true,
+            okText: "Yes, delete it",
+            cancelText: "Cancel",
+            okType: "danger",
+            className: "custom-delete-confirm",
+
+            async onOk() {
+                const res = await supportService.removeResponse(id);
+                if (res.data.isSuccess) {
+                    message.success(res.data.message);
+                    await loadRequest();
+                } else {
+                    message.error(res.data.message);
+                }
+            },
+        });
+    };
+
+
     return (
         <>
             <>
+                {modalContextHolder}
                 {contexHolder}
                 <div className=" font-semibold text-lg">View All Request</div>
                 <div className="my-3 border border-b-1 container  bg-black "></div>
@@ -59,9 +115,11 @@ export default function UserMangement() {
                         type="search"
                         placeholder="Search by room number, guest name, or phone"
                         className="w-96 border p-2  rounded-md "
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
 
                     />
-                    <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large">
+                    <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large" onClick={handleSearch}>
                         Search
                     </Button>
                 </div>
@@ -153,7 +211,7 @@ export default function UserMangement() {
                                         >
                                             Response
                                         </div>
-                                        <div className="bg-rose-400 p-2 px-4  rounded cursor-pointer !text-white">
+                                        <div className="bg-rose-400 p-2 px-4  rounded cursor-pointer !text-white" onClick={() => handleDeleteRequest(request.id)}>
                                             Remove
                                         </div>
 

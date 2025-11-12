@@ -32,11 +32,6 @@ namespace behotel.Interface.Implement
             {
                 return null;
             }
-            int status = 0;
-            if (newRoom.Status.Equals("Available"))
-            {
-                status = 1;
-            }
             string imageUrls = "";
             foreach (var img in newRoom.ImageUrl)
             {
@@ -45,7 +40,7 @@ namespace behotel.Interface.Implement
             }
             Room room = new Room()
             {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 RoomName = newRoom.RoomName,
                 RoomNumber = newRoom.RoomNumber,
                 IsAvailable = true,
@@ -53,7 +48,7 @@ namespace behotel.Interface.Implement
                 Description = newRoom.Description,
                 Floor = newRoom.Floor,
                 ImageUrl = imageUrls,
-                Status = status,
+                Status = newRoom.Status,
                 CreatedDate = DateTime.Now
             };
 
@@ -221,31 +216,47 @@ namespace behotel.Interface.Implement
             return new ApiResponse<RoomDTO>(roomDTOsWithPagination, null, "200", "Get room successfully", true, currentPage, pageSize, totalPage, totalItem, null, null);
         }
 
-        public async Task<Room?> UpdateRoomAsync(Guid id, RoomRequest roomRequest)
+        public async Task<Room?> UpdateRoomAsync(Guid id, UpdateRoom updateRoom)
         {
             var roomOrigin = await GetRoomByIdAsync(id);
             if (roomOrigin == null)
             {
                 return null;
             }
-            int status = 0;
-            if (roomRequest.Status.Equals("Available"))
+            string finalImages = "";
+            if ((updateRoom.OldImages == null || updateRoom.OldImages.Length == 0)
+         && (updateRoom.ImageUrl == null || updateRoom.ImageUrl.Count == 0))
             {
-                status = 1;
+                finalImages = roomOrigin.ImageUrl;
             }
-            string imageUrls = "";
-            foreach (var img in roomRequest.ImageUrl)
+            else
             {
-                var relativPath = await SaveFile(img, "room_images");
-                imageUrls += $",{relativPath}";
+                // Giữ lại ảnh cũ nếu có
+                if (updateRoom.OldImages != null && updateRoom.OldImages.Length > 0)
+                {
+                    finalImages = string.Join(",", updateRoom.OldImages);
+                }
+
+                // Thêm ảnh mới nếu có
+                if (updateRoom.ImageUrl != null && updateRoom.ImageUrl.Count > 0)
+                {
+                    foreach (var img in updateRoom.ImageUrl)
+                    {
+                        var relativePath = await SaveFile(img, "room_images");
+                        finalImages += string.IsNullOrEmpty(finalImages) ? relativePath : $",{relativePath}";
+                    }
+                }
             }
-            roomOrigin.RoomNumber = roomRequest.RoomNumber;
-            roomOrigin.RoomName = roomRequest.RoomName;
-            roomOrigin.Description = roomRequest.Description;
-            roomOrigin.ImageUrl = imageUrls;
-            roomOrigin.Floor = roomRequest.Floor;
-            roomOrigin.RoomTypeID = Guid.Parse(roomRequest.RoomTypeID);
-            roomOrigin.Status = status;
+
+
+            roomOrigin.RoomNumber = updateRoom.RoomNumber;
+            roomOrigin.RoomName = updateRoom.RoomName;
+            roomOrigin.Description = updateRoom.Description;
+            roomOrigin.ImageUrl = finalImages.TrimStart(','); // tránh dấu phẩy đầu chuỗi
+            roomOrigin.Floor = updateRoom.Floor;
+            roomOrigin.RoomTypeID = Guid.Parse(updateRoom.RoomTypeID);
+            roomOrigin.Status = updateRoom.Status;
+
             await _context.SaveChangesAsync();
             return roomOrigin;
         }
@@ -276,7 +287,7 @@ namespace behotel.Interface.Implement
             var pagedRooms = rooms.Skip(skip).Take(pageSize).ToList();
 
             var roomDTOsWithPagination = new List<RoomDTO>();
-            foreach (Room room in pagedRooms) 
+            foreach (Room room in pagedRooms)
             {
                 var roomDTO = await GetRoomDTOByIdAsync(room.Id);
                 if (roomDTO != null)

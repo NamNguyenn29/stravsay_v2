@@ -161,7 +161,7 @@ namespace behotel.Controllers
             return new ApiResponse<SupportRequest>(null, supportRequest, "200", "Response support request successfully", true, 0, 0, 0, 1, null, null);
         }
         [Authorize(Roles ="ADMIN")]
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<ApiResponse<SupportRequest>> DeleteSupportRequest(string id)
         {
             if (string.IsNullOrEmpty(id))

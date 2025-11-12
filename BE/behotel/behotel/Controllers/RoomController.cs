@@ -95,7 +95,7 @@ namespace behotel.Controllers
         }
         [Authorize(Roles ="ADMIN")]
         [HttpPut("{id}")]
-        public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromForm] RoomRequest roomRequest)
+        public async Task<ApiResponse<RoomDTO>> UpdateRoom(string id, [FromForm] UpdateRoom updateRoom)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -108,8 +108,8 @@ namespace behotel.Controllers
                 var combinedErrors = string.Join("; ", errorMessages);
                 return new ApiResponse<RoomDTO>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
-            var room = await _roomImpl.UpdateRoomAsync(guidId, roomRequest);
-            if (room == null)
+            var room = await _roomImpl.UpdateRoomAsync(guidId, updateRoom);
+            if(room == null)
             {
                 return new ApiResponse<RoomDTO>(null, null, "400", "Failed to create room", false, 0, 0, 0, 0, null,null);
             }
@@ -140,5 +140,8 @@ namespace behotel.Controllers
         {
             return await _roomImpl.SearchRoomByKeyword(filter, currentPage,pageSize);
         }
+
+       
+
     }
 }

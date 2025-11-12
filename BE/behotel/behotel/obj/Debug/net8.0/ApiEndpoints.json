@@ -309,6 +309,22 @@
     ]
   },
   {
+    "ContainingType": "ImagesController",
+    "Method": "GetImage",
+    "RelativePath": "api/Images/{filename}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filename",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "behotel.Controllers.RoomController",
     "Method": "GetAll",
     "RelativePath": "api/Room",
@@ -467,6 +483,11 @@
       {
         "Name": "Floor",
         "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "OldImages",
+        "Type": "System.String[]",
         "IsRequired": false
       }
     ],
@@ -773,7 +794,7 @@
   {
     "ContainingType": "behotel.Controllers.SupportRequestController",
     "Method": "DeleteSupportRequest",
-    "RelativePath": "api/SupportRequest/id",
+    "RelativePath": "api/SupportRequest/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -781,7 +802,7 @@
       {
         "Name": "id",
         "Type": "System.String",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
@@ -976,7 +997,7 @@
         "IsRequired": false
       },
       {
-        "Name": "resetToken",
+        "Name": "token",
         "Type": "System.String",
         "IsRequired": false
       }

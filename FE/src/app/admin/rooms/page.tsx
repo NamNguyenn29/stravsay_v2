@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Room } from "@/model/Room";
 import { getRooms } from "@/api/RoomApi/getRoom";
 import { Pagination, Upload } from 'antd';
@@ -7,35 +7,54 @@ import { Modal, Form, Input, Select, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
-import { deleteRoom } from "@/api/RoomApi/deleteRoom";
 import "@/css/modal.css"
 import { roomService } from "@/services/roomService";
+import { SearchOutlined } from "@ant-design/icons";
 
 
 export default function RoomManagement() {
 
     // get rooms
     const [rooms, setRooms] = useState<Room[]>([]);
-    const [totalPage, setTotalPage] = useState(1);
     const [totalElement, setTotalElement] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
-    const [createLoaing, setCreateLoading] = useState(false);
+    const [createLoading, setCreateLoading] = useState(false);
+    const [editLoading, setEditLoading] = useState(false);;
+    const [keyword, setKeyword] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
 
+    const [messageApi, contextHolder] = message.useMessage();
     const [formAdd] = Form.useForm();
     const [formEdit] = Form.useForm();
 
 
-    const loadRoom = async () => {
+    const loadRoom = useCallback(async () => {
         const data = await getRooms(currentPage, pageSize);
         setRooms(data.list);
-        setTotalPage(data.totalPage ? data.totalPage : 0);
         setTotalElement(data.totalElement);
-    }
-    useEffect(() => {
-        loadRoom();
-        loadRoomType();
     }, [currentPage, pageSize]);
+
+    const searchRoom = useCallback(async (filter: string, currentPage: number, pageSize: number) => {
+        const res = await roomService.searchRoom(filter, currentPage, pageSize);
+
+        if (res.data.isSuccess) {
+            setRooms(res.data.list);
+            setTotalElement(res.data.totalElement);
+        } else {
+            messageApi.error(res.data.message);
+        }
+    }, [messageApi]);
+
+    useEffect(() => {
+        if (!isSearching) {
+            loadRoom();
+        } else {
+            searchRoom(keyword, currentPage, pageSize);
+        }
+
+        loadRoomType();
+    }, [currentPage, pageSize, isSearching, loadRoom, searchRoom]);
 
     const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
     const loadRoomType = async () => {
@@ -48,19 +67,18 @@ export default function RoomManagement() {
     const [editModelVisible, setEditModalVisible] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
-    const [form] = Form.useForm();
-    const [messageApi, contexHolder] = message.useMessage();
+
 
 
     const openEditModal = (room: Room) => {
         setSelectedRoom(room);
-        form.setFieldsValue({
+        formEdit.setFieldsValue({
             roomName: room.roomName,
             roomNumber: room.roomNumber,
             description: room.description,
             roomType: room.roomTypeID,
             floor: room.floor,
-            imageUrl: room.imageUrl || [],
+            ImageUrl: room.imageUrl ? room.imageUrl.map(url => url) : [],
             status: room.status
         });
         setEditModalVisible(true);
@@ -71,12 +89,12 @@ export default function RoomManagement() {
     const handleCancle = () => {
         setEditModalVisible(false);
         setAddModalVisible(false);
-        form.resetFields();
+        formEdit.resetFields();
     }
     const [addModalVisible, setAddModalVisible] = useState(false);
 
     const handleAddRoom = () => {
-        form.resetFields(); // form trống
+        formAdd.resetFields(); // form trống
         setAddModalVisible(true);
     };
 
@@ -92,7 +110,6 @@ export default function RoomManagement() {
             formData.append("RoomName", values.roomName);
             formData.append("RoomNumber", values.roomNumber);
             formData.append("RoomTypeID", values.roomType);
-            console.log(values.roomTypeID)
 
             formData.append("Status", values.status);
             formData.append("Description", values.description);
@@ -119,6 +136,57 @@ export default function RoomManagement() {
             setCreateLoading(false);
         }
     };
+
+    const handleUpdateRoom = async () => {
+        try {
+            setEditLoading(true);
+            const values = await formEdit.validateFields();
+
+
+            const formData = new FormData();
+
+            formData.append("RoomName", values.roomName);
+            formData.append("RoomNumber", values.roomNumber);
+            formData.append("RoomTypeID", values.roomType);
+
+            formData.append("Status", values.status);
+            formData.append("Description", values.description);
+            formData.append("Floor", values.floor);
+
+
+            const oldImages: string[] = [];
+
+            if (values.ImageUrl && values.ImageUrl.length > 0) {
+                values.ImageUrl.forEach((item: File | string) => {
+                    if (typeof item === "string") {
+                        oldImages.push(item); // ảnh cũ
+                    } else if (item instanceof File) {
+                        formData.append("ImageUrl", item); // ảnh mới
+                    }
+                });
+            }
+
+            // Nếu có ảnh cũ, gửi OldImages
+            oldImages.forEach(img => formData.append("OldImages", img));
+
+            // Gọi API update
+            const res = await roomService.updateRoom(selectedRoom ? selectedRoom.id : "", formData);
+
+            if (res.data.isSuccess) {
+                messageApi.success(res.data.message);
+            } else {
+                messageApi.error(res.data.message);
+            }
+            setEditLoading(false);
+            setEditModalVisible(false);
+            formEdit.resetFields();
+            loadRoom();
+
+        } catch (err) {
+            messageApi.error("Failed to add room! : " + err);
+            setEditLoading(false);
+        }
+    }
     const [modal, modalContextHolder] = Modal.useModal();
 
     const handleDeleteRoom = (id: string) => {
@@ -132,24 +200,29 @@ export default function RoomManagement() {
             className: "custom-delete-confirm",
 
             async onOk() {
-                const res = await deleteRoom(id);
-                if (res.isSuccess) {
-                    message.success(res.message || "Room deleted successfully!");
+                const res = await roomService.removeRoom(id);
+                if (res.data.isSuccess) {
+                    message.success(res.data.message || "Room deleted successfully!");
                     await loadRoom();
                 } else {
-                    message.error(res.message || "Failed to delete room!");
+                    message.error(res.data.message || "Failed to delete room!");
                 }
             },
         });
     };
 
+    const handleSearchRoom = async () => {
+        if (keyword.trim() === "") {
+            setIsSearching(false);
+            setCurrentPage(1);
+            loadRoom();
+            return;
+        }
 
-
-
-
-
-
-
+        setIsSearching(true);
+        setCurrentPage(1);
+        searchRoom(keyword, 1, pageSize);
+    }
 
 
     const getStatusLabel = (status: number) => {
@@ -168,7 +241,7 @@ export default function RoomManagement() {
 
     return (
         <>
-            {contexHolder}
+            {contextHolder}
             {modalContextHolder}
             <div className=" font-semibold text-lg">Room Mangement</div>
             <div className=" my-3 border border-b-1 container mx-auto bg-black "></div>
@@ -176,17 +249,21 @@ export default function RoomManagement() {
                 <input type="search"
                     placeholder="Search by id, roomNumber, roomName ... "
                     className="border p-2 rouded-md w-96"
-                    onChange={(e) => {
-                        setCurrentPage(1);
-                    }}
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
                 />
-                <button
-                    type="button"
+                <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large" onClick={handleSearchRoom}>
+                    Search
+                </Button>
+                <Button
+                    type="primary"
                     className="bg-sky-900  !text-white text-xl font-semibold  px-4 py-1  rounded-md hover:bg-blue-600"
                     onClick={handleAddRoom}
+                    loading={createLoading}
+                    size="large"
                 >
                     Add room
-                </button>
+                </Button>
             </div>
 
 
@@ -271,7 +348,8 @@ export default function RoomManagement() {
                 centered
                 footer={[
                     <Button key="cancle" onClick={handleCancle}>Cancel</Button>,
-                    <Button key="save" type="primary" className="bg-blue-600" >Save Changes</Button>
+                    <Button key="save" type="primary" className="bg-blue-600" loading={editLoading}
+                        onClick={handleUpdateRoom}>Save Changes</Button>
                 ]}
 
             >
@@ -319,51 +397,72 @@ export default function RoomManagement() {
                         <Form.Item name="floor" label="Floor " className="w-1/3" rules={[{ required: true }]}><Input /></Form.Item>
                     </div>
                     <div className="mb-2 font-medium">Image URLs</div>
-                    <Form.List name="images">
-                        {(fields, { add, remove }) => (
-                            <div className="flex flex-col gap-2">
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className="flex items-center gap-3 mb-3">
-                                        <Form.Item
-                                            {...restField}
-                                            name={name}
-                                            valuePropName="fileList"
-                                            getValueFromEvent={(e) => e?.fileList}
-                                            rules={[{ required: true, message: "Please upload an image!" }]}
-                                            className="!mb-0"
-                                        >
-                                            <Upload
-                                                listType="picture-card"
-                                                beforeUpload={() => false} // Không upload lên server, chỉ preview local
-                                                onPreview={async (file) => {
-                                                    let src: string = file.url || "";
+                    <Form.Item label="Images">
+                        <Form.List name="ImageUrl">
+                            {(fields, { add, remove }) => (
+                                <div className="flex flex-col gap-3">
 
-                                                    if (!src && file.originFileObj instanceof Blob) {
-                                                        src = URL.createObjectURL(file.originFileObj);
-                                                    }
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {fields.map((field, index) => {
+                                            const fileList = formEdit.getFieldValue("ImageUrl") || [];
+                                            const file = fileList[index];
 
-                                                    const img = new Image();
-                                                    img.src = src;
+                                            // Xác định preview URL
+                                            let previewUrl = "";
+                                            if (!file) previewUrl = "";
+                                            else if (file instanceof File) previewUrl = URL.createObjectURL(file);
+                                            else if (typeof file === "string") previewUrl = file; // ảnh cũ từ server
 
-                                                    const w = window.open(src);
-                                                    w?.document.write(img.outerHTML);
-                                                }}
+                                            return (
+                                                <div key={field.key} className="p-3 border rounded-xl bg-gray-50">
+                                                    <Form.Item {...field} className="!mb-2">
+                                                        <Input type="hidden" />
+                                                    </Form.Item>
 
-                                            >
-                                                + Upload
-                                            </Upload>
-                                        </Form.Item>
+                                                    <div className="w-full h-32 border rounded flex items-center justify-center overflow-hidden">
+                                                        {previewUrl && <img src={previewUrl} className="object-cover w-full h-full" />}
+                                                    </div>
 
-                                        <Button danger onClick={() => remove(name)}>Remove</Button>
+                                                    <Upload
+                                                        accept="image/*"
+                                                        showUploadList={false}
+                                                        beforeUpload={(fileUpload) => {
+                                                            const clone = [...fileList];
+                                                            clone[index] = fileUpload; // thay file cũ bằng file mới
+                                                            formEdit.setFieldsValue({ ImageUrl: clone });
+                                                            return false;
+                                                        }}
+                                                    >
+                                                        <Button className="mt-2" block>Upload</Button>
+                                                    </Upload>
+
+                                                    <Button
+                                                        className="mt-2"
+                                                        danger
+                                                        block
+                                                        onClick={() => {
+                                                            const clone = [...fileList];
+                                                            clone.splice(index, 1);
+                                                            formEdit.setFieldsValue({ ImageUrl: clone });
+                                                            remove(field.name);
+                                                        }}
+                                                    >
+                                                        Remove
+                                                    </Button>
+                                                </div>
+                                            );
+                                        })}
+
+
                                     </div>
-                                ))}
 
-                                <Button type="dashed" onClick={() => add()} block>
-                                    + Add Image
-                                </Button>
-                            </div>
-                        )}
-                    </Form.List>
+                                    <Button type="dashed" block onClick={() => add()}>
+                                        + Add Image
+                                    </Button>
+                                </div>
+                            )}
+                        </Form.List>
+                    </Form.Item>
 
 
 

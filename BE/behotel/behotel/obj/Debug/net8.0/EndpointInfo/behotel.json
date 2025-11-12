@@ -480,6 +480,28 @@
         }
       }
     },
+    "/api/Images/{filename}": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Room": {
       "get": {
         "tags": [
@@ -771,6 +793,12 @@
                   "Floor": {
                     "type": "integer",
                     "format": "int32"
+                  },
+                  "OldImages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               },
@@ -794,6 +822,9 @@
                   "style": "form"
                 },
                 "Floor": {
+                  "style": "form"
+                },
+                "OldImages": {
                   "style": "form"
                 }
               }
@@ -1198,9 +1229,7 @@
             }
           }
         }
-      }
-    },
-    "/api/SupportRequest/id": {
+      },
       "delete": {
         "tags": [
           "SupportRequest"
@@ -1208,7 +1237,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -1678,7 +1708,7 @@
             }
           },
           {
-            "name": "resetToken",
+            "name": "token",
             "in": "query",
             "schema": {
               "type": "string"

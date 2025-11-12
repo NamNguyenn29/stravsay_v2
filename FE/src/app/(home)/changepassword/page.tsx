@@ -1,26 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import { useSearchParams } from "next/navigation";
+import { userService } from "@/services/userService";
+import { ResetpasswordModel } from "@/model/ResetPasswordModel";
 export default function ChangePasswordPage() {
   const router = useRouter();
 
-  const [currentPassword, setCurrentPassword] = useState("");
+  // const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const [checking, setChecking] = useState(true);
+  const [isValidToken, setIsValidToken] = useState(false);
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
+  useEffect(() => {
+    const checkToken = async () => {
+
+
+      if (!email || !token) {
+        router.push("/forbidden403");
+        return;
+      }
+
+
+      try {
+        const res = await userService.validateResetToken(email, token);
+        if (res.data.isSuccess) {
+          setIsValidToken(true);
+        } else {
+          router.push("/forbidden403");
+        }
+      } catch (err) {
+        router.push("/forbidden403");
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    checkToken();
+  }, [searchParams, router]);
+
+  if (checking) {
+    return (
+      <div className="flex items-center justify-center h-screen text-lg font-semibold">
+        Validating reset link...
+      </div>
+    );
+  }
+
+  if (!isValidToken) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -34,15 +77,20 @@ export default function ChangePasswordPage() {
     }
 
     setLoading(true);
-    // simulate update
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess("Password updated successfully.");
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      // optionally redirect: router.push("/login");
-    }, 900);
+    const payload: ResetpasswordModel = {
+      Email: email ? email : "",
+      Password: newPassword,
+      ResetToken: token ? token : "",
+    }
+    const res = await userService.resetPassword(payload);
+    if (!res.data.isSuccess) {
+      setError(res.data.message);
+    } else {
+      setSuccess(res.data.message);
+      router.push("/login");
+    }
+    setLoading(false)
+
   };
 
   return (
@@ -81,7 +129,7 @@ export default function ChangePasswordPage() {
             )}
 
             {/* Current password */}
-            <div>
+            {/* <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Current password <span className="text-red-500">*</span>
               </label>
@@ -92,7 +140,7 @@ export default function ChangePasswordPage() {
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-            </div>
+            </div> */}
 
             {/* New password */}
             <div>
@@ -135,7 +183,7 @@ export default function ChangePasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm"
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 !text-white font-semibold rounded-md shadow-sm"
               >
                 {loading ? "Updating..." : "Update"}
               </button>

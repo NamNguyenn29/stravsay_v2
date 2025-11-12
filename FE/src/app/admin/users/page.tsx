@@ -20,10 +20,10 @@ export default function UserMangement() {
 
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
+
     const loadUsers = useCallback(async () => {
         const data = await getUsers(currentPage, pageSize);
         setUsers(data.list);
-
         setTotalElement(data.totalElement)
     }, [currentPage, pageSize]);
 
@@ -46,7 +46,7 @@ export default function UserMangement() {
         } else {
             searchUsers(keyword, currentPage, pageSize);
         }
-    }, [keyword, currentPage, pageSize, isSearching, loadUsers, searchUsers]);
+    }, [currentPage, pageSize, isSearching, loadUsers, searchUsers]);
 
 
 

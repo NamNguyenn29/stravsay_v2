@@ -35,7 +35,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFE", policy =>
     {
         policy
-            .WithOrigins("https://localhost:3000", "https://localhost")    
+            .WithOrigins("https://localhost:3000", "https://localhost")
             .AllowAnyMethod()    // Cho phép mọi method: GET, POST, PUT, DELETE...
             .AllowAnyHeader()   // Cho phép mọi header
             .AllowCredentials();
@@ -148,7 +148,11 @@ builder.Services.AddAuthentication(options =>
     });
 
 
+
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -158,8 +162,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseCors("AllowFE");
+
+
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

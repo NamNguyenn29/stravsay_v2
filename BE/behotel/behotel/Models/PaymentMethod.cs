@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelBooking.Models
+namespace behotel.Models
 {
 
     [Table("PaymentMethod")]

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace HotelBooking.Models
+namespace behotel.Models
 {
 
 

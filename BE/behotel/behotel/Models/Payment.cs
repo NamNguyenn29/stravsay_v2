@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+namespace behotel.Models
 
-namespace HotelBooking.Models
 
 {
-    [Table("Payment")]
+
     public class Payment
     {
         [Key]

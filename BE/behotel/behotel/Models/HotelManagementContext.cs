@@ -1,4 +1,4 @@
-﻿using HotelBooking.Models;
+﻿
 using Microsoft.EntityFrameworkCore;
 namespace behotel.Models
 {

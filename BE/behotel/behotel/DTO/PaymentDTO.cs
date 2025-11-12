@@ -1,14 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HotelBooking.Models
-
+﻿namespace behotel.DTO
 {
-    [Table("Payment")]
-    public class Payment
+    public class PaymentDTO
     {
-        [Key]
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
         public Guid PaymentMethodID { get; set; }
@@ -17,15 +10,13 @@ namespace HotelBooking.Models
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        // Optional / new fields from previous discussions
         public string? ProviderTransactionRef { get; set; }
         public string? MerchantReference { get; set; }
         public decimal? Fee { get; set; }
         public string? ResponsePayload { get; set; }
         public string? PayUrl { get; set; }
 
-        // Navigation properties (optional if using EF Core)
-        public PaymentMethod? PaymentMethod { get; set; }
+        // Optional display info
+        public string? PaymentMethodName { get; set; }
     }
-
 }

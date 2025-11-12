@@ -1,11 +1,7 @@
-﻿using HotelBooking.Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace behotel.Models
+﻿namespace behotel.DTO
 {
-    public class Refund
+    public class RefundDTO
     {
-        [Key]
         public Guid RefundID { get; set; }
         public Guid PaymentID { get; set; }
         public string Reason { get; set; } = string.Empty;
@@ -14,8 +10,7 @@ namespace behotel.Models
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        // Navigation
-        public Payment? Payment { get; set; }
-
+        // Optional info
+        public decimal? Amount { get; set; }
     }
 }

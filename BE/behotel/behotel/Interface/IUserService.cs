@@ -48,5 +48,11 @@ namespace behotel.Interface
 
 
         Task<ApiResponse<UserDTO>> SearchUserKeyword(string filter, int currentPage, int pageSize);
+
+        Task<User?> GetUserByRefreshTokenAsync(string rerfeshToken);
+
+        Task<bool> SaveRefreshToken(Guid userId, string refreshToken);
+
+        Task<ApiResponse<UserDTO>> EditUserStatus(Guid userId, int status);
     }
 }

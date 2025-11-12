@@ -29,7 +29,7 @@ namespace behotel.Models
         public string ?ForgotPassCode { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
-
+        public string? RefreshToken{ get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
 
         public User(Guid id, string? fullName, string email, DateTime? dateOfBirth, string? phone, string password, int status, string activeCode, bool isActived, string? forgotPassCode, DateTime createdDate)

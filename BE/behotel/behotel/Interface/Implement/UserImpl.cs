@@ -212,6 +212,7 @@ namespace behotel.Interface.Implement
                 return new ApiResponse<string>(null, null, "400", "User already active", false, 0, 0, 0, 0, "https://localhost:3000/active/alreadyActive", null);
             }
             user.IsActived = true;
+            user.ActiveCode = null;
             await _context.SaveChangesAsync();
             return new ApiResponse<string>(null, null, "200", "Active user successfully", true, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
         }
@@ -398,7 +399,8 @@ namespace behotel.Interface.Implement
 
         public async Task<ApiResponse<UserDTO>> SearchUserKeyword(string filter, int currentPage, int pageSize)
         {
-            if(string.IsNullOrEmpty(filter)) {
+            if (string.IsNullOrEmpty(filter))
+            {
                 return new ApiResponse<UserDTO>(null, null, "400", "Keyword  is required", false, 0, 0, 0, 0, null, null);
             }
             if (currentPage <= 0 || pageSize <= 0)
@@ -408,7 +410,7 @@ namespace behotel.Interface.Implement
             using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString("DBConnection"));
             connection.Open();
 
-            var sql = UserSqlQuery.searchUser   ;
+            var sql = UserSqlQuery.searchUser;
 
             var userDict = new Dictionary<Guid, UserDTO>();
 
@@ -444,6 +446,52 @@ namespace behotel.Interface.Implement
 
             return new ApiResponse<UserDTO>(userDTOsWithPagination, null, "200", "Filter user successfully", true, currentPage, pageSize, totalPage, totalElement, null, 0);
 
+        }
+
+        public async Task<User?> GetUserByRefreshTokenAsync(string rerfeshToken)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.RefreshToken == rerfeshToken);
+            if (user == null)
+            {
+                return null;
+            }
+            return user; ;
+
+        }
+
+        public async Task<bool> SaveRefreshToken(Guid userId, string refreshToken)
+        {
+            var user = await _context.User.FindAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            user.RefreshToken = refreshToken;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<ApiResponse<UserDTO>> EditUserStatus(Guid userId, int status)
+        {
+            var user = await _context.User.FindAsync(userId);
+            if (user == null)
+            {
+                return new ApiResponse<UserDTO>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, null);
+            }
+            {
+                
+            }
+            if (status == 0)
+            {
+                user.IsActived = false;
+                user.RefreshToken = null;
+            } else
+            {
+                user.IsActived = true;
+            }
+            
+            await _context.SaveChangesAsync();
+            return new ApiResponse<UserDTO>(null, null, "200", "Update user status successfully",true, 0, 0, 0, 0, null, null);
         }
     }
 }

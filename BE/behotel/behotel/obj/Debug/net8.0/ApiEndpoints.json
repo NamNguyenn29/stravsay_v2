@@ -46,6 +46,16 @@
     ]
   },
   {
+    "ContainingType": "behotel.Controllers.AuthController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/Auth/refresh",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "behotel.Controllers.BookingController",
     "Method": "GetAll",
     "RelativePath": "api/Booking",

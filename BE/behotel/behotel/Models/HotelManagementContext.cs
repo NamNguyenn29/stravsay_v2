@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotelBooking.Models;
+using Microsoft.EntityFrameworkCore;
 namespace behotel.Models
 {
     public class HotelManagementContext : DbContext
@@ -18,6 +19,16 @@ namespace behotel.Models
         public DbSet<SupportRequest> SupportRequest { get; set; }
 
         public DbSet<User_Deleted> User_Deleted { get; set; }
+        public DbSet<Review> Review { get; set; }
+        public DbSet<ReviewAttachment> ReviewAttachment { get; set; }
+        public DbSet<Review_Deleted> Review_Deleted { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<PaymentMethodConfig> PaymentMethodConfigs { get; set; }
+        public DbSet<PaymentWebhookEvent> PaymentWebhookEvents { get; set; }
+        public DbSet<Refund> Refunds { get; set; }
+
+
 
 
     }

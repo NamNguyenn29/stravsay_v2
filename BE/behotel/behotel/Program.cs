@@ -1,17 +1,18 @@
-﻿using behotel.Helper.Validation;
+﻿using behotel.DTO;
+using behotel.Helper.SendMail;
+using behotel.Helper.SendMail.Implement;
+using behotel.Helper.Validation;
 using behotel.Interface;
 using behotel.Interface.Implement;
+using behotel.Interfaces;
 using behotel.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.EntityFrameworkCore;
-using behotel.Helper.SendMail.Implement;
-using behotel.Helper.SendMail;
-using behotel.DTO;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HotelManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -53,6 +55,8 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
 
     });
+builder.Services.AddHttpClient();
+
 
 
 
@@ -65,6 +69,12 @@ builder.Services.AddScoped<IServiceService, ServiceImpl>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeImpl>();
 builder.Services.AddScoped<IInProgressBookingService, InprogressBookingImpl>();
+builder.Services.AddScoped<IReviewService, ReviewImpl>();
+builder.Services.AddScoped<IPaymentService, PaymentImpl>();
+builder.Services.AddScoped<IPaymentMethodService, PaymentMethodImpl>();
+builder.Services.AddScoped<IPaymentMethodConfigService, PaymentMethodConfigImpl>();
+builder.Services.AddScoped<IPaymentWebhookEventService, PaymentWebhookEventImpl>(); 
+
 
 
 
@@ -131,8 +141,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-
 
 
 app.Run();

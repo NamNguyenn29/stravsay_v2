@@ -30,8 +30,7 @@ namespace behotel.Controllers
             return await _supportRequestService.GetSupportRequestWithPaginaionAsync(currentPage, pageSize);
 
         }
-        [Authorize
-            ]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ApiResponse<SupportRequest>> GetResponseById(string id)
         {

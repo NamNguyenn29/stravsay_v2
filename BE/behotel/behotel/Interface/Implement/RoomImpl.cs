@@ -6,6 +6,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Configuration;
 using System.Data;
 
@@ -176,6 +177,7 @@ namespace behotel.Interface.Implement
                 .Select(fileName => $"{baseUrl}{fileName.Trim()}")
                 .ToList();
 
+           
             roomDTO.Floor = roomOrigin.Floor;
             roomDTO.RoomTypeID = roomOrigin.RoomTypeID.ToString();
 
@@ -234,8 +236,17 @@ namespace behotel.Interface.Implement
                 // Giữ lại ảnh cũ nếu có
                 if (updateRoom.OldImages != null && updateRoom.OldImages.Length > 0)
                 {
-                    finalImages = string.Join(",", updateRoom.OldImages);
+                    var baseUrl = "https://localhost:7020";
+                    var relativeOldImages = updateRoom.OldImages
+                        .Select(img =>
+                    img.Replace(baseUrl, "") // xóa prefix base URL
+                        )
+                        .ToArray();
+
+                    finalImages = string.Join(",", relativeOldImages);
                 }
+
+
 
                 // Thêm ảnh mới nếu có
                 if (updateRoom.ImageUrl != null && updateRoom.ImageUrl.Count > 0)

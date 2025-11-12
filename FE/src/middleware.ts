@@ -15,7 +15,7 @@ export function middleware(req: NextRequest) {
         const response = NextResponse.redirect(new URL("/login", req.url));
         response.cookies.set("redirectAfterLogin", currentUrl, {
             path: "/",
-            maxAge: 300, // 5 phút
+            maxAge: 300,
             httpOnly: false,
         });
         return response;

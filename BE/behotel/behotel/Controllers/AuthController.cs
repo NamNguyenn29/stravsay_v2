@@ -1,4 +1,5 @@
-﻿using behotel.DTO;
+﻿using Azure.Core;
+using behotel.DTO;
 using behotel.Helper;
 using behotel.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -57,16 +58,26 @@ namespace behotel.Controllers
             }
             loginModel.Roles = userDTO.RoleList;
 
-            var token = GenerateToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
-            var cookieOptions = new CookieOptions
+            var accessToken = GenerateAccessToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
+            var cookieOptionsForACToken = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddHours(1)
             };
+            var refreshToken = GenerateRefreshToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
+            await _userService.SaveRefreshToken(userDTO.Id,refreshToken);
+            var cookiesOptionsForRFToken = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
             var roleJson = JsonSerializer.Serialize(userDTO.RoleList);
-            Response.Cookies.Append("accessToken", token, cookieOptions);
+            Response.Cookies.Append("accessToken", accessToken, cookieOptionsForACToken);
+            Response.Cookies.Append("refreshToken",refreshToken, cookiesOptionsForRFToken);
             Response.Cookies.Append("roles", roleJson, new CookieOptions
             {
                 HttpOnly = false, // middleware Edge runtime có thể đọc
@@ -75,7 +86,7 @@ namespace behotel.Controllers
                 Path = "/",
                 Expires = DateTime.UtcNow.AddHours(1)
             });
-            return new ApiResponse<string>(null, token, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
+            return new ApiResponse<string>(null, accessToken, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
         }
 
@@ -87,7 +98,15 @@ namespace behotel.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Path = "/"
+            });
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"
             });
             Response.Cookies.Delete("roles", new CookieOptions
             {
@@ -99,13 +118,75 @@ namespace behotel.Controllers
             return new ApiResponse<string>(null, null, "200", "Logout successfully", true, 0, 0, 0, 0, null, null);
         }
 
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public async Task<IActionResult>  RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if(string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized(new { message = "No refresh token provided" });
+            }
 
-        private string GenerateToken(string id, string email, List<string> roles)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(refreshToken, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])),
+                    ValidateIssuer = true,
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = _config["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                var user = await _userService.GetUserByRefreshTokenAsync(refreshToken);
+                if (user == null)
+                {
+                    return Unauthorized(new { message = "Invalid refresh token" });
+                }
+
+                var userDTO = await _userService.GetUserDTOAsync(user.Id);
+
+                var newAccessToken = GenerateAccessToken(user.Id.ToString(), user.Email, userDTO.RoleList);
+                var cookieOptionsForACToken = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddHours(1)
+                };
+                Response.Cookies.Append("accessToken", newAccessToken, cookieOptionsForACToken);
+
+                return Ok(new { message = "Access token refreshed successfully" });
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return Unauthorized("Refresh token expired");
+            }
+            catch (Exception ex) {
+                return Unauthorized("Invalid refresh token");
+            }
+
+
+
+
+
+        }
+
+
+        private string GenerateAccessToken(string id, string email, List<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, id),
-                new Claim(ClaimTypes.Email , email)
+                new Claim(ClaimTypes.Email , email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             foreach (var role in roles)
             {
@@ -126,6 +207,37 @@ namespace behotel.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+
+        private string GenerateRefreshToken(string id, string email, List<string> roles)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, id),
+                new Claim(ClaimTypes.Email , email),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+          ;
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: creds
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
+        }
+
+
     }
 
 }

@@ -174,9 +174,9 @@ namespace behotel.Controllers
 
         [AllowAnonymous]
         [HttpGet("checkToken")]
-        public async Task<ApiResponse<string>> CheckToken ([FromQuery] string email,[FromQuery] string resetToken )
+        public async Task<ApiResponse<string>> CheckToken ([FromQuery] string email,[FromQuery] string token )
         {
-            return await _userService.CheckResetToken(email, resetToken);
+            return await _userService.CheckResetToken(email, token);
         }
 
         [AllowAnonymous]

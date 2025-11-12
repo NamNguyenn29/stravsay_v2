@@ -2,10 +2,11 @@
 import { Booking } from "@/model/Booking";
 import { getBookings } from "@/api/Booking/getBooking";
 import { useState, useEffect, useCallback } from "react";
-import { Pagination, Modal, Form, Input, DatePicker, Button, message } from "antd";
+import { Pagination, Modal, Form, Input, DatePicker, Button, message, Select } from "antd";
 import dayjs from "dayjs";
 import { SearchOutlined } from "@ant-design/icons";
 import { BookingService } from "@/services/bookingService";
+import { userService } from "@/services/userService";
 
 export default function BookingMangement() {
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -18,7 +19,8 @@ export default function BookingMangement() {
     const [pageSize, setPageSize] = useState(5);
     const [messageApi, contextHolder] = message.useMessage();
     const [loading, setLoading] = useState<boolean>(false);
-
+    const [keyword, setKeyword] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
 
     const loadingBooking = useCallback(async () => {
         const data = await getBookings(currentPage, pageSize);
@@ -26,10 +28,24 @@ export default function BookingMangement() {
         setTotalElement(data.totalElement);
     }, [currentPage, pageSize]);
 
-    useEffect(() => {
-        loadingBooking();
-    }, [currentPage, loadingBooking, pageSize]);
+    const searchBooking = useCallback(async (filter: string, page: number, size: number) => {
+        const res = await BookingService.searchBooking(filter, page, size);
 
+        if (res.data.isSuccess) {
+            setBookings(res.data.list);
+            setTotalElement(res.data.totalElement);
+        } else {
+            messageApi.error(res.data.message);
+        }
+    }, [messageApi]);
+
+    useEffect(() => {
+        if (!isSearching) {
+            loadingBooking();
+        } else {
+            searchBooking(keyword, currentPage, pageSize);
+        }
+    }, [currentPage, loadingBooking, pageSize, isSearching, searchBooking]);
 
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
@@ -51,7 +67,9 @@ export default function BookingMangement() {
             ...booking,
             checkInDate: dayjs(booking.checkInDate),
             checkOutDate: dayjs(booking.checkOutDate),
-            status: getStatusLabel(booking.status).text
+            status: getStatusLabel(booking.status).text,
+            services: booking.service,
+
         });
         setviewModalVisible(true);
     };
@@ -84,6 +102,20 @@ export default function BookingMangement() {
         loadingBooking();
     }
 
+    const handleSearch = async () => {
+        if (keyword.trim() === "") {
+            setIsSearching(false);
+            setCurrentPage(1);
+            loadingBooking();
+            return;
+        }
+
+        setIsSearching(true);
+        setCurrentPage(1);
+
+        searchBooking(keyword, 1, pageSize);
+    };
+
     return (
         <>
             {contextHolder}
@@ -95,9 +127,11 @@ export default function BookingMangement() {
                     type="search"
                     placeholder="Search by room number, guest name, or phone"
                     className="w-96 border p-2  rounded-md "
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
 
                 />
-                <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large">
+                <Button type="primary" icon={<SearchOutlined />} iconPosition={'start'} size="large" onClick={handleSearch}>
                     Search
                 </Button>
             </div>
@@ -171,7 +205,7 @@ export default function BookingMangement() {
 
             {/*  view Booking Modal */}
             <Modal
-                title={<span className="text-xl font-semibold text-blue-600">view Booking</span>}
+                title={<span className="text-xl font-semibold text-blue-600">View Booking</span>}
                 open={viewModalVisible}
                 onCancel={handleCancel}
                 centered
@@ -222,9 +256,20 @@ export default function BookingMangement() {
                         </Form.Item>
                     </div>
 
-                    <Form.Item name="status" label="Status" >
-                        <Input placeholder="" />
-                    </Form.Item>
+                    <div className="flex gap-3">
+                        <Form.Item name="status" label="Status" >
+                            <Input placeholder="" />
+                        </Form.Item>
+
+                        <Form.Item name="services" label="Services" className="w-2/3">
+                            <Select
+                                mode="multiple"
+                                placeholder="Select services"
+                            />
+                        </Form.Item>
+
+                    </div>
+
                 </Form>
             </Modal >
         </>

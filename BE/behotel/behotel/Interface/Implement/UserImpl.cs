@@ -201,19 +201,19 @@ namespace behotel.Interface.Implement
             var user = await GetUserByEmailAsync(email);
             if (user == null)
             {
-                return new ApiResponse<string>(null, null, "404", "User not found", false, 0, 0, 0, 0, "http://localhost:3000/activeSuccess", null);
+                return new ApiResponse<string>(null, null, "400", "User not found", false, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
             }
             if (!user.ActiveCode.Equals(activeCode))
             {
-                return new ApiResponse<string>(null, null, "404", "Wrong active code", false, 0, 0, 0, 0, "http://localhost:3000/activeSuccess", null);
+                return new ApiResponse<string>(null, null, "400", "Wrong active code", false, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
             }
             if (user.IsActived)
             {
-                return new ApiResponse<string>(null, null, "404", "User already active", false, 0, 0, 0, 0, "http://localhost:3000/alreadyActive", null);
+                return new ApiResponse<string>(null, null, "400", "User already active", false, 0, 0, 0, 0, "https://localhost:3000/active/alreadyActive", null);
             }
             user.IsActived = true;
             await _context.SaveChangesAsync();
-            return new ApiResponse<string>(null, null, "200", "Active user successfully", true, 0, 0, 0, 0, "http://localhost:3000/activeSuccess", null);
+            return new ApiResponse<string>(null, null, "200", "Active user successfully", true, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
         }
 
         public async Task<User?> UpdateUserAsync(Guid id, UpdateUser updateUser)
@@ -311,7 +311,7 @@ namespace behotel.Interface.Implement
                 <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản <strong>Travstay</strong> của bạn.</p>
                 <p>Vui lòng bấm vào nút bên dưới để đặt lại mật khẩu mới:</p>
 
-                <a href='https://localhost:3000/resetpassword?email={to}&token={resetToken}'
+                <a href='https://localhost:3000/changepassword?email={to}&token={resetToken}'
                     style='display:inline-block; background-color:#4CAF50; color:white; padding:10px 20px;
                            text-decoration:none; border-radius:5px; font-weight:bold;'>
                     Đặt lại mật khẩu
@@ -371,7 +371,7 @@ namespace behotel.Interface.Implement
             {
                 return new ApiResponse<string>(null, null, "400", "Wrong email or reset code", false, 0, 0, 0, 0, null, 0);
             }
-            return new ApiResponse<string>(null, null, "200", "Reset Token is valid", false, 0, 0, 0, 0, null, 0);
+            return new ApiResponse<string>(null, null, "200", "Reset Token is valid", true, 0, 0, 0, 0, null, 0);
 
         }
 
@@ -382,7 +382,7 @@ namespace behotel.Interface.Implement
             {
                 return new ApiResponse<string>(null, null, "400", "Wrong email or reset code", false, 0, 0, 0, 0, null, 0);
             }
-            if (!CompareToken(resetPasswordModel.resetToken, user.ForgotPassCode))
+            if (!CompareToken(resetPasswordModel.ResetToken, user.ForgotPassCode))
             {
                 return new ApiResponse<string>(null, null, "400", "Wrong email or reset code", false, 0, 0, 0, 0, null, 0);
             }
@@ -392,7 +392,7 @@ namespace behotel.Interface.Implement
             _context.User.Update(user);
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<string>(null, null, "200", "Reset Password successfully", false, 0, 0, 0, 0, null, 0);
+            return new ApiResponse<string>(null, null, "200", "Reset Password successfully", true, 0, 0, 0, 0, null, 0);
 
         }
 

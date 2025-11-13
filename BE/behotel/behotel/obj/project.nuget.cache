@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vnFKgIoV1IU=",
+  "dgSpecHash": "lJcYLZWgqeY=",
   "success": true,
-  "projectFilePath": "E:\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
+  "projectFilePath": "E:\\backup\\Project2\\stravsay_v2\\BE\\behotel\\behotel\\behotel.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nam22\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\nam22\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

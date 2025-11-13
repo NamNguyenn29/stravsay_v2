@@ -562,7 +562,6 @@ export default function RoomManagement() {
                                                         const clone = [...fileList];
                                                         clone.splice(index, 1);
                                                         formAdd.setFieldsValue({ ImageUrl: clone });
-                                                        remove(field.name);
                                                     }}>
                                                         Remove
                                                     </Button>

@@ -5,5 +5,6 @@ export const BookingService = {
     getBookingForUser: () => api.get("/Booking/userbooking"),
     approveBooking: (id: string) => api.patch(`/Booking/${id}/approve`),
     deleteBooking: (id: string) => api.delete(`/Booking/${id}`),
-    searchBooking: (filter: string, currentPage: number, pageSize: number) => api.get(`Booking/search?filter=${filter}&currentPage=${currentPage}&pageSize=${pageSize}`)
+    searchBooking: (filter: string, currentPage: number, pageSize: number) => api.get(`Booking/search?filter=${filter}&currentPage=${currentPage}&pageSize=${pageSize}`),
+    getBookings: (currentPage: number, pageSize: number) => api.get(`/Booking?currentPage=${currentPage}&pageSize=${pageSize}`)
 }

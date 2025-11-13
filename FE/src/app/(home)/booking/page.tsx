@@ -14,10 +14,10 @@ import MyBooking from "@/components/user/MyBooking";
 import { useEffect, useState } from "react";
 import { Room } from "@/model/Room";
 import { RoomType } from "@/model/RoomType";
-import { getAvailableRoom } from "@/api/RoomApi/getAvailableRoom";
 import { SearchRoom } from "@/model/SearchRoom";
 import BookingComponent from "@/components/home/BookingComponent";
 import { roomTypeService } from "@/services/roomTypeService";
+import { roomService } from "@/services/roomService";
 export default function BookingPage() {
     const { RangePicker } = DatePicker;
     const [datedif, setDatedif] = useState<number>(0);
@@ -69,8 +69,9 @@ export default function BookingPage() {
             noChildren: noChildren || 0,
         };
 
-        const data = await getAvailableRoom(searchRoom);
-        setRooms(data.list);
+        // const data = await getAvailableRoom(searchRoom);
+        const res = await roomService.getAvailableRoom(searchRoom);
+        setRooms(res.data.list);
         setLoading(false);
     };
 

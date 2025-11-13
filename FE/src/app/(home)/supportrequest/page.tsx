@@ -5,6 +5,7 @@ import { notification } from "antd";
 import { NewSupportRequest } from "@/model/NewSupportRequest";
 import { useRouter } from "next/navigation";
 import { CreateNewSupportRequest } from "@/api/Request/createRequest";
+import { supportService } from "@/services/supportRequestService";
 export default function SupportRequest() {
     const [form, setForm] = useState({
         email: "",
@@ -40,9 +41,10 @@ export default function SupportRequest() {
 
             };
 
-            const res = await CreateNewSupportRequest(newSupportRequest);
+            // const res = await CreateNewSupportRequest(newSupportRequest);
+            const res = await supportService.createSupportRequest(newSupportRequest);
 
-            if (res.isSuccess) {
+            if (res.data.isSuccess) {
                 api.success({
                     message: <span style={{ fontSize: '20px', fontWeight: '600' }}>Please check your email!</span>,
                     description: <span style={{ fontSize: '16px' }}>Create support request successfully</span>,
@@ -53,7 +55,7 @@ export default function SupportRequest() {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 router.push("/");
             } else {
-                setError(res.message || "Send support request failed.");
+                setError(res.data.message || "Send support request failed.");
             }
         } catch (err) {
             console.error(err);

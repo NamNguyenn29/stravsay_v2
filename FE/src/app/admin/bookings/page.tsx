@@ -23,9 +23,9 @@ export default function BookingMangement() {
     const [isSearching, setIsSearching] = useState(false);
 
     const loadingBooking = useCallback(async () => {
-        const data = await getBookings(currentPage, pageSize);
-        setBookings(data.list);
-        setTotalElement(data.totalElement);
+        const res = await BookingService.getBookings(currentPage, pageSize);
+        setBookings(res.data.list);
+        setTotalElement(res.data.totalElement);
     }, [currentPage, pageSize]);
 
     const searchBooking = useCallback(async (filter: string, page: number, size: number) => {
@@ -275,3 +275,6 @@ export default function BookingMangement() {
         </>
     );
 }
+
+
+// modified

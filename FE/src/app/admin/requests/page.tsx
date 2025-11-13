@@ -20,9 +20,10 @@ export default function UserMangement() {
     const [modal, modalContextHolder] = Modal.useModal();
 
     const loadRequest = useCallback(async () => {
-        const data = await getRequests(currentPage, pageSize);
-        setRequests(data.list);
-        setTotalElement(data.totalElement);
+        // const data = await getRequests(currentPage, pageSize);
+        const res = await supportService.getRequests(currentPage, pageSize);
+        setRequests(res.data.list);
+        setTotalElement(res.data.totalElement);
     }, [currentPage, pageSize]);
 
     const searchRequest = useCallback(async (filter: string, page: number, size: number) => {

@@ -133,7 +133,7 @@ export default function AdminSidebar({ selectedKey, collapsed = false }: Props) 
             // const result = await logOut();
             const result = await userService.logOut();
             if (result.data.isSuccess) {
-              document.cookie = "CURRENT_USER=; path=/; max-age=0";
+              // document.cookie = "CURRENT_USER=; path=/; max-age=0";
               sessionStorage.setItem("justLoggedOut", "true");
               router.push("/login");
 

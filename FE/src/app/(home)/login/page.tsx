@@ -1,12 +1,10 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/api/UserApi/loginUser";
 import { LoginModel } from "@/model/LoginModel";
 import { notification } from "antd";
-import { GetMyUser } from "@/api/UserApi/GetMyUser";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { userService } from "@/services/userService";
@@ -22,29 +20,41 @@ export default function LoginPage() {
     const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        const justLoggedOut = sessionStorage.getItem("justLoggedOut");
-        if (justLoggedOut) {
-            sessionStorage.removeItem("justLoggedOut");
-            setChecking(false);
-            return;
-        }
-
-        const userCookie = getCookie("CURRENT_USER");
-        if (userCookie) {
-            const user = JSON.parse(userCookie);
-            if (user.roleList.includes("ADMIN")) {
-                router.replace("/admin");
-                return;
-            } else if (user.roleList.includes("USER")) {
-                router.replace("/user/profile");
-                return;
-            } else {
-                router.replace("/");
+        const checkUser = async () => {
+            const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+            if (justLoggedOut) {
+                sessionStorage.removeItem("justLoggedOut");
+                setChecking(false);
                 return;
             }
-            return;
+
+            try {
+                const res = await userService.getMyUser();
+                if (res.data?.isSuccess && res.data?.object) {
+                    const user = res.data.object;
+                    if (user.roleList.includes("ADMIN")) {
+                        router.replace("/admin");
+                        return;
+                    }
+                    if (user.roleList.includes("USER")) {
+                        router.replace("/user/profile");
+                        return;
+                    }
+                    router.replace("/");
+                    return;
+                }
+                // nếu không redirect, dừng checking
+                setChecking(false);
+
+            } catch (err) {
+                // lỗi network hoặc 401
+                // document.cookie = "CURRENT_USER=; path=/; max-age=0";
+                setChecking(false);
+            }
+
         }
-        setChecking(false);
+
+        checkUser();
     }, [router]);
 
 
@@ -69,14 +79,14 @@ export default function LoginPage() {
             const res = await userService.loginUser(loginModel);
 
             if (res.data.isSuccess && res.data.object) {
-                // const resGetUser = await GetMyUser();
                 const resGetUser = await userService.getMyUser();
-                if (resGetUser.data.isSuccess && resGetUser.data.object) {
-                    const jsonString = JSON.stringify(resGetUser.data.object);
+                // if (resGetUser.data.isSuccess && resGetUser.data.object) {
+                //     const jsonString = JSON.stringify(resGetUser.data.object);
 
-                    document.cookie = `CURRENT_USER=${encodeURIComponent(jsonString)}; path=/; max-age=${1 * 60 * 60}`;
-                    await new Promise(r => setTimeout(r, 100)); // 
-                }
+                //     document.cookie = `CURRENT_USER=${encodeURIComponent(jsonString)}; path=/; max-age=${1 * 60 * 60}`;
+
+                //     await new Promise(r => setTimeout(r, 100)); // 
+                // }
 
                 api.success({
                     message: "Welcome back!",
@@ -254,4 +264,3 @@ export default function LoginPage() {
     );
 }
 
-//modified

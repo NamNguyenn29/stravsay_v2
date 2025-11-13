@@ -6,7 +6,6 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { message } from "antd";
-import { logOut } from "@/api/UserApi/logOut";
 import { userService } from "@/services/userService";
 export default function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -31,11 +30,26 @@ export default function UserMenu() {
 
     }, []);
 
-    const loadUser = () => {
+    // const loadUser = () => {
+    //     try {
+    //         const userCookie = getCookie("CURRENT_USER");
+    //         if (userCookie) {
+    //             const user = JSON.parse(userCookie);
+    //             setName(user.fullName);
+    //             if (user.roleList.includes("USER")) {
+    //                 setRole("USER");
+    //             }
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
+
+    const loadUser = async () => {
         try {
-            const userCookie = getCookie("CURRENT_USER");
-            if (userCookie) {
-                const user = JSON.parse(userCookie);
+            const res = await userService.getMyUser();
+            if (res.data.isSuccess) {
+                const user = res.data.object;
                 setName(user.fullName);
                 if (user.roleList.includes("USER")) {
                     setRole("USER");
@@ -47,17 +61,17 @@ export default function UserMenu() {
     }
 
 
-    function getCookie(name: string): string | null {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
-    }
+    // function getCookie(name: string): string | null {
+    //     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    //     return match ? decodeURIComponent(match[2]) : null;
+    // }
 
     const handleLogout = async () => {
         // const result = await logOut();
         const result = await userService.logOut();
         if (result.data.isSuccess) {
             message.success("Logged out successfully!");
-            document.cookie = "CURRENT_USER=; path=/; max-age=0";
+            // document.cookie = "CURRENT_USER=; path=/; max-age=0";
             sessionStorage.setItem("justLoggedOut", "true");
             router.push("/login");
 

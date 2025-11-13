@@ -23,14 +23,37 @@ export default function Profile() {
     const [curPassword, setCurPassword] = useState("");
     const [nPassword, setNPassword] = useState("");
     const [confpassword, setConfPassword] = useState("");
+    // const loadUser = useCallback(async () => {
+    //     try {
+    //         const userCookie = getCookie("CURRENT_USER");
+
+    //         if (userCookie) {
+    //             const user = JSON.parse(userCookie);
+
+    //             // const data = await getUserById(user.id);
+    //             const res = await userService.getUserById(user.id);
+    //             setUser(res.data.object);
+
+    //             inforForm.setFieldsValue({
+    //                 email: res.data.object?.email,
+    //                 fullname: res.data.object?.fullName,
+    //                 phone: res.data.object?.phone,
+    //                 dob: res.data.object?.dateOfBirth ? dayjs(res.data.object.dateOfBirth) : null,
+    //             });
+    //         }
+
+    //     } catch (err) {
+    //         console.error("Error: ", err);
+
+    //     }
+    // }, []);
     const loadUser = useCallback(async () => {
         try {
-            const userCookie = getCookie("CURRENT_USER");
+            const resUser = await userService.getMyUser();
 
-            if (userCookie) {
-                const user = JSON.parse(userCookie);
+            if (resUser.data.isSuccess) {
+                const user = resUser.data.object;
 
-                // const data = await getUserById(user.id);
                 const res = await userService.getUserById(user.id);
                 setUser(res.data.object);
 
@@ -52,10 +75,10 @@ export default function Profile() {
     }, [loadUser]);
 
 
-    function getCookie(name: string): string | null {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
-    }
+    // function getCookie(name: string): string | null {
+    //     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    //     return match ? decodeURIComponent(match[2]) : null;
+    // }
 
 
 

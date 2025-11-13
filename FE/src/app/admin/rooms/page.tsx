@@ -5,11 +5,11 @@ import { getRooms } from "@/api/RoomApi/getRoom";
 import { Pagination, Upload } from 'antd';
 import { Modal, Form, Input, Select, Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { getRoomType } from "@/api/getRoomType";
 import { RoomType } from "@/model/RoomType";
 import "@/css/modal.css"
 import { roomService } from "@/services/roomService";
 import { SearchOutlined } from "@ant-design/icons";
+import { roomTypeService } from "@/services/roomTypeService";
 
 
 export default function RoomManagement() {
@@ -58,8 +58,9 @@ export default function RoomManagement() {
 
     const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
     const loadRoomType = async () => {
-        const data = await getRoomType();
-        setRoomTypes(data.list);
+        // const data = await getRoomType();
+        const res = await roomTypeService.getRoomType();
+        setRoomTypes(res.data.list);
     }
 
 

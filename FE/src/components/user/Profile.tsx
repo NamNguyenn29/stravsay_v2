@@ -1,14 +1,12 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Card, Avatar, Form, Input, Button, DatePicker, Tabs, message } from "antd";
+import { Card, Avatar, Form, Input, Button, DatePicker, Tabs } from "antd";
 import {
     UserOutlined, MailOutlined, PhoneOutlined, CalendarOutlined, LockOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { User } from "@/model/User";
-import { getUserById } from "@/api/UserApi/getUserById";
 import { UpdateUser } from "@/model/UpdateUser";
-import { updateUser } from "@/api/UserApi/updateUser";
 import { motion } from "framer-motion";
 import { notification } from "antd";
 import { ChangePasswordModel } from "@/model/ChangePassword";
@@ -32,14 +30,15 @@ export default function Profile() {
             if (userCookie) {
                 const user = JSON.parse(userCookie);
 
-                const data = await getUserById(user.id);
-                setUser(data.object);
+                // const data = await getUserById(user.id);
+                const res = await userService.getUserById(user.id);
+                setUser(res.data.object);
 
                 inforForm.setFieldsValue({
-                    email: data.object?.email,
-                    fullname: data.object?.fullName,
-                    phone: data.object?.phone,
-                    dob: data.object?.dateOfBirth ? dayjs(data.object.dateOfBirth) : null,
+                    email: res.data.object?.email,
+                    fullname: res.data.object?.fullName,
+                    phone: res.data.object?.phone,
+                    dob: res.data.object?.dateOfBirth ? dayjs(res.data.object.dateOfBirth) : null,
                 });
             }
 
@@ -73,18 +72,19 @@ export default function Profile() {
                 dateOfBirth: values.dob
             }
 
-            const result = await updateUser(updatePayload);
+            // const result = await updateUser(updatePayload);
             // await new Promise(resolve => setTimeout(resolve, 800));
+            const result = await userService.updateUser(updatePayload);
             api.success({
                 message: "Update information successfully!",
                 description: "You have updated information.",
                 placement: "topRight",
             });
-            if (result.isSuccess) {
+            if (result.data.isSuccess) {
                 message.success("Update user successfully!");
                 loadUser();
             } else {
-                message.error(result.message || "Fail to update user!");
+                message.error(result.data.message || "Fail to update user!");
             }
         }
         catch (error) {

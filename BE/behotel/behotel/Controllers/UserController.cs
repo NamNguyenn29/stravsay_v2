@@ -80,7 +80,7 @@ namespace behotel.Controllers
         }
 
         [Authorize]
-        [HttpPut("/me")]
+        [HttpPut("me")]
         public async Task<ApiResponse<UserDTO>> UpdateUser([FromBody] UpdateUser updateUser)
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

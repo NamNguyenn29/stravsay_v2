@@ -16,6 +16,7 @@ import {
   LogoutOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import { userService } from "@/services/userService";
 
 type AdminMenuItem = {
   key: string;
@@ -129,8 +130,9 @@ export default function AdminSidebar({ selectedKey, collapsed = false }: Props) 
           danger
           icon={<LogoutOutlined />}
           onClick={async () => {
-            const result = await logOut();
-            if (result.isSuccess) {
+            // const result = await logOut();
+            const result = await userService.logOut();
+            if (result.data.isSuccess) {
               document.cookie = "CURRENT_USER=; path=/; max-age=0";
               sessionStorage.setItem("justLoggedOut", "true");
               router.push("/login");

@@ -9,6 +9,7 @@ import { notification } from "antd";
 import { GetMyUser } from "@/api/UserApi/GetMyUser";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { userService } from "@/services/userService";
 
 
 export default function LoginPage() {
@@ -65,9 +66,10 @@ export default function LoginPage() {
                 roles: []
             };
 
-            const res = await loginUser(loginModel);
+            // const res = await loginUser(loginModel);
+            const res = await userService.loginUser(loginModel);
 
-            if (res.isSuccess && res.object) {
+            if (res.data.isSuccess && res.data.object) {
                 const resGetUser = await GetMyUser();
                 if (resGetUser.isSuccess && resGetUser.object) {
                     const jsonString = JSON.stringify(resGetUser.object);
@@ -97,7 +99,7 @@ export default function LoginPage() {
                 }
 
             } else {
-                setError(res.message || "Invalid email or password.");
+                setError(res.data.message || "Invalid email or password.");
             }
         } catch (err) {
             console.error(err);

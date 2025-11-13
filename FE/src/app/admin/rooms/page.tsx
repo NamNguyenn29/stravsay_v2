@@ -30,9 +30,9 @@ export default function RoomManagement() {
 
 
     const loadRoom = useCallback(async () => {
-        const data = await getRooms(currentPage, pageSize);
-        setRooms(data.list);
-        setTotalElement(data.totalElement);
+        const res = await roomService.getRooms(currentPage, pageSize);
+        setRooms(res.data.list);
+        setTotalElement(res.data.totalElement);
     }, [currentPage, pageSize]);
 
     const searchRoom = useCallback(async (filter: string, currentPage: number, pageSize: number) => {
@@ -563,7 +563,7 @@ export default function RoomManagement() {
                                                         const clone = [...fileList];
                                                         clone.splice(index, 1);
                                                         formAdd.setFieldsValue({ ImageUrl: clone });
-                                                        
+
                                                     }}>
                                                         Remove
                                                     </Button>

@@ -25,3 +25,5 @@ export async function getAvailableRoom(searchRoom: SearchRoom): Promise<ApiRespo
         } as ApiResponse<Room>;
     }
 }
+
+// modified

@@ -85,6 +85,7 @@ namespace behotel.Controllers
                 SameSite = SameSiteMode.None,
                 Path = "/",
                 Expires = DateTime.UtcNow.AddHours(1)
+
             });
             return new ApiResponse<string>(null, accessToken, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
@@ -162,6 +163,16 @@ namespace behotel.Controllers
                     Expires = DateTime.UtcNow.AddHours(1)
                 };
                 Response.Cookies.Append("accessToken", newAccessToken, cookieOptionsForACToken);
+                var roleJson = JsonSerializer.Serialize(userDTO.RoleList);
+                Response.Cookies.Append("roles", roleJson, new CookieOptions
+                {
+                    HttpOnly = false, // middleware Edge runtime có thể đọc
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Path = "/",
+                    Expires = DateTime.UtcNow.AddHours(1),
+                });
+
 
                 return Ok(new { message = "Access token refreshed successfully" });
             }
@@ -202,6 +213,7 @@ namespace behotel.Controllers
                 audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
+
                 signingCredentials: creds
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);

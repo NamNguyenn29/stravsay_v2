@@ -18,5 +18,13 @@ export const userService = {
     getUserById: (id: string) => api.get(`/User/${id}`),
     getUsers: (currentPage: number, pageSize: number) => api.get(`/User?currentPage=${currentPage}&pageSize=${pageSize}`),
     getMyUser: () => api.get("/User/me")
+    // async getMyUser() {
+    //     try {
+    //         return await api.get("/User/me");
+    //     } catch {
+    //         return { data: { isSuccess: false } };
+    //     }
+    // }
+
 
 }

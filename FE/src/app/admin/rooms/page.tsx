@@ -444,7 +444,7 @@ export default function RoomManagement() {
                                                             const clone = [...fileList];
                                                             clone.splice(index, 1);
                                                             formEdit.setFieldsValue({ ImageUrl: clone });
-                                                            remove(field.name);
+                                                            // remove(field.name);
                                                         }}
                                                     >
                                                         Remove

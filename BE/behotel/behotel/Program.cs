@@ -32,12 +32,13 @@ builder.Services.AddTransient<IMailService, MailImpl>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFE", policy =>
     {
         policy
-            .AllowAnyOrigin()    // Cho phép tất cả origin (frontend)
+            .WithOrigins("https://localhost:3000", "https://localhost")
             .AllowAnyMethod()    // Cho phép mọi method: GET, POST, PUT, DELETE...
-            .AllowAnyHeader();   // Cho phép mọi header
+            .AllowAnyHeader()   // Cho phép mọi header
+            .AllowCredentials();
     });
 });
 
@@ -46,15 +47,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HotelManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 builder.Services.AddControllers();
-builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new NullableDateTimeConverter());
-        options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
+        //options.JsonSerializerOptions.Converters.Add(new NullableDateOnlyConverter());
 
     });
+
 builder.Services.AddHttpClient();
 
 
@@ -73,47 +75,21 @@ builder.Services.AddScoped<IReviewService, ReviewImpl>();
 builder.Services.AddScoped<IPaymentService, PaymentImpl>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodImpl>();
 builder.Services.AddScoped<IPaymentMethodConfigService, PaymentMethodConfigImpl>();
-builder.Services.AddScoped<IPaymentWebhookEventService, PaymentWebhookEventImpl>(); 
+builder.Services.AddScoped<IPaymentWebhookEventService, PaymentWebhookEventImpl>();
 
 
 
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    // 🔐 Cấu hình Swagger để hiển thị nút Authorize (Bearer)
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Nhập JWT token vào đây ( dạng: Bearer {token})",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-                new string[] {}
-            }
-        });
-});
 
 // Add Authentication & JWT
 var key = builder.Configuration["Jwt:Key"];
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(option =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
     {
-        option.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -121,13 +97,41 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+            ClockSkew = TimeSpan.Zero,
+
+
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Cookies["accessToken"];
+                if (!string.IsNullOrEmpty(token))
+                    context.Token = token;
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                {
+                    context.Response.StatusCode = 401;
+                    context.Response.ContentType = "application/json";
+                    return context.Response.WriteAsync("{\"message\":\"Token expired\"}");
+                }
+                return Task.CompletedTask;
+            }
+        };
+
     });
 
 
+
 var app = builder.Build();
-app.UseCors("AllowAll");
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -137,10 +141,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFE");
 
+
+app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
 
 
 app.Run();

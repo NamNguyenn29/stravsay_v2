@@ -22,3 +22,5 @@ export async function logOut(): Promise<ApiResponse<string>> {
         } as ApiResponse<string>;
     }
 }
+
+//modified

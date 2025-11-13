@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { message } from "antd";
 import { logOut } from "@/api/UserApi/logOut";
+import { userService } from "@/services/userService";
 export default function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
@@ -52,8 +53,9 @@ export default function UserMenu() {
     }
 
     const handleLogout = async () => {
-        const result = await logOut();
-        if (result.isSuccess) {
+        // const result = await logOut();
+        const result = await userService.logOut();
+        if (result.data.isSuccess) {
             message.success("Logged out successfully!");
             document.cookie = "CURRENT_USER=; path=/; max-age=0";
             sessionStorage.setItem("justLoggedOut", "true");

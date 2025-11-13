@@ -7,6 +7,7 @@ import { registerUser } from "@/api/UserApi/register";
 import { RegisterModel } from "@/model/RegisterModel";
 import { embed } from "framer-motion/client";
 import { notification } from "antd";
+import { userService } from "@/services/userService";
 
 
 export default function SignupPage() {
@@ -52,10 +53,10 @@ export default function SignupPage() {
                 password: password,
             };
 
-            const res = await registerUser(registerModel);
+            const res = await userService.registerUser(registerModel);
             console.log("Register response:", res);
 
-            if (res.isSuccess) {
+            if (res.data.isSuccess) {
                 api.success({
                     message: "Please check your email!",
                     description: "Create user successfully",
@@ -66,7 +67,7 @@ export default function SignupPage() {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
                 router.push("/login");
             } else {
-                setError(res.message || "Registration failed.");
+                setError(res.data.message || "Registration failed.");
             }
         } catch (err) {
             console.error(err);

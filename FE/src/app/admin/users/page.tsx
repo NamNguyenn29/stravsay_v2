@@ -22,9 +22,11 @@ export default function UserMangement() {
     const [messageApi, contextHolder] = message.useMessage();
 
     const loadUsers = useCallback(async () => {
-        const data = await getUsers(currentPage, pageSize);
-        setUsers(data.list);
-        setTotalElement(data.totalElement)
+        // const data = await getUsers(currentPage, pageSize);
+        const res = await userService.getUsers(currentPage, pageSize);
+
+        setUsers(res.data.list);
+        setTotalElement(res.data.totalElement)
     }, [currentPage, pageSize]);
 
 

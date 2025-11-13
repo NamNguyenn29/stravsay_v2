@@ -16,11 +16,11 @@ namespace behotel.Controllers
         private readonly IUserService _userService;
         private readonly IUserSoftDeleteService _userSoftDeleteService;
 
-        public UserController(IUserService userService,IUserSoftDeleteService userSoftDelete)
+        public UserController(IUserService userService, IUserSoftDeleteService userSoftDelete)
         {
             _userService = userService;
             _userSoftDeleteService = userSoftDelete;
-            
+
         }
         [Authorize(Roles = "ADMIN")]
         [HttpGet]
@@ -91,7 +91,7 @@ namespace behotel.Controllers
                 var combinedErrors = string.Join("; ", errorMessages);
                 return new ApiResponse<UserDTO>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
-          
+
 
             var updatedUser = await _userService.UpdateUserAsync(guidId, updateUser);
             if (updatedUser == null)
@@ -121,7 +121,7 @@ namespace behotel.Controllers
                 return new ApiResponse<string>(null, null, "400", "Invalid GUID format", false, 0, 0, 0, 0, null, null);
             }
             return await _userSoftDeleteService.SoftDeleteUser(guidId);
-            
+
         }
 
 
@@ -150,7 +150,7 @@ namespace behotel.Controllers
         public async Task<ApiResponse<UserDTO>> ChangePassword([FromBody] ChangePasswordModel changePasswordModel)
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if(String.IsNullOrWhiteSpace(id))
+            if (String.IsNullOrWhiteSpace(id))
             {
                 return new ApiResponse<UserDTO>(null, null, "400", "Id is required", false, 0, 0, 0, 0, null, 0);
             }
@@ -169,12 +169,12 @@ namespace behotel.Controllers
         [HttpPost("forgotpassword")]
         public async Task<ApiResponse<string>> ForgotPassword([FromBody] string email)
         {
-             return await _userService.CheckEmailExists(email);
+            return await _userService.CheckEmailExists(email);
         }
 
         [AllowAnonymous]
         [HttpGet("checkToken")]
-        public async Task<ApiResponse<string>> CheckToken ([FromQuery] string email,[FromQuery] string token )
+        public async Task<ApiResponse<string>> CheckToken([FromQuery] string email, [FromQuery] string token)
         {
             return await _userService.CheckResetToken(email, token);
         }
@@ -186,12 +186,20 @@ namespace behotel.Controllers
             return await _userService.ResetPassword(resetPasswordModel);
         }
 
-        [Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         [HttpGet("search")]
-        public async Task<ApiResponse<UserDTO>> SearchUser([FromQuery]string filter,[FromQuery] int currentPage ,[FromQuery] int pageSize)
+        public async Task<ApiResponse<UserDTO>> SearchUser([FromQuery] string filter, [FromQuery] int currentPage, [FromQuery] int pageSize)
         {
             return await _userService.SearchUserKeyword(filter, currentPage, pageSize);
         }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpPut("{id}/status")]
+        public async Task<ApiResponse<UserDTO>> EditUserStatus(Guid id, [FromBody] int status)
+        {
+            return await _userService.EditUserStatus(id, status);
+        }
+        
         
         
 

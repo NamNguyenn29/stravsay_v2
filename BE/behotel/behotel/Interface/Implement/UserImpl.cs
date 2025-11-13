@@ -267,7 +267,7 @@ namespace behotel.Interface.Implement
             var user = await _context.User.FindAsync(userId);
             if (user == null)
             {
-                return new ApiResponse<UserDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, 0);
             }
             var isCorrectPassword = BCrypt.Net.BCrypt.Verify(changePasswordModel.currentPassword, user.Password);
             if (!isCorrectPassword)
@@ -280,7 +280,7 @@ namespace behotel.Interface.Implement
             var userDTO = await GetUserDTOAsync(userId);
             if (userDTO == null)
             {
-                return new ApiResponse<UserDTO>(null, null, "404", "User informaiton not  found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<UserDTO>(null, null, "400", "User informaiton not  found", false, 0, 0, 0, 0, null, 0);
 
             }
             return new ApiResponse<UserDTO>(null, userDTO, "200", "Change password successfully", true, 0, 0, 0, 0, null, 0);

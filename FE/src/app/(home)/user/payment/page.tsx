@@ -1,80 +1,70 @@
 "use client";
 
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Checkbox, Input, Button } from "antd";
-import { jwtDecode } from "jwt-decode";
+import { userService } from "@/services/userService";
+import { User } from "@/model/User";
+import useMessage from "antd/es/message/useMessage";
 
-import { getUserById } from "@/api/UserApi/getUserById";
 import { paymentServices } from "@/services/paymentService";
 import { Service } from "@/model/Service";
-import { serviceServices } from "@/services/serviceServices";
+import { serviceServices } from "@/services/serviceService";
+
 import { PaymentMethod } from "@/model/PaymentMethod";
 
 
-interface DecodedToken {
-  [key: string]: string | undefined;
-  sub?: string;
-  userId?: string;
-}
+
 
 export default function CheckoutPage() {
-  // ---------------------------
   // Customer Info
-  // ---------------------------
   const [fullName, setFullName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [user, setUser] = useState<User | null>(null);
 
-  // ---------------------------
+
   // Payment
-  // ---------------------------
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [paymentMethodId, setPaymentMethodId] = useState<string | null>(null);
   const [loadingMethods, setLoadingMethods] = useState<boolean>(false);
   const [creatingPayment, setCreatingPayment] = useState<boolean>(false);
 
-  // ---------------------------
   // Extra Services
-  // ---------------------------
   const [services, setServices] = useState<Service[]>([]);
   const [loadingServices, setLoadingServices] = useState<boolean>(true);
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
 
-  // ---------------------------
   // Load user, payment methods, services
-  // ---------------------------
+
   useEffect(() => {
     loadUser();
     loadPaymentMethods();
     loadServices();
   }, []);
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
-      const token = sessionStorage.getItem("accessToken");
-      if (!token) return;
+      const res = await userService.getMyUser();
+      const u = res.data.object;
 
-      const decoded = jwtDecode<DecodedToken>(token);
-      const rawId =
-        decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] ||
-        decoded.sub ||
-        decoded.userId;
-      if (!rawId) return;
-
-      const res = await getUserById(rawId);
-      const u = res?.object;
       if (!u) return;
 
+      // Gán state
+      setUser(u);
+
+      // Gán form (fullName, phone, email)
       setFullName(u.fullName || "");
       setPhone(u.phone || "");
       setEmail(u.email || "");
+
     } catch (err) {
       console.error("Load user error:", err);
     }
-  };
+  }, []);
+
+
+
 
   const loadPaymentMethods = async () => {
     try {

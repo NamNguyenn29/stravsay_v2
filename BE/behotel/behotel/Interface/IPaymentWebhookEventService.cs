@@ -1,6 +1,6 @@
 ﻿using behotel.DTO;
 
-namespace behotel.Interfaces
+namespace behotel.Interface
 {
 
     public interface IPaymentWebhookEventService

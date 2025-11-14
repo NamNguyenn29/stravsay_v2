@@ -2,7 +2,7 @@
 using behotel.Interface;
 using behotel.Interfaces;
 using behotel.Models;
-using HotelBooking.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,9 +25,7 @@ namespace behotel.Interface.Implement
             _logger = logger;
         }
 
-        // =============================
         // GHI NHẬN MỘT WEBHOOK MỚI
-        // =============================
         public async Task<PaymentWebhookEventDTO> LogEventAsync(string provider, string payload, string? signature)
         {
             try
@@ -66,9 +64,7 @@ namespace behotel.Interface.Implement
             }
         }
 
-        // =============================
         // XÁC MINH CHỮ KÝ (SIGNATURE)
-        // =============================
         public async Task<bool> ValidateSignatureAsync(string provider, string payload, string signature)
         {
             try
@@ -110,9 +106,8 @@ namespace behotel.Interface.Implement
             }
         }
 
-        // =============================
         // XỬ LÝ SỰ KIỆN WEBHOOK
-        // =============================
+
         public async Task<bool> ProcessEventAsync(Guid eventId)
         {
             try
@@ -174,9 +169,7 @@ namespace behotel.Interface.Implement
             }
         }
 
-        // =============================
         // LẤY DANH SÁCH WEBHOOK CHƯA XỬ LÝ
-        // =============================
         public async Task<IEnumerable<PaymentWebhookEventDTO>> GetUnprocessedEventsAsync()
         {
             try
@@ -204,9 +197,7 @@ namespace behotel.Interface.Implement
             }
         }
 
-        // =============================
         // LẤY WEBHOOK THEO ID
-        // =============================
         public async Task<PaymentWebhookEventDTO?> GetByIdAsync(Guid eventId)
         {
             try

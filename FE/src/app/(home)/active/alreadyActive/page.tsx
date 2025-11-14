@@ -4,9 +4,9 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "antd";
 import { motion } from "framer-motion";
-import { CheckCircleTwoTone } from "@ant-design/icons";
+import { InfoCircleTwoTone } from "@ant-design/icons";
 
-export default function ActiveSuccess() {
+export default function ActiveAlready() {
     return (
         <div
             style={{
@@ -24,7 +24,7 @@ export default function ActiveSuccess() {
                 overflow: "hidden",
             }}
         >
-            {/* Overlay - chỉ làm tối nhẹ để nổi card lên */}
+            {/* Overlay */}
             <div
                 style={{
                     position: "absolute",
@@ -34,7 +34,7 @@ export default function ActiveSuccess() {
                 }}
             />
 
-            {/* Hiệu ứng ánh sáng nhẹ phía sau */}
+            {/* Hiệu ứng ánh sáng xanh tím */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.4 }}
@@ -45,7 +45,7 @@ export default function ActiveSuccess() {
                     height: "600px",
                     borderRadius: "50%",
                     background:
-                        "radial-gradient(circle, rgba(0,255,200,0.35), rgba(79,70,229,0.15), transparent 70%)",
+                        "radial-gradient(circle, rgba(80,120,255,0.35), rgba(140,60,255,0.2), transparent 70%)",
                     filter: "blur(120px)",
                     top: "50%",
                     left: "50%",
@@ -76,30 +76,30 @@ export default function ActiveSuccess() {
                     maxWidth: "1100px",
                 }}
             >
-                {/* Icon bên trái */}
+                {/* Icon đã kích hoạt trước đó */}
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, ease: "backOut" }}
                     style={{
                         background:
-                            "radial-gradient(circle at center, rgba(0,255,200,0.25), rgba(79,70,229,0.25))",
+                            "radial-gradient(circle at center, rgba(120,150,255,0.25), rgba(140,60,255,0.25))",
                         padding: "45px",
                         borderRadius: "50%",
                         boxShadow:
-                            "0 0 50px rgba(0,255,200,0.4), 0 0 100px rgba(79,70,229,0.25)",
+                            "0 0 50px rgba(120,150,255,0.4), 0 0 100px rgba(140,60,255,0.25)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                     }}
                 >
-                    <CheckCircleTwoTone
-                        twoToneColor="#00ffc8"
+                    <InfoCircleTwoTone
+                        twoToneColor="#7c83ff"
                         style={{ fontSize: "120px" }}
                     />
                 </motion.div>
 
-                {/* Nội dung bên phải */}
+                {/* Phần text */}
                 <motion.div
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -118,10 +118,10 @@ export default function ActiveSuccess() {
                             fontSize: "30px",
                             marginBottom: "12px",
                             letterSpacing: "0.5px",
-                            textShadow: "0 0 12px rgba(0,255,200,0.2)",
+                            textShadow: "0 0 12px rgba(120,150,255,0.25)",
                         }}
                     >
-                        Your account has been activated!
+                        Your account is already activated
                     </h1>
 
                     <p
@@ -132,40 +132,40 @@ export default function ActiveSuccess() {
                             lineHeight: "1.7",
                         }}
                     >
-                        Welcome to{" "}
+                        It looks like your account has already been activated.
+                        You can now log in and start exploring{" "}
                         <b
                             style={{
-                                color: "#00ffc8",
-                                fontWeight: 600,
-                                textShadow: "0 0 10px rgba(0,255,200,0.3)",
+                                color: "#7c83ff",
+                                textShadow: "0 0 10px rgba(120,150,255,0.3)",
                             }}
                         >
                             Travstay
-                        </b>{" "}
-                        🌍 <br />
-                        You’re all set to start your amazing journey!
+                        </b>
+                        .
                     </p>
 
+                    {/* Button về trang login */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
                         style={{ marginTop: "35px" }}
                     >
-                        <Link href="/">
+                        <Link href="/login">
                             <Button
                                 type="primary"
                                 size="large"
                                 style={{
                                     background:
-                                        "linear-gradient(90deg, #00ffc8 0%, #4f46e5 100%)",
+                                        "linear-gradient(90deg, #7c83ff 0%, #a45bff 100%)",
                                     border: "none",
                                     borderRadius: "14px",
                                     padding: "0 50px",
                                     fontWeight: 600,
                                     color: "#fff",
                                     boxShadow:
-                                        "0 0 30px rgba(0,255,200,0.4), 0 0 40px rgba(79,70,229,0.3)",
+                                        "0 0 30px rgba(120,150,255,0.4), 0 0 40px rgba(160,80,255,0.3)",
                                     transition: "all 0.3s ease",
                                 }}
                                 onMouseEnter={(e) =>
@@ -177,7 +177,7 @@ export default function ActiveSuccess() {
                                     "scale(1)")
                                 }
                             >
-                                Log in now
+                                Return
                             </Button>
                         </Link>
                     </motion.div>

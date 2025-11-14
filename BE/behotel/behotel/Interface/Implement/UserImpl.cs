@@ -201,11 +201,11 @@ namespace behotel.Interface.Implement
             var user = await GetUserByEmailAsync(email);
             if (user == null)
             {
-                return new ApiResponse<string>(null, null, "400", "User not found", false, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
+                return new ApiResponse<string>(null, null, "400", "User not found", false, 0, 0, 0, 0, "https://localhost:3000/active/activeFailed", null);
             }
             if (!user.ActiveCode.Equals(activeCode))
             {
-                return new ApiResponse<string>(null, null, "400", "Wrong active code", false, 0, 0, 0, 0, "https://localhost:3000/active/activeSuccess", null);
+                return new ApiResponse<string>(null, null, "400", "Wrong active code", false, 0, 0, 0, 0, "https://localhost:3000/active/activeFailed", null);
             }
             if (user.IsActived)
             {

@@ -2,7 +2,6 @@
 using behotel.Interface;
 using behotel.Interfaces;
 using behotel.Models;     // Chứa HotelManagementContext và entity PaymentMethodConfig
-using HotelBooking.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

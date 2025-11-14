@@ -1,5 +1,5 @@
 ﻿using behotel.DTO;
-using HotelBooking.Models;
+
 
 public interface IPaymentService
 {

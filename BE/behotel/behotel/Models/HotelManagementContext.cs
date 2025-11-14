@@ -1,4 +1,4 @@
-﻿using HotelBooking.Models;
+﻿
 using Microsoft.EntityFrameworkCore;
 namespace behotel.Models
 {
@@ -26,8 +26,8 @@ namespace behotel.Models
         public DbSet<Booking_Deleted> Booking_Deleted { get; set; }
 
         public DbSet<Review> Review { get; set; }
-        //public DbSet<ReviewAttachment> ReviewAttachment { get; set; }
-        //public DbSet<Review_Deleted> Review_Deleted { get; set; }
+        public DbSet<ReviewAttachment> ReviewAttachment { get; set; }
+        public DbSet<Review_Deleted> Review_Deleted { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<PaymentMethodConfig> PaymentMethodConfigs { get; set; }

@@ -1,7 +1,6 @@
 ﻿using behotel.DTO;
 using behotel.Helper;
 using behotel.Interface;
-using behotel.Interfaces;
 using behotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

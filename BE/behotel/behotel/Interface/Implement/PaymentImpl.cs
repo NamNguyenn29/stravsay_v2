@@ -1,7 +1,6 @@
 ﻿using behotel.DTO;
 using behotel.Interface;
 using behotel.Models;
-using HotelBooking.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

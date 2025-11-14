@@ -1,4 +1,4 @@
-﻿using HotelBooking.Models;
+﻿
 using System.ComponentModel.DataAnnotations;
 
 namespace behotel.Models

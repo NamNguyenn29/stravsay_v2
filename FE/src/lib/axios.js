@@ -31,6 +31,7 @@
 
 
 import axios from "axios";
+import { Rss } from "lucide-react";
 import Router from "next/router";
 
 const api = axios.create({
@@ -57,25 +58,24 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        if (originalRequest.url.includes("/Auth/refresh")) {
+            return Promise.reject(error);
+        }
+
         // Nếu không phải 401 thì bỏ qua
         if (error.response?.status !== 401) {
             return Promise.reject(error);
         }
 
-        // Nếu đang refresh, đợi refresh xong
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject });
-            })
-                .then(() => api(originalRequest))
-                .catch((err) => Promise.reject(err));
+            }).then(() => api(originalRequest));
         }
 
         isRefreshing = true;
 
         try {
-            const hasRefreshToken = document.cookie.includes("refreshToken=");
-            if (!hasRefreshToken) throw new Error("No refresh token");
             await api.post("/Auth/refresh");
             // const res = await api.post("/Auth/refresh");
             // if (res.data.isSuccess && res.data.object) {
@@ -94,9 +94,11 @@ api.interceptors.response.use(
         } catch (err) {
             processQueue(err, null);
             // document.cookie = "CURRENT_USER=; path=/; max-age=0";
-            if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-                Router.push("/login");
-            }
+            // if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+            //     Router.push("/login");
+            // }
+            Router.push("/login");
+
             return Promise.reject(err);
         } finally {
             isRefreshing = false;

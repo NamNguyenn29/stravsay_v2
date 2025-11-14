@@ -86,6 +86,7 @@ namespace behotel.Controllers
                 Path = "/",
                 Expires = DateTime.UtcNow.AddHours(1)
 
+
             });
             return new ApiResponse<string>(null, accessToken, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
@@ -171,6 +172,7 @@ namespace behotel.Controllers
                     SameSite = SameSiteMode.None,
                     Path = "/",
                     Expires = DateTime.UtcNow.AddHours(1),
+
                 });
 
 

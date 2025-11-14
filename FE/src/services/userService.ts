@@ -17,7 +17,7 @@ export const userService = {
     logOut: () => api.post("/Auth/logout"),
     getUserById: (id: string) => api.get(`/User/${id}`),
     getUsers: (currentPage: number, pageSize: number) => api.get(`/User?currentPage=${currentPage}&pageSize=${pageSize}`),
-    getMyUser: () => api.get("/User/me")
+    getMyUser: () => api.get("/User/me"),
     // async getMyUser() {
     //     try {
     //         return await api.get("/User/me");
@@ -25,6 +25,7 @@ export const userService = {
     //         return { data: { isSuccess: false } };
     //     }
     // }
+    refreshToken: () => api.post("/Auth/refresh"),
 
 
 }

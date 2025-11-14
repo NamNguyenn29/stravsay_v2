@@ -8,6 +8,7 @@ import { notification } from "antd";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { userService } from "@/services/userService";
+import api from "@/lib/axios";
 
 
 export default function LoginPage() {
@@ -30,6 +31,10 @@ export default function LoginPage() {
 
             try {
                 const res = await userService.getMyUser();
+                // if (res.status !== 401) {
+                //     await userService.refreshToken();
+                //     res = await userService.getMyUser();
+                // }
                 if (res.data?.isSuccess && res.data?.object) {
                     const user = res.data.object;
                     if (user.roleList.includes("ADMIN")) {

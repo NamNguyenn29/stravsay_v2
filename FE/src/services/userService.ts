@@ -26,6 +26,7 @@ export const userService = {
     //     }
     // }
     refreshToken: () => api.post("/Auth/refresh"),
+    eidtStatus: (id: string, status: number) => api.put(`/User/${id}/status`, status),
 
 
 }

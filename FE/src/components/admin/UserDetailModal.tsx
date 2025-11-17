@@ -146,21 +146,6 @@ export default function UserDetailModal({ selectedUser, onClose, onUpdated }: Pr
                                     </div>
                                 ),
                             },
-                            {
-                                key: "2",
-                                label: "Activity Log",
-                                children: (
-                                    <div className="mt-4">
-                                        <Table
-                                            columns={logColumns}
-                                            dataSource={userLogs}
-                                            pagination={{ pageSize: 5 }}
-                                            bordered
-                                            size="middle"
-                                        />
-                                    </div>
-                                ),
-                            },
                         ]}
                     />
 

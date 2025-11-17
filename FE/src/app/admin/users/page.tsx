@@ -1,6 +1,5 @@
 'use client';
 import { User } from "@/model/User";
-import { getUsers } from "@/api/UserApi/getUser";
 import { useState, useEffect, useCallback } from "react";
 import { Button, message, Modal, Pagination } from 'antd';
 import UserDetailModal from "@/components/admin/UserDetailModal";
@@ -144,7 +143,6 @@ export default function UserMangement() {
                             <th className="px-6 py-3">Role</th>
                             <th className="px-6 py-3">Status</th>
                             <th className="px-6 py-3">Created Date</th>
-                            <th className="px-6 py-3">Last login</th>
                             <th className="px-6 py-3 text-center">Action</th>
                         </tr>
 
@@ -165,7 +163,6 @@ export default function UserMangement() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-3 ">{formatDate(user.createdDate)}</td>
-                                    <td className="px-6 py-3 "></td>
                                     <td className="px-6 py-3 flex gap-5">
                                         <div className="bg-slate-500 hover:bg-slate-800 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer " onClick={() => setSelectedUser(user)}>More Detail</div>
                                         <div className="bg-rose-400 hover:bg-rose-600 p-3 px-5 text-white rounded rounded-(200px) cursor-pointer" onClick={() => handleDeleteUser(user.id)}>Remove</div>

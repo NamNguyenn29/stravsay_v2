@@ -82,6 +82,7 @@ namespace behotel.Interface.Implement
                 return null;
             }
             supportRequest.Response = response;
+            supportRequest.Status = 1;
             await _context.SaveChangesAsync();
             return supportRequest;
         }

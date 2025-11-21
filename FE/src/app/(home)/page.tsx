@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import "antd/dist/reset.css";
 import { RoomType } from "@/model/RoomType";
 import { roomTypeService } from "@/services/roomTypeService";
+import ChatButton from "@/components/home/ChatButton";
 export default function Home() {
   const router = useRouter();
   const { RangePicker } = DatePicker;
@@ -270,7 +271,7 @@ export default function Home() {
         </section>
       </div>
 
-
+      <ChatButton />
     </div>
 
   );

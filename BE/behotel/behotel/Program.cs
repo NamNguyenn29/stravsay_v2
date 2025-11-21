@@ -6,6 +6,7 @@ using behotel.Interface;
 using behotel.Interface.Implement;
 using behotel.Interfaces;
 using behotel.Models;
+using behotel.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,7 +60,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddHttpClient();
 
-
+builder.Services.AddHttpClient<GeminiService>();
 builder.Services.AddScoped<IUserService, UserImpl>();
 builder.Services.AddScoped<IRoomService, RoomImpl>();
 builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingImpl>();

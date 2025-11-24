@@ -17,6 +17,12 @@ import "antd/dist/reset.css";
 import { RoomType } from "@/model/RoomType";
 import { roomTypeService } from "@/services/roomTypeService";
 import ChatButton from "@/components/home/ChatButton";
+import dynamic from "next/dynamic";
+
+const RoomVR = dynamic(() => import("@/components/home/RoomVR"), {
+  ssr: false,
+});
+
 export default function Home() {
   const router = useRouter();
   const { RangePicker } = DatePicker;
@@ -270,8 +276,13 @@ export default function Home() {
           </div>
         </section>
       </div>
-
+      <div className="flex justify-center my-12">
+        <div className="w-full max-w-5xl h-[600px] rounded-xl overflow-hidden shadow-lg">
+          <RoomVR />
+        </div>
+      </div>
       <ChatButton />
+
     </div>
 
   );

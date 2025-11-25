@@ -13,15 +13,15 @@ namespace behotel.Interface.Implement
         private readonly IUserService _userService;
         private readonly IRoomService _roomService;
         private readonly IServiceService _serviceService;
-        private readonly IDiscountService _discountService;
+        //private readonly IDiscountService _discountService;
 
-        public BookingImpl(HotelManagementContext context, IUserService userService, IRoomService roomService, IServiceService serviceService, IDiscountService discountService)
+        public BookingImpl(HotelManagementContext context, IUserService userService, IRoomService roomService, IServiceService serviceService /*IDiscountService discountService*/)
         {
             _context = context;
             _userService = userService;
             _roomService = roomService;
             _serviceService = serviceService;
-            _discountService = discountService;
+            //_discountService = discountService;
         }
 
         public async Task<ApiResponse<BookingDTO>> ApproveBookingAsync(Guid id)
@@ -90,17 +90,22 @@ namespace behotel.Interface.Implement
 
                 }
             }
-            decimal discountValue = 1;
-            if (newBooking.DiscountID != null)
-            {
-                var discount = await _discountService.GetDiscountByIdAsync(Guid.Parse(newBooking.DiscountID));
-                if (discount != null)
-                {
-                    discountValue = discount.DiscountValue;
-                }
-            }
             TimeSpan difference = newBooking.CheckOutDate.Date - newBooking.CheckInDate.Date;
             int totalDays = difference.Days;
+
+            decimal discountValue = 1;
+            Guid? discountID = null;
+
+            //if (newBooking.DiscountID != null)
+            //{
+            //    var discount = await _discountService.ValidateDiscountAsync(newBooking.DiscountID, (roomDTO.BasePrice * totalDays + totalServicePrice));
+            //    if (discount != null)
+            //    {
+            //        discountValue = discount.DiscountValue;
+            //        discountID = discount.Id;
+            //    }
+            //}
+
             Booking booking = new Booking
             {
                 Id = idGuid,
@@ -112,12 +117,9 @@ namespace behotel.Interface.Implement
                 Children = newBooking.Children,
                 Status = 0,
                 Price = (roomDTO.BasePrice * totalDays + totalServicePrice) * discountValue,
+                DiscountID = discountID,
                 CreatedDate = DateTime.Now
             };
-            if (newBooking.DiscountID != null)
-            {
-                booking.DiscountID = Guid.Parse(newBooking.DiscountID);
-            }
             _context.Booking.Add(booking);
             await _context.SaveChangesAsync();
             var bookingDTO = await GetBookingDTOByIdAsync(booking.Id);

@@ -20,9 +20,6 @@ namespace behotel.Interface.Implement
             _context = context;
             _logger = logger;
         }
-
-        // LẤY DANH SÁCH PHƯƠNG THỨC ĐANG ACTIVE
- 
         public async Task<IEnumerable<PaymentMethodDTO>> GetAllActiveAsync()
         {
             try
@@ -48,9 +45,6 @@ namespace behotel.Interface.Implement
                 throw;
             }
         }
-
-
-        // LẤY 1 PHƯƠNG THỨC THEO ID
         public async Task<PaymentMethodDTO?> GetByIdAsync(Guid id)
         {
             try
@@ -75,10 +69,6 @@ namespace behotel.Interface.Implement
                 throw;
             }
         }
-
-
-        // BẬT PHƯƠNG THỨC THANH TOÁN
-
         public async Task<bool> EnableAsync(Guid id)
         {
             try
@@ -87,7 +77,7 @@ namespace behotel.Interface.Implement
                 if (method == null)
                     return false;
 
-                method.Status = 1; // Active
+                method.Status = 1;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -97,9 +87,6 @@ namespace behotel.Interface.Implement
                 return false;
             }
         }
-
-        // TẮT PHƯƠNG THỨC THANH TOÁN
-
         public async Task<bool> DisableAsync(Guid id)
         {
             try

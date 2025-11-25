@@ -25,6 +25,7 @@ namespace behotel.Interface.Implement
         private readonly ILogger<PaymentImpl> _logger;
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private const int PENDING_TIMEOUT_MINUTES = 15; // Timeout cho PENDING payment
 
         public PaymentImpl(
             HotelManagementContext context,
@@ -40,7 +41,6 @@ namespace behotel.Interface.Implement
             _httpContextAccessor = httpContextAccessor;
         }
 
-
         public async Task<PaymentDTO> CreateAsync(PaymentDTO dto)
         {
             if (dto == null)
@@ -52,58 +52,111 @@ namespace behotel.Interface.Implement
             if (paymentMethod == null)
                 throw new Exception("Phương thức thanh toán không tồn tại.");
 
-            var payment = new Payment
-            {
-                PaymentID = Guid.NewGuid(),
-                BookingID = dto.BookingID,
-                PaymentMethodID = dto.PaymentMethodID,
-                Amount = dto.Amount,
-                Status = 0, // Pending
-                CreatedDate = DateTime.UtcNow
-            };
+            var booking = await _context.Booking
+                .FirstOrDefaultAsync(b => b.Id == dto.BookingID);
 
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
+            if (booking == null)
+                throw new Exception("Booking không tồn tại.");
 
-            if (paymentMethod.Code.Equals("MOMO", StringComparison.OrdinalIgnoreCase))
+            if (booking.Status == 1)
+                throw new Exception("Booking này đã được thanh toán, không thể tạo thanh toán mới.");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
             {
-                var payUrl = await CreateMomoPaymentUrl(payment);
-                dto.ProviderTransactionRef = null;
-                dto.ResponsePayload = payUrl;
-                dto.Status = 0;
-                dto.CreatedDate = payment.CreatedDate;
+                var existingPending = await _context.Payments
+                    .Where(p => p.BookingID == dto.BookingID && p.Status == 0)
+                    .FirstOrDefaultAsync();
+
+                if (existingPending != null)
+                {
+                    // ✅ FIX: Commit transaction trước khi return
+                    await transaction.CommitAsync();
+
+                    return new PaymentDTO
+                    {
+                        PaymentID = existingPending.PaymentID,
+                        BookingID = existingPending.BookingID,
+                        Amount = existingPending.Amount,
+                        PayUrl = existingPending.PayUrl,
+                        CreatedDate = existingPending.CreatedDate,
+                        PaymentMethodID = existingPending.PaymentMethodID
+                    };
+                }
+
+                var payment = new Payment
+                {
+                    PaymentID = Guid.NewGuid(),
+                    BookingID = dto.BookingID,
+                    PaymentMethodID = dto.PaymentMethodID,
+                    Amount = dto.Amount,
+                    Status = 0,
+                    CreatedDate = DateTime.UtcNow,
+                    MerchantReference = Guid.NewGuid().ToString()
+                };
+
+                _context.Payments.Add(payment);
+                await _context.SaveChangesAsync();
+
+                if (paymentMethod.Code.Equals("MOMO", StringComparison.OrdinalIgnoreCase))
+                {
+                    var payUrl = await CreateMomoPaymentUrl(payment);
+                    payment.PayUrl = payUrl;
+                    await _context.SaveChangesAsync();
+
+                    // ✅ FIX: Commit transaction
+                    await transaction.CommitAsync();
+
+                    dto.PaymentID = payment.PaymentID;
+                    dto.PayUrl = payUrl;
+                    dto.CreatedDate = payment.CreatedDate;
+                    return dto;
+                }
+                else if (paymentMethod.Code.Equals("VNPAY", StringComparison.OrdinalIgnoreCase))
+                {
+                    var payUrl = CreateVnPayPaymentUrl(payment);
+                    payment.PayUrl = payUrl;
+                    await _context.SaveChangesAsync();
+
+                    // ✅ FIX: Commit transaction
+                    await transaction.CommitAsync();
+
+                    dto.PaymentID = payment.PaymentID;
+                    dto.PayUrl = payUrl;
+                    dto.CreatedDate = payment.CreatedDate;
+                    return dto;
+                }
+                else if (paymentMethod.Code.Equals("PAY_ON_ARRIVAL", StringComparison.OrdinalIgnoreCase))
+                {
+                    payment.Status = 1;
+                    payment.PaidAt = DateTime.UtcNow;
+                    booking.Status = 1;
+
+                    await _context.SaveChangesAsync();
+
+                    // ✅ FIX: Commit transaction
+                    await transaction.CommitAsync();
+
+                    dto.PaymentID = payment.PaymentID;
+                    dto.PayUrl = null;
+                    dto.ResponsePayload = "Đặt phòng thành công. Thanh toán tại quầy.";
+                    dto.CreatedDate = payment.CreatedDate;
+
+                    return dto;
+                }
+
+                // ✅ FIX: Commit nếu không match case nào
+                await transaction.CommitAsync();
                 return dto;
             }
-            else if (paymentMethod.Code.Equals("VNPAY", StringComparison.OrdinalIgnoreCase))
+            catch (Exception ex)
             {
-                var payUrl = CreateVnPayPaymentUrl(payment); 
-                dto.ResponsePayload = payUrl;
-                dto.PayUrl = payUrl;
-                dto.Status = 0;
-                dto.CreatedDate = payment.CreatedDate;
-                return dto;
+                // ✅ FIX: Rollback nếu có lỗi
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Lỗi khi tạo payment");
+                throw;
             }
-
-
-            else if (paymentMethod.Code.Equals("BANK_TRANSFER", StringComparison.OrdinalIgnoreCase))
-            {
-
-                string bankDetails = paymentMethod.Details ?? "Thông tin ngân hàng chưa được cấu hình";
-
-                string paymentMemo = $"THANHTOAN {payment.PaymentID.ToString().Substring(0, 8)}";
-
-                dto.ResponsePayload = $"Vui lòng chuyển khoản đến:\n{bankDetails}\nNội dung bắt buộc: {paymentMemo}";
-                dto.PayUrl = null;
-            }
-
-            else if (paymentMethod.Code.Equals("PAY_ON_ARRIVAL", StringComparison.OrdinalIgnoreCase))
-            {
-
-                dto.ResponsePayload = "Đặt phòng thành công. Vui lòng thanh toán tại quầy lễ tân khi nhận phòng.";
-                dto.PayUrl = null; 
-            }
-
-            return dto;
         }
 
         private async Task<string> CreateMomoPaymentUrl(Payment payment)
@@ -119,10 +172,9 @@ namespace behotel.Interface.Implement
                 string ipnUrl = momoSection["IpnUrl"];
                 string requestType = momoSection["RequestType"];
 
-
                 string amount = ((int)(payment.Amount > 0 ? payment.Amount : 1000)).ToString();
 
-                string orderId = Guid.NewGuid().ToString();
+                string orderId = payment.PaymentID.ToString();
                 string requestId = DateTime.UtcNow.Ticks.ToString();
                 string orderInfo = $"Thanh toan don hang {payment.BookingID}";
                 string extraData = "";
@@ -180,12 +232,13 @@ namespace behotel.Interface.Implement
                 return "Lỗi khi tạo link thanh toán MoMo.";
             }
         }
+
         private string CreateVnPayPaymentUrl(Payment payment)
         {
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_config["TimeZoneId"]);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
-            var tick = payment.PaymentID.ToString(); 
-            var pay = new VnPayLibrary(); 
+            var tick = payment.PaymentID.ToString();
+            var pay = new VnPayLibrary();
             var urlCallBack = _config["Vnpay:ReturnUrl"];
 
             pay.AddRequestData("vnp_Version", _config["Vnpay:Version"]);
@@ -197,13 +250,14 @@ namespace behotel.Interface.Implement
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(_httpContextAccessor.HttpContext));
             pay.AddRequestData("vnp_Locale", _config["Vnpay:Locale"]);
             pay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang {payment.BookingID}");
-            pay.AddRequestData("vnp_OrderType", "other"); 
+            pay.AddRequestData("vnp_OrderType", "other");
             pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
-            pay.AddRequestData("vnp_TxnRef", tick); 
+            pay.AddRequestData("vnp_TxnRef", tick);
 
             var paymentUrl = pay.CreateRequestUrl(_config["Vnpay:BaseUrl"], _config["Vnpay:HashSecret"]);
             return paymentUrl;
         }
+
         public async Task<object> ProcessVnPayReturnAsync(IQueryCollection collections)
         {
             var pay = new VnPayLibrary();
@@ -211,7 +265,7 @@ namespace behotel.Interface.Implement
 
             if (response == null || !response.Success)
             {
-                return response; 
+                return response;
             }
 
             try
@@ -222,13 +276,14 @@ namespace behotel.Interface.Implement
                 {
                     await MarkAsPaidAsync(
                         paymentId,
-                        response.TransactionId, 
-                        JsonConvert.SerializeObject(response) 
+                        response.TransactionId,
+                        JsonConvert.SerializeObject(response)
                     );
                 }
                 else
                 {
-                    // (Tùy chọn) Cập nhật trạng thái thất bại nếu cần
+                    // Nếu VNPAY trả về mã lỗi, hủy payment
+                    await CancelAsync(paymentId);
                 }
             }
             catch (Exception ex)
@@ -239,10 +294,6 @@ namespace behotel.Interface.Implement
 
             return response;
         }
-
-
-
-
 
         private string ComputeHmacSha256(string data, string key)
         {
@@ -264,7 +315,6 @@ namespace behotel.Interface.Implement
                 BookingID = payment.BookingID,
                 PaymentMethodID = payment.PaymentMethodID,
                 Amount = payment.Amount,
-                Status = payment.Status,
                 CreatedDate = payment.CreatedDate,
                 PaidAt = payment.PaidAt,
                 ProviderTransactionRef = payment.ProviderTransactionRef,
@@ -282,14 +332,12 @@ namespace behotel.Interface.Implement
                     BookingID = p.BookingID,
                     PaymentMethodID = p.PaymentMethodID,
                     Amount = p.Amount,
-                    Status = p.Status,
                     CreatedDate = p.CreatedDate,
                     PaidAt = p.PaidAt,
                     ProviderTransactionRef = p.ProviderTransactionRef
                 })
                 .ToListAsync();
         }
-
 
         public async Task<bool> UpdateStatusAsync(Guid paymentId, int status)
         {
@@ -303,40 +351,161 @@ namespace behotel.Interface.Implement
 
         public async Task<bool> MarkAsPaidAsync(Guid paymentId, string? providerRef, string? responsePayload)
         {
-            var payment = await _context.Payments.FindAsync(paymentId);
-            if (payment == null) return false;
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            payment.Status = 1; // Paid
-            payment.PaidAt = DateTime.UtcNow;
-            payment.ProviderTransactionRef = providerRef;
-            payment.ResponsePayload = responsePayload;
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-
-        public async Task<bool> CancelAsync(Guid paymentId)
-        {
-            var payment = await _context.Payments.FindAsync(paymentId);
-            if (payment == null) return false;
-
-            if (payment.Status == 0) // Pending
+            try
             {
-                payment.Status = 2; // Canceled
+                var payment = await _context.Payments.FindAsync(paymentId);
+                if (payment == null)
+                {
+                    _logger.LogWarning($"Payment {paymentId} không tồn tại");
+                    return false;
+                }
+
+                // IDEMPOTENCY CHECK #1: Payment đã PAID rồi
+                if (payment.Status == 1)
+                {
+                    _logger.LogInformation($"Payment {paymentId} đã PAID trước đó, bỏ qua callback duplicate.");
+                    await transaction.CommitAsync();
+                    return true;
+                }
+
+                // IDEMPOTENCY CHECK #2: Transaction ID đã được xử lý chưa
+                if (!string.IsNullOrEmpty(providerRef))
+                {
+                    var existingTransaction = await _context.Payments
+                        .AnyAsync(p => p.ProviderTransactionRef == providerRef
+                                    && p.Status == 1
+                                    && p.PaymentID != paymentId);
+
+                    if (existingTransaction)
+                    {
+                        _logger.LogWarning($"Transaction {providerRef} đã được xử lý rồi, bỏ qua duplicate webhook.");
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+                }
+
+                // Không cho phép update payment đã CANCEL
+                if (payment.Status == 2)
+                {
+                    _logger.LogWarning($"Payment {paymentId} đã CANCEL, không thể chuyển thành PAID.");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+
+                // Cập nhật payment thành SUCCESS
+                payment.Status = 1;
+                payment.PaidAt = DateTime.UtcNow;
+                payment.ProviderTransactionRef = providerRef;
+                payment.ResponsePayload = responsePayload;
+                _context.Payments.Update(payment);
+
+                // Cập nhật booking thành SUCCESS
+                var booking = await _context.Booking.FindAsync(payment.BookingID);
+                if (booking == null)
+                {
+                    _logger.LogError($"Booking {payment.BookingID} không tồn tại cho Payment {paymentId}");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+
+                // Chỉ update nếu booking đang PENDING
+                if (booking.Status == 0)
+                {
+                    booking.Status = 1;
+                    _context.Booking.Update(booking);
+                }
+                else if (booking.Status == 2)
+                {
+                    _logger.LogWarning($"Booking {booking.Id} đã bị CANCEL, không thể thanh toán.");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+
+                // Lưu tất cả thay đổi
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation($"✅ Payment {paymentId} và Booking {payment.BookingID} đã được cập nhật thành SUCCESS. TransactionRef: {providerRef}");
                 return true;
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Lỗi khi đánh dấu Payment {paymentId} là PAID");
+                await transaction.RollbackAsync();
+                return false;
+            }
+        }
 
+       public async Task<bool> CancelAsync(Guid paymentId)
+{
+    using var transaction = await _context.Database.BeginTransactionAsync();
+    
+    try
+    {
+        var payment = await _context.Payments.FindAsync(paymentId);
+        if (payment == null)
+        {
+            _logger.LogWarning($"Payment {paymentId} không tồn tại");
             return false;
         }
 
+        // Đã CANCEL rồi thì return true
+        if (payment.Status == 2)
+        {
+            _logger.LogInformation($"Payment {paymentId} đã CANCEL trước đó.");
+            await transaction.CommitAsync();
+            return true;
+        }
+
+        // Không cho phép cancel payment đã PAID
+        if (payment.Status == 1)
+        {
+            _logger.LogWarning($"Payment {paymentId} đã PAID, không thể cancel.");
+            await transaction.RollbackAsync();
+            return false;
+        }
+
+        // Chỉ cancel payment PENDING (status = 0)
+        if (payment.Status == 0)
+        {
+            payment.Status = 2;
+            _context.Payments.Update(payment);
+
+            // Đồng bộ cập nhật booking thành CANCELLED
+            var booking = await _context.Booking.FindAsync(payment.BookingID);
+            if (booking != null && booking.Status == 0)
+            {
+                booking.Status = 2;
+                _context.Booking.Update(booking);
+            }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            _logger.LogInformation($"❌ Payment {paymentId} và Booking {payment.BookingID} đã được cancel.");
+            return true;
+        }
+
+        await transaction.RollbackAsync();
+        return false;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, $"Lỗi khi cancel Payment {paymentId}");
+        await transaction.RollbackAsync();
+        return false;
+    }
+}
+      
         private class MomoResponse
         {
             [JsonProperty("payUrl")] public string PayUrl { get; set; }
             [JsonProperty("resultCode")] public int ResultCode { get; set; }
             [JsonProperty("message")] public string Message { get; set; }
         }
+
         private class VnPayPaymentResponseModel
         {
             public bool Success { get; set; }
@@ -508,7 +677,5 @@ namespace behotel.Interface.Implement
                 return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
             }
         }
-    
-
-}
+    }
 }

@@ -10,10 +10,23 @@ interface MyBookingProps {
     room?: Room;
     guest?: number;
     isContinue?: boolean;
+    totalAmount?: number;
+  
+    showTotalPrice?: boolean;
 }
 
-export default function MyBooking({ datedif, start, end, room, guest, isContinue }: MyBookingProps) {
+export default function MyBooking({ 
+    datedif, 
+    start, 
+    end, 
+    room, 
+    guest, 
+    isContinue, 
+    totalAmount,
+    showTotalPrice = false 
+}: MyBookingProps) {
     const router = useRouter();
+    
     const handleContinue = () => {
         if (!room) {
             message.warning("Please select a room before continuing!");
@@ -21,15 +34,21 @@ export default function MyBooking({ datedif, start, end, room, guest, isContinue
         }
         router.push("/user/payment");
     };
-    // const totalPrice = room ? room.basePrice * datedif : 0;
 
-    // Hàm chuyển số tháng sang chữ
     const formatDate = (date: Date) => {
         return date.toLocaleDateString("en-US", {
             day: "numeric",
-            month: "short", // "short" → Jan, Feb | "long" → January, February
+            month: "short",
         });
     };
+
+    
+    const displayPrice = showTotalPrice 
+        ? totalAmount 
+        : room?.basePrice;
+    const priceLabel = showTotalPrice
+        ? "Total Amount"
+        : "Price per night"; 
 
     return (
         <div className="col-span-3 border border-gray-200 bg-white rounded-lg shadow-md">
@@ -82,28 +101,32 @@ export default function MyBooking({ datedif, start, end, room, guest, isContinue
                         </div>
 
                         <div className="mt-4 w-full border-t pt-3 text-right">
-                            <div className="text-lg text-gray-500">Price per night</div>
-                            {/* <div className="text-rose-500 font-bold text-lg line-through">
-                                {room.basePrice.toLocaleString()} đ
-                            </div> */}
+                            <div className="text-lg text-gray-500">{priceLabel}</div>
                             <div className="text-lg mt-2">
-                                Total:{" "}
-                                <span className="font-semibold">
-                                    {/* {(room.basePrice * 0.9).toLocaleString()} đ */}
-                                    {room.basePrice.toLocaleString()} đ
+                                {showTotalPrice ? "Total: " : ""}
+                                <span className="font-semibold text-rose-500">
+                                    {displayPrice?.toLocaleString()} đ
                                 </span>
                             </div>
+                            
+                            {showTotalPrice && room && (
+                                <div className="text-sm text-gray-500 mt-2 space-y-1">
+                                    <div>Room: {(room.basePrice * datedif).toLocaleString()} đ</div>
+                                    {totalAmount && totalAmount > room.basePrice * datedif && (
+                                        <div>Services: {(totalAmount - room.basePrice * datedif).toLocaleString()} đ</div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
-                        {isContinue &&
+                        {isContinue && (
                             <div
                                 className="bg-rose-400 px-10 py-3 rounded-lg text-white font-bold text-xl cursor-pointer hover:bg-blue-900 mt-4 transition-all"
                                 onClick={handleContinue}
                             >
                                 Continue
                             </div>
-
-                        }
+                        )}
                     </div>
                 ) : (
                     <div className="text-gray-500 text-center">No room selected</div>

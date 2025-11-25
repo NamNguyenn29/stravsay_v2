@@ -1,6 +1,6 @@
 ﻿using behotel.DTO;
 
-
+namespace behotel.Interface;
 public interface IPaymentService
 {
     Task<PaymentDTO> CreateAsync(PaymentDTO payment);
@@ -17,5 +17,4 @@ public interface IPaymentService
 
 
     Task<bool> CancelAsync(Guid paymentId);
-
 }

@@ -4,7 +4,6 @@ using behotel.Helper.SendMail.Implement;
 using behotel.Helper.Validation;
 using behotel.Interface;
 using behotel.Interface.Implement;
-using behotel.Interfaces;
 using behotel.Models;
 using behotel.Services;
 using FluentValidation;
@@ -66,7 +65,7 @@ builder.Services.AddScoped<IRoomService, RoomImpl>();
 builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingImpl>();
 builder.Services.AddScoped<ISupportRequestService, SupportRequestImpl>();
 builder.Services.AddScoped<IServiceService, ServiceImpl>();
-builder.Services.AddScoped<IDiscountService, DiscountService>();
+//builder.Services.AddScoped<IDiscountService, DiscountImpl>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeImpl>();
 builder.Services.AddScoped<IInProgressBookingService, InprogressBookingImpl>();
 builder.Services.AddScoped<IUserSoftDeleteService,UserSoftDelete>();
@@ -75,8 +74,6 @@ builder.Services.AddScoped<IUserSoftDeleteService,UserSoftDelete>();
 builder.Services.AddScoped<IReviewService, ReviewImpl>();
 builder.Services.AddScoped<IPaymentService, PaymentImpl>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodImpl>();
-builder.Services.AddScoped<IPaymentMethodConfigService, PaymentMethodConfigImpl>();
-builder.Services.AddScoped<IPaymentWebhookEventService, PaymentWebhookEventImpl>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

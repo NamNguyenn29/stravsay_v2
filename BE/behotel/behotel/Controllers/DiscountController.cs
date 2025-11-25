@@ -1,52 +1,154 @@
-﻿using behotel.DTO;
-using behotel.Helper;
-using behotel.Interface;
-using behotel.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿//using behotel.DTO;
+//using behotel.Interface;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace behotel.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DiscountController : ControllerBase
-    {
-        private readonly IDiscountService _discountService;
-        public DiscountController(IDiscountService discountService)
-        {
-            _discountService = discountService;
-        }
+//namespace behotel.Controllers
+//{
+//    [ApiController]
+//    [Route("api/[controller]")]
+//    public class DiscountController : ControllerBase
+//    {
+//        private readonly IDiscountService _discountService;
 
-        [Authorize(Roles ="ADMIN")]
-        [HttpGet]
-        public async Task<ApiResponse<Discount>> GetAll()
-        {
-            // update with panigation
-            List<Discount> discounts = (List<Discount>)await _discountService.GetAllDiscountAsync();
-            ApiResponse<Discount> _apiResponse = new ApiResponse<Discount>( discounts, null, "200", "Get all discount successfully", true,0,0,0,0, null, 0);
-            return _apiResponse;
-        }
-        [Authorize]
-        [HttpGet("{id}")]
-        public async Task<ApiResponse<Discount>> GetDiscountById(string id)
-        {
-            if (String.IsNullOrWhiteSpace(id))
-            {
-                return new ApiResponse<Discount>(null, null, "400", "is is require", false, 0, 0, 0, 0, null, null);
-            }
-            Guid idGuid = Guid.Parse(id);
-            var discount = await _discountService.GetDiscountByIdAsync(idGuid);
-            if (discount == null)
-            {
-                return new ApiResponse<Discount>(null, null, "404", "Discount not found", false, 0, 0, 0, 0 ,null, null);
-            }
+//        public DiscountController(IDiscountService discountService)
+//        {
+//            _discountService = discountService;
+//        }
 
-            return new ApiResponse<Discount>(null, discount, "200", "Get discount successfully", true,0,0,0,1, null, null);
-        }
+//        [Authorize]
+//        [HttpGet]
+//        public async Task<ActionResult<IEnumerable<DiscountDTO>>> GetAll()
+//        {
+//            try
+//            {
+//                var dtos = await _discountService.GetAllAsync();
+//                return Ok(dtos);
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
 
-        // create 
-        // update
-        // remove
-    }
-}
+//        [Authorize]
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult<DiscountDTO>> GetById(Guid id)
+//        {
+//            try
+//            {
+//                var dto = await _discountService.GetByIdAsync(id);
+//                return Ok(dto);
+//            }
+//            catch (KeyNotFoundException ex)
+//            {
+//                return NotFound(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+
+//        [AllowAnonymous]
+//        [HttpGet("code/{code}")]
+//        public async Task<ActionResult<DiscountDTO>> GetByCode(string code)
+//        {
+//            try
+//            {
+//                var dto = await _discountService.GetByCodeAsync(code);
+//                return Ok(dto);
+//            }
+//            catch (KeyNotFoundException ex)
+//            {
+//                return NotFound(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+
+//        [Authorize(Roles = "ADMIN")]
+//        [HttpPost]
+//        public async Task<ActionResult<DiscountDTO>> Create([FromBody] DiscountDTO dto)
+//        {
+//            try
+//            {
+//                var resultDto = await _discountService.CreateAsync(dto);
+//                return CreatedAtAction(nameof(GetById), new { id = resultDto.Id }, resultDto);
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+
+//        [Authorize(Roles = "ADMIN")]
+//        [HttpPut("{id}")]
+//        public async Task<ActionResult<DiscountDTO>> Update(Guid id, [FromBody] DiscountDTO dto)
+//        {
+//            try
+//            {
+//                var resultDto = await _discountService.UpdateAsync(id, dto);
+//                return Ok(resultDto);
+//            }
+//            catch (KeyNotFoundException ex)
+//            {
+//                return NotFound(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+
+//        [Authorize(Roles = "ADMIN")]
+//        [HttpDelete("{id}")]
+//        public async Task<ActionResult> Delete(Guid id)
+//        {
+//            try
+//            {
+//                await _discountService.DeleteAsync(id);
+//                return NoContent();
+//            }
+//            catch (KeyNotFoundException ex)
+//            {
+//                return NotFound(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+
+//        [AllowAnonymous]
+//        [HttpPost("validate")]
+//        public async Task<ActionResult<DiscountDTO>> Validate([FromBody] ValidateDiscountRequest request)
+//        {
+//            try
+//            {
+//                var dto = await _discountService.ValidateDiscountAsync(request.Code, request.OrderAmount);
+//                return Ok(dto);
+//            }
+//            catch (KeyNotFoundException ex)
+//            {
+//                return NotFound(new { message = ex.Message });
+//            }
+//            catch (InvalidOperationException ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//        }
+//    }
+
+//    public class ValidateDiscountRequest
+//    {
+//        public string Code { get; set; }
+//        public decimal OrderAmount { get; set; }
+//    }
+//}

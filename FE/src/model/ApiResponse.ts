@@ -10,4 +10,5 @@ export type ApiResponse<T> = {
     isSuccess: boolean | null
     string: string | null
     int: number | null
+    
 }

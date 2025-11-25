@@ -1,10 +1,12 @@
 'use client';
+import { useRouter } from "next/navigation";
 import { useBookingStore } from "../../../../store/useBookingStore";
 import "antd/dist/reset.css";
 import MyBooking from "@/components/user/MyBooking";
 import { useEffect, useState } from "react";
 import { Room } from "@/model/Room";
 export default function BookingPaymentLayout({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
     const [datedif, setDatedif] = useState<number>(0);
     const {
         checkInDate,
@@ -12,9 +14,15 @@ export default function BookingPaymentLayout({ children }: { children: React.Rea
         noAdult,
         noChildren,
         room,
+        totalAmount,
     } = useBookingStore();
 
     useEffect(() => {
+        if (!room) {
+            router.replace("/booking");
+            return;
+        }
+
         if (checkInDate && checkOutDate) {
             const start = new Date(checkInDate);
             const end = new Date(checkOutDate);
@@ -28,7 +36,8 @@ export default function BookingPaymentLayout({ children }: { children: React.Rea
         } else {
             setDatedif(0);
         }
-    }, [checkInDate, checkOutDate]);
+    }, [checkInDate, checkOutDate, room, router]);
+
     return (
         <div>
             <div className="bg-[rgb(250,247,245)] mx-auto container py-5 ">
@@ -44,6 +53,8 @@ export default function BookingPaymentLayout({ children }: { children: React.Rea
                                 end={new Date(checkOutDate as string)}
                                 guest={(noAdult as number) + (noChildren as number)}
                                 isContinue={false}
+                                totalAmount={totalAmount} 
+                                showTotalPrice={true}
                             />
                         </div>
                     </div>

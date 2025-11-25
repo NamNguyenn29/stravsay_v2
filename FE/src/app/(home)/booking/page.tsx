@@ -193,6 +193,7 @@ export default function BookingPage() {
                                 end={new Date(checkOutDate as string)}
                                 guest={(noAdult as number) + (noChildren as number)}
                                 isContinue={true}
+                                showTotalPrice={false}
                             />
                         </div>
                     </div>

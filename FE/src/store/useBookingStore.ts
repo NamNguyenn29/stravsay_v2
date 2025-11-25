@@ -11,6 +11,12 @@ interface BookingState {
     noAdult: number;
     room: Room | null;
 
+   
+    totalAmount: number;
+    setTotalAmount: (amount: number) => void;
+
+  
+
     setRoomType: (roomType: RoomType | null) => void;
     setCheckInDate: (date: string) => void;
     setCheckOutDate: (date: string) => void;
@@ -28,6 +34,9 @@ export const useBookingStore = create<BookingState>((set) => ({
     roomType: null,
     room: null,
 
+   
+    totalAmount: 0,
+    setTotalAmount: (amount) => set({ totalAmount: amount }),
 
     setRoomType: (roomType) => set({ roomType }),
     setCheckInDate: (date) => set({ checkInDate: date }),
@@ -36,12 +45,16 @@ export const useBookingStore = create<BookingState>((set) => ({
     setAdult: (adult) => set({ noAdult: adult }),
     setRoom: (room) => set({ room }),
 
-    resetBooking: () => set({
-        roomType: null,
-        checkInDate: dayjs().hour(14).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
-        checkOutDate: dayjs().add(1, "day").hour(12).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
-        noAdult: 2,
-        noChildren: 0,
-        room: null,
-    }),
+    resetBooking: () =>
+        set({
+            roomType: null,
+            checkInDate: dayjs().hour(14).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
+            checkOutDate: dayjs().add(1, "day").hour(12).minute(0).second(0).format("YYYY-MM-DD HH:mm:ss"),
+            noAdult: 2,
+            noChildren: 0,
+            room: null,
+
+            
+            totalAmount: 0,
+        }),
 }));

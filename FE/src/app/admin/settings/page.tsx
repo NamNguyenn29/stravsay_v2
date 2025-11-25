@@ -11,10 +11,7 @@ import {
 } from "@ant-design/icons";
 
 import GeneralSettings from "@/components/admin/settings/GeneralSettings";
-import BookingSettings from "@/components/admin/settings/BookingSettings";
-import NotificationSettings from "@/components/admin/settings/NotificationSettings";
-import SecuritySettings from "@/components/admin/settings/SecuritySettings";
-import SystemSettings from "@/components/admin/settings/SystemSettings";
+
 
 
 export default function SettingsPage() {
@@ -38,42 +35,6 @@ export default function SettingsPage() {
         </span>
       ),
       children: <GeneralSettings />,
-    },
-    {
-      key: "booking",
-      label: (
-        <span>
-          <CalendarOutlined /> Booking & Policy
-        </span>
-      ),
-      children: <BookingSettings />,
-    },
-    {
-      key: "notification",
-      label: (
-        <span>
-          <BellOutlined /> Notifications
-        </span>
-      ),
-      children: <NotificationSettings />,
-    },
-    {
-      key: "security",
-      label: (
-        <span>
-          <LockOutlined /> Security
-        </span>
-      ),
-      children: <SecuritySettings />,
-    },
-    {
-      key: "system",
-      label: (
-        <span>
-          <ToolOutlined /> System Preferences
-        </span>
-      ),
-      children: <SystemSettings />,
     },
   ];
 

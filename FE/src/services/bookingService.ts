@@ -1,6 +1,8 @@
 import api from "@/lib/axios";
+import { Booking } from "@/model/Booking";
 
 export const BookingService = {
+    createBooking: (data: Booking) => api.post("/Booking", data),
     cancleBooking: (id: string) => api.patch(`/Booking/${id}/cancel`),
     getBookingForUser: () => api.get("/Booking/userbooking"),
     approveBooking: (id: string) => api.patch(`/Booking/${id}/approve`),

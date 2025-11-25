@@ -7,7 +7,6 @@
         public Guid PaymentMethodID { get; set; }
         public decimal Amount { get; set; }
         public DateTime? PaidAt { get; set; }
-        public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public string? ProviderTransactionRef { get; set; }

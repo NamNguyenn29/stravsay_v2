@@ -3,15 +3,36 @@ import { motion } from "framer-motion";
 import { Input, Button, message, Spin, Modal } from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Booking } from "@/model/Booking";
 import dayjs from "dayjs";
 import { BookingService } from "@/services/bookingService";
 
 export default function ElegantBookings() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [bookings, setBookings] = useState<Booking[]>([]);
+    const [modal, modalContextHolder] = Modal.useModal();
+    const [messageApi, contexHolder] = message.useMessage();
 
+    useEffect(() => {
+        const payment = searchParams.get('payment');
+        const code = searchParams.get('code');
+        const error = searchParams.get('error');
+
+        if (payment === 'success') {
+            messageApi.success('Thanh toán thành công! Đặt phòng của bạn đã được xác nhận 🎉', 5);
+            router.replace('/user/userbooking', { scroll: false });
+        } else if (payment === 'failed') {
+            messageApi.error(`Thanh toán thất bại! Mã lỗi: ${code || 'N/A'}`, 5);
+            router.replace('/user/userbooking', { scroll: false });
+        } else if (error) {
+            messageApi.error('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại!', 5);
+            router.replace('/user/userbooking', { scroll: false });
+        }
+    }, [searchParams, router, messageApi]);
     useEffect(() => {
         loadBooking();
     }, []);
@@ -30,8 +51,6 @@ export default function ElegantBookings() {
         if (!dateString) return "-";
         return dayjs(dateString).format("DD/MM/YYYY : HH:00");
     };
-    const [modal, modalContextHolder] = Modal.useModal();
-    const [messageApi, contexHolder] = message.useMessage();
     const handleCancel = (id: string) => {
         modal.confirm({
             title: "Are you sure you want to cancel this booking?",
@@ -43,18 +62,22 @@ export default function ElegantBookings() {
             className: "custom-delete-confirm",
 
             async onOk() {
-
-                const res = await BookingService.cancleBooking(id);
-                if (res.data.isSuccess) {
-                    messageApi.success(res.data.message);
-                } else {
-                    messageApi.error(res.data.message);
+                try {
+                    const res = await BookingService.cancleBooking(id);
+                    if (res.data.isSuccess) {
+                        messageApi.success(res.data.message);
+                        // Reload lại danh sách
+                        loadBooking();
+                    } else {
+                        messageApi.error(res.data.message);
+                    }
+                } catch (error) {
+                    messageApi.error("Có lỗi khi hủy booking");
                 }
-
-
             },
         });
     }
+
 
     return (
         <>

@@ -22,7 +22,6 @@ namespace behotel.Models
 
         // Navigation property
         public ICollection<Payment>? Payments { get; set; }
-        public ICollection<PaymentMethodConfig>? Configs { get; set; }
     }
 
    

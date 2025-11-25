@@ -68,7 +68,7 @@ export default function BookingMangement() {
             checkInDate: dayjs(booking.checkInDate),
             checkOutDate: dayjs(booking.checkOutDate),
             status: getStatusLabel(booking.status).text,
-            services: booking.service,
+            services: booking.services,
 
         });
         setviewModalVisible(true);
@@ -213,7 +213,7 @@ export default function BookingMangement() {
                     (selectedBooking?.status == 0 &&
                         <Button key="save" type="primary" className="bg-blue-600" onClick={() => approveBooking(selectedBooking.id!)} loading={loading} >
                             Approve
-                        </Button>
+                        </Button >
                     ),
                     < Button key="cancel" onClick={handleCancel} > Close</Button >,
 

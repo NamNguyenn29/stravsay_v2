@@ -1,244 +1,253 @@
-"use client";
+'use client';
+import { Review } from "@/model/Review";
+import { useState, useEffect } from "react";
+import { Pagination, Modal, Form, Input, Button, message, Rate, Select } from "antd";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { reviewService } from "@/services/reviewService";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Modal, message, Select } from "antd";
-import { SearchOutlined, DeleteOutlined, SendOutlined } from "@ant-design/icons";
+interface ReviewWithBooking extends Review {
+  bookingUserName?: string;
+  roomName?: string;
+  roomNumber?: string;
+}
 
-type Review = {
-  id: string;
-  reviewerName: string;
-  reviewerEmail?: string;
-  room: string;
-  rating: number;
-  content: string;
-  createdAt: string;
-  status: "approved" | "pending";
-};
+export default function ReviewManagement() {
+  const [reviews, setReviews] = useState<ReviewWithBooking[]>([]);
+  const [allReviews, setAllReviews] = useState<ReviewWithBooking[]>([]);
+  const [viewModalVisible, setViewModalVisible] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<ReviewWithBooking | null>(null);
+  const [form] = Form.useForm();
+  const [totalElement, setTotalElement] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const [ratingFilter, setRatingFilter] = useState<number | null>(null);
+  const [modal, modalContextHolder] = Modal.useModal();
 
-export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchText, setSearchText] = useState("");
-  const [appliedStatus, setAppliedStatus] = useState<"all" | "approved" | "pending">("all");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
-  const [replyOpen, setReplyOpen] = useState(false);
-  const [replyFor, setReplyFor] = useState<Review | null>(null);
-  const [replyMessage, setReplyMessage] = useState("");
-
-  // TODO: fetch from backend
   useEffect(() => {
-    setReviews([]); 
+    loadAllReviews();
   }, []);
 
-  const totalCount = reviews.length;
-  const approvedCount = reviews.filter((r) => r.status === "approved").length;
-  const pendingCount = reviews.filter((r) => r.status === "pending").length;
+  const loadAllReviews = async () => {
+    try {
+      setLoading(true);
+      const res = await reviewService.getAllReviews();
 
-  const filtered = useMemo(() => {
-    const q = searchText.trim().toLowerCase();
-    return reviews.filter((r) => {
-      if (appliedStatus !== "all" && r.status !== appliedStatus) return false;
-      if (!q) return true;
-      return (
-        String(r.id).toLowerCase().includes(q) ||
-        r.reviewerName.toLowerCase().includes(q) ||
-        (r.reviewerEmail || "").toLowerCase().includes(q) ||
-        r.room.toLowerCase().includes(q) ||
-        r.content.toLowerCase().includes(q)
+      if (res.data?.isSuccess) {
+        const data = res.data.list || [];
+        setAllReviews(data);
+        
+        const startIdx = (currentPage - 1) * pageSize;
+        setReviews(data.slice(startIdx, startIdx + pageSize));
+        setTotalElement(data.length);
+      } else {
+        messageApi.error("Failed to load reviews");
+      }
+    } catch (error) {
+      messageApi.error("Error loading reviews");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePaginationChange = (page: number, size: number) => {
+    setCurrentPage(page);
+    setPageSize(size);
+
+  
+    const dataSource = keyword.trim() || ratingFilter ? reviews : allReviews;
+    const startIdx = (page - 1) * size;
+    setReviews(dataSource.slice(startIdx, startIdx + size));
+  };
+
+  const handleSearch = () => {
+    setLoading(true);
+
+    let filtered = [...allReviews];
+
+    if (keyword.trim()) {
+      const lowerKeyword = keyword.toLowerCase();
+      filtered = filtered.filter((r: ReviewWithBooking) =>
+        r.title?.toLowerCase().includes(lowerKeyword) ||
+        r.content?.toLowerCase().includes(lowerKeyword) ||
+        r.userName?.toLowerCase().includes(lowerKeyword)
       );
+    }
+
+    // Filter by rating
+    if (ratingFilter) {
+      filtered = filtered.filter((r: ReviewWithBooking) => r.rating === ratingFilter);
+    }
+    setCurrentPage(1);
+    setTotalElement(filtered.length);
+    setReviews(filtered.slice(0, pageSize));
+    setLoading(false);
+  };
+
+  // Reset filter
+  const handleResetFilter = () => {
+    setKeyword("");
+    setRatingFilter(null);
+    setCurrentPage(1);
+    setTotalElement(allReviews.length);
+    setReviews(allReviews.slice(0, pageSize));
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
+    return dayjs(dateString).format("DD/MM/YYYY - HH:mm");
+  };
+
+  const openViewModal = (review: ReviewWithBooking) => {
+    setSelectedReview(review);
+    form.setFieldsValue({
+      userName: review.userName,
+      rating: review.rating,
+      title: review.title,
+      content: review.content,
+      createdDate: dayjs(review.createdDate),
     });
-  }, [reviews, appliedStatus, searchText]);
-
-  const totalItems = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
-  const currentRows = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filtered.slice(start, start + itemsPerPage);
-  }, [filtered, currentPage, itemsPerPage]);
-
-  const handleSummaryClick = (filter: "all" | "approved" | "pending") => {
-    setAppliedStatus(filter);
-    setCurrentPage(1);
+    setViewModalVisible(true);
   };
 
-  const handleReset = () => {
-    setSearchText("");
-    setAppliedStatus("all");
-    setCurrentPage(1);
-  };
+  const handleDelete = (id: string) => {
+    modal.confirm({
+      title: "Delete Review",
+      content: "Are you sure you want to delete this review?",
+      okText: "Delete",
+      cancelText: "Cancel",
+      okType: "danger",
+      centered: true,
 
-  function confirmDelete(id: string) {
-    Modal.confirm({
-      title: "Delete review",
-      content: `Are you sure you want to delete review ${id}?`,
-      okText: "Yes",
-      cancelText: "No",
-      onOk() {
-        // TODO: backend delete
-        setReviews((prev) => prev.filter((r) => r.id !== id));
-        message.success("Deleted review");
+      async onOk() {
+        try {
+          const res = await reviewService.deleteReview(id);
+
+          if (res.data?.isSuccess) {
+            messageApi.success("Review deleted successfully");
+            loadAllReviews(); // Reload data
+          } else {
+            messageApi.error(res.data?.message || "Failed to delete review");
+          }
+        } catch (error) {
+          messageApi.error("Error deleting review");
+        }
       },
     });
-  }
+  };
 
-  function openReply(r: Review) {
-    setReplyFor(r);
-    setReplyMessage("");
-    setReplyOpen(true);
-  }
-
-  function sendReply() {
-    if (!replyFor) return;
-    // TODO: backend reply
-    message.success(`Reply sent to ${replyFor.reviewerName}`);
-    setReplyOpen(false);
-    setReplyFor(null);
-  }
+  const handleCancel = () => {
+    setViewModalVisible(false);
+    form.resetFields();
+  };
 
   return (
-    <div className="px-6 py-6 bg-gray-50 min-h-[calc(100vh-80px)]">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold">Review Management</h1>
-        <div className="w-full h-[2px] bg-black/80 mt-3 mb-6" />
-      </div>
+    <>
+      {contextHolder}
+      {modalContextHolder}
 
-      {/* Search */}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center bg-white rounded-md shadow-sm border border-gray-200 px-3 py-2 min-w-[420px]">
-          <SearchOutlined className="text-gray-500 mr-2" />
-          <input
-            className="outline-none w-full"
-            placeholder="Search by reviewer, room, email or content"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-        <div className="ml-auto flex items-center gap-3">
-          <button onClick={handleReset} className="px-4 py-2 rounded-md bg-white border border-gray-200 shadow-sm">
-            Reset
-          </button>
-        </div>
-      </div>
+      <div className="font-semibold text-lg">Review Management</div>
+      <div className="my-3 border-b border-gray-300"></div>
 
-      {/* === SUMMARY BOXE === */}
-      <div className="flex gap-5 mb-6">
-        {/* Total Reviews */}
-        <div
-          onClick={() => handleSummaryClick("all")}
-          className={`flex-1 rounded-xl shadow-lg p-6 border transition cursor-pointer ${
-            appliedStatus === "all"
-              ? "bg-blue-100 border-blue-400"
-              : "bg-white border-gray-200 hover:border-blue-200"
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-9 h-9 rounded-full bg-blue-400" />
-            <div className="font-semibold text-gray-800">Total Reviews</div>
-          </div>
-          <div className="text-2xl font-extrabold mt-4">{totalCount}</div>
-        </div>
+      {/* Search & Filter */}
+      <div className="flex justify-start gap-5 container mb-10">
+        <input
+          type="search"
+          placeholder="Search by reviewer, title, or content"
+          className="w-96 border p-2 rounded-md"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch();
+          }}
+        />
 
-        {/* Approved */}
-        <div
-          onClick={() => handleSummaryClick("approved")}
-          className={`w-64 rounded-xl shadow-lg p-6 border transition cursor-pointer ${
-            appliedStatus === "approved"
-              ? "bg-green-100 border-green-400"
-              : "bg-white border-gray-200 hover:border-green-200"
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-9 h-9 rounded-full bg-green-400" />
-            <div className="font-semibold text-gray-800">Approved</div>
-          </div>
-          <div className="text-2xl font-extrabold mt-4">{approvedCount}</div>
-        </div>
+        <Select
+          placeholder="Filter by rating"
+          style={{ width: 150 }}
+          allowClear
+          value={ratingFilter}
+          onChange={setRatingFilter}
+          options={[
+            { label: "5 Stars", value: 5 },
+            { label: "4 Stars", value: 4 },
+            { label: "3 Stars", value: 3 },
+            { label: "2 Stars", value: 2 },
+            { label: "1 Star", value: 1 },
+          ]}
+        />
 
-        {/* Pending */}
-        <div
-          onClick={() => handleSummaryClick("pending")}
-          className={`w-64 rounded-xl shadow-lg p-6 border transition cursor-pointer ${
-            appliedStatus === "pending"
-              ? "bg-yellow-100 border-yellow-400"
-              : "bg-white border-gray-200 hover:border-yellow-200"
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-9 h-9 rounded-full bg-yellow-400" />
-            <div className="font-semibold text-gray-800">Pending</div>
-          </div>
-          <div className="text-2xl font-extrabold mt-4">{pendingCount}</div>
-        </div>
+        <Button type="primary" icon={<SearchOutlined />} size="large" onClick={handleSearch}>
+          Search
+        </Button>
+
+        <Button onClick={handleResetFilter}>Reset</Button>
       </div>
 
       {/* Table */}
-      <div className="container mx-auto my-6 bg-white rounded-xl shadow-lg overflow-hidden">
-        <table className="w-full text-base">
-          <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 text-lg font-semibold">
+      <div className="mb-5 bg-white shadow-md rounded-xl overflow-hidden container mx-auto">
+        <table className="min-w-full text-base">
+          <thead className="bg-gray-100 text-gray-700 text-left font-semibold">
             <tr>
-              <th className="px-6 py-4">No</th>
-              <th className="px-6 py-4">Reviewer / Email</th>
-              <th className="px-6 py-4">Room</th>
-              <th className="px-6 py-4">Rating</th>
-              <th className="px-6 py-4">Content</th>
-              <th className="px-6 py-4">Date</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-center">Action</th>
+              <th className="px-5 py-3">No</th>
+              <th className="px-3 py-3">Reviewer</th>
+              <th className="px-3 py-3">Room</th>
+              <th className="px-2 py-3">Rating</th>
+              <th className="px-3 py-3">Title</th>
+              <th className="px-2 py-3">Content</th>
+              <th className="px-3 py-3">Created Date</th>
+              <th className="px-3 py-3">Updated Date</th>
+              <th className="px-3 py-3 text-center">Action</th>
             </tr>
           </thead>
+
           <tbody className="divide-y divide-gray-200">
-            {currentRows.length === 0 ? (
+            {loading ? (
               <tr>
-                <td colSpan={8} className="px-6 py-16 text-center text-gray-500">
-                  No reviews found
-                </td>
+                <td colSpan={8} className="text-center py-8">Loading...</td>
+              </tr>
+            ) : reviews.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="text-center py-8">No reviews found</td>
               </tr>
             ) : (
-              currentRows.map((r, idx) => (
-                <tr key={r.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4">{idx + 1 + (currentPage - 1) * itemsPerPage}</td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-800">{r.reviewerName}</div>
-                    <div className="text-sm text-gray-500">{r.reviewerEmail}</div>
+              reviews.map((review, index) => (
+                <tr key={review.reviewID} className="hover:bg-gray-50 transition">
+                  <td className="px-6 py-4">{index + 1 + (currentPage - 1) * pageSize}</td>
+
+                  <td className="px-3 py-4">{review.userName || "Unknown"}</td>
+
+                  <td className="px-3 py-4">{review.roomName || "-"}</td>
+
+                  <td className="px-2 py-4">
+                    <Rate disabled value={review.rating} />
                   </td>
-                  <td className="px-6 py-4">{r.room}</td>
-                  <td className="px-6 py-4 text-yellow-500">
-                    {Array.from({ length: r.rating }).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
-                  </td>
-                  <td className="px-6 py-4 text-gray-700 max-w-[420px]">{r.content}</td>
-                  <td className="px-6 py-4">{r.createdAt}</td>
-                  <td className="px-6 py-4">
-                    {r.status === "approved" ? (
-                      <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 font-semibold">
-                        Approved
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 font-semibold">
-                        Pending
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-3">
-                      <button
-                        onClick={() => openReply(r)}
-                        className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
-                      >
-                        <SendOutlined /> Reply
-                      </button>
-                      <button
-                        onClick={() => confirmDelete(r.id)}
-                        className="bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-md flex items-center gap-2"
-                      >
-                        <DeleteOutlined /> Delete
-                      </button>
-                    </div>
+
+                  <td className="px-3 py-4 max-w-xs truncate">{review.title || "-"}</td>
+
+                  <td className="px-2 py-4 max-w-xs">{review.content || "-"}</td>
+
+                  <td className="px-3 py-4">{formatDate(review.createdDate!)}</td>
+                  <td className="px-3 py-4">{formatDate(review.updatedDate!)}</td>
+
+                  <td className="px-3 py-4 text-center flex gap-3 justify-center">
+                    <button
+                      onClick={() => openViewModal(review)}
+                      className="px-4 py-2 text-sm font-medium !text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                    >
+                      View
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(review.reviewID!)}
+                      className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
+                      title="Delete"
+                    >
+                      <DeleteOutlined />
+                    </button>
                   </td>
                 </tr>
               ))
@@ -248,65 +257,47 @@ export default function ReviewsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-6">
-        <div className="text-lg font-medium">Total {totalItems} items</div>
-        <div className="flex items-center gap-3">
-          <Select
-            value={itemsPerPage}
-            onChange={(v) => {
-              setItemsPerPage(Number(v));
-              setCurrentPage(1);
-            }}
-            options={[5, 10, 20].map((n) => ({ label: `${n} / page`, value: n }))}
-            style={{ width: 120 }}
-          />
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-2 rounded-md bg-white border border-gray-200"
-            >
-              ‹
-            </button>
-            <div className="w-10 h-10 bg-white rounded-md flex items-center justify-center shadow-sm">
-              {currentPage}
-            </div>
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage >= totalPages}
-              className="px-3 py-2 rounded-md bg-white border border-gray-200"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-      </div>
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={totalElement}
+        showSizeChanger
+        pageSizeOptions={[5, 10, 20, 50]}
+        onChange={handlePaginationChange}
+        className="text-center flex justify-end"
+        showTotal={(total) => `Total ${total} reviews`}
+      />
 
-      {/* Reply Modal */}
+      {/* View Modal */}
       <Modal
-        title={replyFor ? `Reply to ${replyFor.reviewerName}` : "Reply"}
-        open={replyOpen}
-        onOk={sendReply}
-        onCancel={() => {
-          setReplyOpen(false);
-          setReplyFor(null);
-        }}
-        okText="Send"
+        title={<span className="text-xl font-semibold text-blue-600">View Review</span>}
+        open={viewModalVisible}
+        onCancel={handleCancel}
+        centered
+        footer={[<Button key="close" onClick={handleCancel}>Close</Button>]}
       >
-        <div className="mb-4">
-          <div className="text-sm text-gray-500 mb-2">Original review</div>
-          <div className="bg-gray-100 p-3 rounded">{replyFor?.content}</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500 mb-2">Your reply</div>
-          <textarea
-            rows={6}
-            value={replyMessage}
-            onChange={(e) => setReplyMessage(e.target.value)}
-            className="w-full p-3 border border-gray-200 rounded"
-          />
-        </div>
+        <Form form={form} layout="vertical" className="mt-4">
+          <Form.Item label="Reviewer">
+            <Input value={selectedReview?.userName} disabled />
+          </Form.Item>
+
+          <Form.Item label="Rating">
+            <Rate disabled value={selectedReview?.rating} />
+          </Form.Item>
+
+          <Form.Item label="Title">
+            <Input value={selectedReview?.title} disabled />
+          </Form.Item>
+
+          <Form.Item label="Content">
+            <Input.TextArea value={selectedReview?.content} disabled rows={5} />
+          </Form.Item>
+
+          <Form.Item label="Created Date">
+            <Input value={formatDate(selectedReview?.createdDate || "")} disabled />
+          </Form.Item>
+        </Form>
       </Modal>
-    </div>
+    </>
   );
 }

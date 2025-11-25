@@ -1,11 +1,12 @@
-﻿using behotel.DTOs;
-using behotel.Interface;
-using behotel.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using behotel.DTOs;
+using behotel.Models;
+using behotel.Interface;
+using behotel.Helper;
+using Microsoft.EntityFrameworkCore;
 
 namespace behotel.Interface.Implement
 {
@@ -18,135 +19,191 @@ namespace behotel.Interface.Implement
             _context = context;
         }
 
-        // Tạo review mới
-        public async Task<ReviewDTO> CreateReviewAsync(ReviewDTO reviewDTO, Guid userId)
+        public async Task<ApiResponse<ReviewDTO>> GetAllReviewsAsync()
         {
-            // Kiểm tra booking có tồn tại không
-            var bookingExists = await _context.Booking.AnyAsync(b => b.Id == reviewDTO.BookingID);
-            if (!bookingExists)
-                throw new Exception("Booking không tồn tại");
+            var reviews = await _context.Review
+                .Include(r => r.User)
+                .Include(r => r.Booking)
+                    .ThenInclude(b => b.Room)
+                .OrderByDescending(r => r.CreatedDate)
+                .ToListAsync();
 
-            // Kiểm tra user đã review booking này chưa
+            var reviewDTOs = reviews.Select(r => MapToDTO(r)).ToList();
+
+            return new ApiResponse<ReviewDTO>(reviewDTOs, null, "200", "Get all reviews successfully", true, 0, 0, 0, reviewDTOs.Count, null, 0);
+        }
+
+        public async Task<ApiResponse<ReviewDTO>> GetReviewByIdAsync(Guid reviewId)
+        {
+            var review = await _context.Review
+                .Include(r => r.User)
+                .Include(r => r.Booking)
+                    .ThenInclude(b => b.Room)
+                .FirstOrDefaultAsync(r => r.ReviewID == reviewId);
+
+            if (review == null)
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+            }
+
+            return new ApiResponse<ReviewDTO>(null, MapToDTO(review), "200", "Get review successfully", true, 0, 0, 0, 0, null, 0);
+        }
+
+        public async Task<ApiResponse<ReviewDTO>> GetReviewsByRoomIdAsync(Guid roomId)
+        {
+            var reviews = await _context.Review
+                .Include(r => r.User)
+                .Include(r => r.Booking)
+                .Where(r => r.Booking.RoomId == roomId)
+                .OrderByDescending(r => r.CreatedDate)
+                .ToListAsync();
+
+            var reviewDTOs = reviews.Select(r => MapToDTO(r)).ToList();
+
+            return new ApiResponse<ReviewDTO>(reviewDTOs, null, "200", "Get reviews by room successfully", true, 0, 0, 0, reviewDTOs.Count, null, 0);
+        }
+
+        public async Task<ApiResponse<ReviewDTO>> GetReviewsByUserIdAsync(Guid userId)
+        {
+            var reviews = await _context.Review
+                .Include(r => r.User)
+                .Include(r => r.Booking)
+                .Where(r => r.UserID == userId)
+                .OrderByDescending(r => r.CreatedDate)
+                .ToListAsync();
+
+            var reviewDTOs = reviews.Select(r => MapToDTO(r)).ToList();
+
+            return new ApiResponse<ReviewDTO>(reviewDTOs, null, "200", "Get reviews by user successfully", true, 0, 0, 0, reviewDTOs.Count, null, 0);
+        }
+
+        public async Task<ReviewDTO?> GetReviewByBookingIdAsync(Guid bookingId)
+        {
+            var review = await _context.Review
+                .Where(r => r.BookingID == bookingId)
+                .Select(r => new ReviewDTO
+                {
+                    ReviewID = r.ReviewID,
+                    BookingID = r.BookingID,
+                    UserID = r.UserID,
+                    Rating = r.Rating,
+                    Title = r.Title,
+                    Content = r.Content,
+                    CreatedDate = r.CreatedDate,
+                    UpdatedDate = r.UpdatedDate,
+                    UserName = r.User.FullName ?? "Unknown"
+                    
+                })
+                .FirstOrDefaultAsync();
+
+            return review; 
+        }
+
+        public async Task<ApiResponse<ReviewDTO>> CreateReviewAsync(ReviewDTO reviewDto, Guid currentUserId)
+        {
+            var booking = await _context.Booking.FindAsync(reviewDto.BookingID);
+            if (booking == null)
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "404", "Booking not found", false, 0, 0, 0, 0, null, 0);
+            }
+
+
+            if (booking.UserId != currentUserId)
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "403", "You do not have permission to review this booking", false, 0, 0, 0, 0, null, 0);
+            }
+
+            if (DateTime.Now <= booking.CheckOutDate)
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "400", "Cannot review before checkout time", false, 0, 0, 0, 0, null, 0);
+            }
+
             var existingReview = await _context.Review
-                .AnyAsync(r => r.BookingID == reviewDTO.BookingID && r.UserID == userId);
-            if (existingReview)
-                throw new Exception("Bạn đã review booking này rồi");
+                .FirstOrDefaultAsync(r => r.BookingID == reviewDto.BookingID);
+
+            if (existingReview != null)
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "400", "You have already reviewed this booking", false, 0, 0, 0, 0, null, 0);
+            }
 
             var review = new Review
             {
                 ReviewID = Guid.NewGuid(),
-                BookingID = reviewDTO.BookingID,
-                UserID = userId,
-                Rating = reviewDTO.Rating,
-                Title = reviewDTO.Title,
-                Content = reviewDTO.Content,
-                CreatedDate = DateTime.Now
+                BookingID = reviewDto.BookingID,
+                UserID = currentUserId,
+                Rating = reviewDto.Rating,
+                Title = reviewDto.Title,
+                Content = reviewDto.Content,
+                CreatedDate = DateTime.Now,
+                UpdatedDate=DateTime.Now,
+                Status = 1
             };
 
             _context.Review.Add(review);
             await _context.SaveChangesAsync();
 
-            return await MapToDTO(review);
+            var createdReviewDTO = MapToDTO(review);
+            return new ApiResponse<ReviewDTO>(null, createdReviewDTO, "200", "Create review successfully", true, 0, 0, 0, 0, null, 0);
         }
 
-        // Lấy review theo ID
-        public async Task<ReviewDTO> GetReviewByIdAsync(Guid reviewId)
-        {
-            var review = await _context.Review
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(r => r.ReviewID == reviewId);
-
-            if (review == null)
-                throw new Exception("Review không tồn tại");
-
-            return await MapToDTO(review);
-        }
-
-        // Lấy tất cả reviews của 1 booking
-        public async Task<List<ReviewDTO>> GetReviewsByBookingIdAsync(Guid bookingId)
-        {
-            var reviews = await _context.Review
-                .Include(r => r.User)
-                .Where(r => r.BookingID == bookingId)
-                .OrderByDescending(r => r.CreatedDate)
-                .ToListAsync();
-
-            var reviewDTOs = new List<ReviewDTO>();
-            foreach (var review in reviews)
-            {
-                reviewDTOs.Add(await MapToDTO(review));
-            }
-
-            return reviewDTOs;
-        }
-
-        // Lấy tất cả reviews của 1 user
-        public async Task<List<ReviewDTO>> GetReviewsByUserIdAsync(Guid userId)
-        {
-            var reviews = await _context.Review
-                .Include(r => r.User)
-                .Where(r => r.UserID == userId)
-                .OrderByDescending(r => r.CreatedDate)
-                .ToListAsync();
-
-            var reviewDTOs = new List<ReviewDTO>();
-            foreach (var review in reviews)
-            {
-                reviewDTOs.Add(await MapToDTO(review));
-            }
-
-            return reviewDTOs;
-        }
-
-        // Cập nhật review
-        public async Task<ReviewDTO> UpdateReviewAsync(Guid reviewId, ReviewDTO reviewDTO, Guid currentUserId)
+        public async Task<ApiResponse<ReviewDTO>> UpdateReviewAsync(Guid reviewId, ReviewDTO reviewDto, Guid currentUserId)
         {
             var review = await _context.Review.FindAsync(reviewId);
-
             if (review == null)
-                throw new Exception("Review không tồn tại");
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+            }
 
-            // Chỉ cho phép user sở hữu review được update
             if (review.UserID != currentUserId)
-                throw new UnauthorizedAccessException("Bạn không có quyền sửa review này");
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "403", "You do not have permission to update this review", false, 0, 0, 0, 0, null, 0);
+            }
 
-            review.Rating = reviewDTO.Rating;
-            review.Title = reviewDTO.Title;
-            review.Content = reviewDTO.Content;
+            review.Rating = reviewDto.Rating;
+            review.Title = reviewDto.Title;
+            review.Content = reviewDto.Content;
+            review.UpdatedDate = DateTime.Now;
 
-            _context.Review.Update(review);
+            _context.Review.Update(review); 
             await _context.SaveChangesAsync();
 
-            return await MapToDTO(review);
+            var updatedReviewDTO = MapToDTO(review);
+            return new ApiResponse<ReviewDTO>(null, updatedReviewDTO, "200", "Update review successfully", true, 0, 0, 0, 0, null, 0);
         }
 
-        // Xóa review (hard delete)
-        public async Task<bool> DeleteReviewAsync(Guid reviewId, Guid currentUserId, bool isAdmin)
+        public async Task<ApiResponse<ReviewDTO>> DeleteReviewAsync(Guid reviewId)
         {
             var review = await _context.Review.FindAsync(reviewId);
 
             if (review == null)
-                throw new Exception("Review không tồn tại");
-
-            // Admin hoặc chính chủ review mới được xóa
-            if (!isAdmin && review.UserID != currentUserId)
-                throw new UnauthorizedAccessException("Bạn không có quyền xóa review này");
+            {
+                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+            }
 
             _context.Review.Remove(review);
             await _context.SaveChangesAsync();
 
+            return new ApiResponse<ReviewDTO>(null, null, "200", "Delete review successfully", true, 0, 0, 0, 0, null, 0);
+        }
+
+        public async Task<bool> CanReviewBookingAsync(Guid bookingId, Guid userId)
+        {
+            var booking = await _context.Booking.FindAsync(bookingId);
+            if (booking == null || booking.UserId != userId)
+            {
+                return false;
+            }
+
+            if (DateTime.Now <= booking.CheckOutDate)
+            {
+                return false;
+            }
+
             return true;
         }
 
-        // Map từ Model sang DTO
-        private async Task<ReviewDTO> MapToDTO(Review review)
+        private ReviewDTO MapToDTO(Review review)
         {
-            // Lấy thông tin user nếu chưa load
-            if (review.User == null)
-            {
-                review.User = await _context.User.FindAsync(review.UserID);
-            }
-
             return new ReviewDTO
             {
                 ReviewID = review.ReviewID,
@@ -156,7 +213,10 @@ namespace behotel.Interface.Implement
                 Title = review.Title,
                 Content = review.Content,
                 CreatedDate = review.CreatedDate,
-                UserName = review.User?.FullName ?? "Unknown User"
+                UpdatedDate = review.UpdatedDate,
+                UserName = review.User?.FullName ?? "Unknown",
+                RoomName = review.Booking?.Room?.RoomName ?? "-",        
+                RoomNumber = review.Booking?.Room?.RoomNumber.ToString() ?? "-"
             };
         }
     }

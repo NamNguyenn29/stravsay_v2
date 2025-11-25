@@ -7,12 +7,14 @@ namespace behotel.Models
         public Guid ReviewID { get; set; }
         public Guid BookingID { get; set; }
         public Guid UserID { get; set; }
-        public int Rating { get; set; }              // 1-5 sao
-        public string? Title { get; set; }           // Tiêu đề ngắn
-        public string? Content { get; set; }         // Nội dung review
+        public int Rating { get; set; }            
+        public string? Title { get; set; }           
+        public string? Content { get; set; }         
         public DateTime CreatedDate { get; set; }
 
         public Booking Booking { get; set; }
         public User User { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public int Status { get; set; }
     }
 }

@@ -23,8 +23,10 @@ namespace behotel.DTOs
         public string? Content { get; set; }
 
         public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
-        // Thông tin bổ sung khi hiển thị
         public string? UserName { get; set; }
+        public string? RoomName { get; set; }      
+        public string? RoomNumber { get; set; }   
     }
 }

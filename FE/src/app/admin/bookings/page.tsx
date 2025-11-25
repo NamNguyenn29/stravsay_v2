@@ -177,7 +177,7 @@ export default function BookingMangement() {
                                         >
                                             View
                                         </button>
-                                        <button className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow" onClick={() => removeBooking(booking.id)}>
+                                        <button className="px-4 py-2 text-sm font-medium !text-white bg-red-500 hover:bg-red-600 rounded-lg shadow" onClick={() => removeBooking(booking.id!)}>
                                             Remove
                                         </button>
                                     </td>
@@ -211,7 +211,7 @@ export default function BookingMangement() {
                 centered
                 footer={[
                     (selectedBooking?.status == 0 &&
-                        <Button key="save" type="primary" className="bg-blue-600" onClick={() => approveBooking(selectedBooking.id)} loading={loading} >
+                        <Button key="save" type="primary" className="bg-blue-600" onClick={() => approveBooking(selectedBooking.id!)} loading={loading} >
                             Approve
                         </Button>
                     ),

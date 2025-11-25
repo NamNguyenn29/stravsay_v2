@@ -305,7 +305,7 @@ namespace behotel.Interface.Implement
             var booking = await _context.Booking.FindAsync(id);
             if (booking == null)
             {
-                return new ApiResponse<string>(null, null, "404", "No booking found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<string>(null, null, "400", "No booking found", false, 0, 0, 0, 0, null, null);
             }
             var bookingServices = await _context.BookingService
                                  .Where(bs => bs.BookingId == id)
@@ -343,12 +343,20 @@ namespace behotel.Interface.Implement
                 });
             }
 
+            var payment = await _context.Payments.FirstOrDefaultAsync(p => p.BookingID == booking.Id);
+           
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 await _context.Booking_Deleted.AddAsync(booking_Deleted);
                 await _context.BookingService_Deleted.AddRangeAsync(bookingService_Deleteds);
+                if (payment != null)
+                {
+                    _context.Payments.Remove(payment);
+                    await _context.SaveChangesAsync();
 
+                }
                 _context.Booking.Remove(booking);
                 _context.BookingService.RemoveRange(bookingServices);
 
@@ -359,9 +367,15 @@ namespace behotel.Interface.Implement
             }
             catch (Exception ex)
             {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                var stackTrace = ex.StackTrace;
 
+                Console.WriteLine($"Error: {errorMessage}");
+                Console.WriteLine($"Stack: {stackTrace}");
                 await transaction.RollbackAsync();
-                return new ApiResponse<string>(null, ex.Message, "400", "Failed to delete booking", false, 0, 0, 0, 0, null, 0);
+
+                return new ApiResponse<string>(null, errorMessage, "400", "Failed to delete booking", false, 0, 0, 0, 0, null, 0);
+            
             }
 
 

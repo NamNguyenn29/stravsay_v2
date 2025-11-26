@@ -192,7 +192,7 @@ const RoomVR: React.FC<RoomVRProps> = ({ imageUrl = "/panorama.jpg" }) => {
                         fontWeight: 'bold',
                     }}
                 >
-                    ⏳ Loading 360° View...
+                    Loading 360° View...
                 </div>
             )}
 
@@ -231,7 +231,7 @@ const RoomVR: React.FC<RoomVRProps> = ({ imageUrl = "/panorama.jpg" }) => {
                     fontWeight: '500',
                 }}
             >
-                🖱️ Drag to look around | 🖲️ Scroll to zoom
+                Drag to look around |  Scroll to zoom
             </div>
 
             {/* Info badge */}
@@ -248,7 +248,7 @@ const RoomVR: React.FC<RoomVRProps> = ({ imageUrl = "/panorama.jpg" }) => {
                     fontSize: 12,
                 }}
             >
-                🏨 360° Room View
+                360° Room View
             </div>
 
             {/* Three.js Canvas */}

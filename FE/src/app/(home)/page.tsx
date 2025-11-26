@@ -277,7 +277,7 @@ export default function Home() {
         </section>
       </div>
       <div className="flex justify-center my-12">
-        <div className="w-full max-w-5xl h-[600px] rounded-xl overflow-hidden shadow-lg">
+        <div className="w-full max-w-5xl h-[700px] rounded-xl overflow-hidden shadow-lg">
           <RoomVR />
         </div>
       </div>

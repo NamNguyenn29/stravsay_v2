@@ -114,7 +114,7 @@ namespace behotel.Controllers
                 return new ApiResponse<RoomDTO>(null, null, "400", "Failed to create room", false, 0, 0, 0, 0, null,null);
             }
             var RoomDTO = await _roomImpl.GetRoomDTOByIdAsync(guidId);
-            return new ApiResponse<RoomDTO>(null, RoomDTO, "200","Create room successfully", true, 0, 0, 0, 1, null, null);
+            return new ApiResponse<RoomDTO>(null, RoomDTO, "200","Update room successfully", true, 0, 0, 0, 1, null, null);
         }
 
         [Authorize(Roles ="ADMIN")]

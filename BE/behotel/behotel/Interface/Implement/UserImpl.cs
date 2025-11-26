@@ -203,14 +203,16 @@ namespace behotel.Interface.Implement
             {
                 return new ApiResponse<string>(null, null, "400", "User not found", false, 0, 0, 0, 0, "https://localhost:3000/active/activeFailed", null);
             }
-            if (!user.ActiveCode.Equals(activeCode))
-            {
-                return new ApiResponse<string>(null, null, "400", "Wrong active code", false, 0, 0, 0, 0, "https://localhost:3000/active/activeFailed", null);
-            }
             if (user.IsActived)
             {
                 return new ApiResponse<string>(null, null, "400", "User already active", false, 0, 0, 0, 0, "https://localhost:3000/active/alreadyActive", null);
             }
+            if (!string.Equals(user.ActiveCode, activeCode, StringComparison.Ordinal))
+            {
+                return new ApiResponse<string>(null, null, "400", "Wrong active code", false, 0, 0, 0, 0, "https://localhost:3000/active/activeFailed", null);
+            }
+
+           
             user.IsActived = true;
             user.ActiveCode = null;
             await _context.SaveChangesAsync();

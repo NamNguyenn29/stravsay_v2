@@ -73,7 +73,7 @@ namespace behotel.Controllers
 
         [AllowAnonymous]
         [HttpGet("activeUser")]
-        public async Task<IActionResult> ActiveUser(String email, String activationCode)
+        public async Task<IActionResult> ActiveUser([FromQuery] String email, [FromQuery] String activationCode)
         {
             var apiResponse = await _userService.ActiveUser(email, activationCode);
             return Redirect(apiResponse.String);

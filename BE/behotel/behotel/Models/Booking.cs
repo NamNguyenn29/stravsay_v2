@@ -28,5 +28,9 @@ namespace behotel.Models
         public int Adult { get; set; }
         [Range(0, 10, ErrorMessage = "Children count must be between 0 and 10.")]
         public int Children { get; set; }
+   
+
+        public Room? Room { get; set; } 
+
     }
 }

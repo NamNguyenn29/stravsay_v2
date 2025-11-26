@@ -1,20 +1,33 @@
 "use client";
 
-import { Carousel, Rate, Button } from "antd";
+import { useState, useEffect } from "react";
+import { Carousel, Rate, Button, Spin } from "antd";
+import api from "@/lib/axios";
 
-/**
- * ExperienceWithMyHotel
- * - Loại bỏ hoàn toàn CardHeader/CardContent/CardTitle (thay bằng div + Tailwind)
- * - Không cần lucide-react / shadcn
- * - Text tiếng Anh; comment tiếng Việt để dễ nối API
- */
+interface Review {
+  reviewID?: string;
+  id?: string;
+  userName: string;
+  roomName: string;
+  rating: number;
+  content: string;
+  image?: string;
+  createdDate?: string;
+  updatedDate?: string;
+}
 
-const highlights = [
+interface Highlight {
+  title: string;
+  description: string;
+  icon: string;
+  image: string;
+}
+
+const highlights: Highlight[] = [
   {
     title: "Luxury Rooms with City View",
     description:
       "Experience breathtaking views and ultimate comfort in our elegantly designed rooms.",
-    // dùng emoji thay icon để tránh dependency
     icon: "🛏️",
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
@@ -45,44 +58,47 @@ const highlights = [
   },
 ];
 
-const reviews = [
-  {
-    name: "Sarah Johnson",
-    rating: 5,
-    comment:
-      "The best hotel experience I’ve ever had. The staff were incredibly friendly and helpful!",
-    image:
-      "https://randomuser.me/api/portraits/women/68.jpg",
-  },
-  {
-    name: "Michael Chen",
-    rating: 4,
-    comment:
-      "Beautiful rooms, great food, and the pool view was amazing. Highly recommend!",
-    image:
-      "https://randomuser.me/api/portraits/men/79.jpg",
-  },
-  {
-    name: "Emily Davis",
-    rating: 5,
-    comment:
-      "Loved the elegant design and hospitality. Will definitely come back next time.",
-    image:
-      "https://randomuser.me/api/portraits/women/45.jpg",
-  },
-  {
-    name: "James Brown",
-    rating: 4,
-    comment:
-      "A truly relaxing getaway with top-notch service and facilities. Worth every penny.",
-    image:
-      "https://randomuser.me/api/portraits/men/52.jpg",
-  },
-];
-
 export default function ExperienceWithMyHotel() {
-  // Tạo slides 2 reviews mỗi slide cho Carousel
-  const slides: Array<typeof reviews> = [];
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadAllReviews();
+  }, []);
+
+  const loadAllReviews = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/Review");
+
+      if (res.data?.isSuccess) {
+        const data = res.data.list || [];
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid response format");
+        }
+
+        const firstFourReviews = data.slice(0, 4);
+
+        const reviewsWithImages = firstFourReviews.map((review: Review, index: number) => ({
+          ...review,
+          image:
+            review.image ||
+            `https://randomuser.me/api/portraits/${index % 2 === 0 ? "women" : "men"}/${68 + index}.jpg`,
+        }));
+
+        setReviews(reviewsWithImages);
+      } else {
+        console.error("Failed to load reviews:", res.data?.message);
+      }
+    } catch (error) {
+      console.error("Error loading reviews:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const slides: Review[][] = [];
   for (let i = 0; i < reviews.length; i += 2) {
     slides.push(reviews.slice(i, i + 2));
   }
@@ -105,7 +121,6 @@ export default function ExperienceWithMyHotel() {
           <p className="text-lg md:text-xl max-w-2xl mx-auto">
             Where comfort meets elegance — discover the art of hospitality in every detail.
           </p>
-          {/* Start Your Journey button removed as requested */}
         </div>
       </div>
 
@@ -122,7 +137,7 @@ export default function ExperienceWithMyHotel() {
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-72 object-cover transition-transform duration-500 hover:scale-105"
                 loading="lazy"
               />
             </div>
@@ -132,8 +147,9 @@ export default function ExperienceWithMyHotel() {
                 <div className="text-3xl">{item.icon}</div>
                 <h2 className="text-2xl font-semibold">{item.title}</h2>
               </div>
-              <p className="text-gray-600 text-lg leading-relaxed">{item.description}</p>
-              {/* Ví dụ: sau này chèn link "Learn more" hoặc API */}
+              <p className="text-gray-600 text-lg leading-relaxed">
+                {item.description}
+              </p>
             </div>
           </div>
         ))}
@@ -143,39 +159,67 @@ export default function ExperienceWithMyHotel() {
       <section className="bg-gray-50 py-16 px-6">
         <div className="max-w-5xl mx-auto text-center mb-8">
           <h2 className="text-3xl font-bold">What Our Guests Say</h2>
-          <p className="text-gray-600 mt-2">Real stories from people who experienced our hospitality.</p>
+          <p className="text-gray-600 mt-2">
+            Real stories from people who experienced our hospitality.
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <Carousel autoplay dots>
-            {slides.map((pair, idx) => (
-              <div key={idx} className="px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {pair.map((r, i) => (
-                    <div
-                      key={i}
-                      className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition"
-                    >
-                      <div className="flex items-start gap-4">
-                        <img
-                          src={r.image}
-                          alt={r.name}
-                          className="w-14 h-14 rounded-full object-cover"
-                        />
-                        <div>
-                          <div className="flex items-center gap-3">
-                            <h4 className="text-lg font-semibold">{r.name}</h4>
-                            <Rate disabled defaultValue={r.rating} />
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Spin />
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="text-center text-gray-500 py-12">
+              No reviews available yet
+            </div>
+          ) : (
+            <Carousel autoplay dots>
+              {slides.map((pair, idx) => (
+                <div key={idx} className="px-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {pair.map((review) => {
+                      const reviewId = review.reviewID || review.id || "";
+                      return (
+                        <div
+                          key={reviewId}
+                          className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition"
+                        >
+                          <div className="flex items-start gap-4">
+                            <img
+                              src={review.image}
+                              alt={review.userName}
+                              className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <h4 className="text-lg font-semibold">
+                                    {review.userName}
+                                  </h4>
+                                  <p className="text-sm text-gray-500 mt-1">
+                                    Room: {review.roomName || "-"}
+                                  </p>
+                                </div>
+                                <Rate
+                                  disabled
+                                  defaultValue={review.rating}
+                                  style={{ fontSize: 14 }}
+                                />
+                              </div>
+                              <p className="text-gray-700 italic mt-3">
+                                "{review.content}"
+                              </p>
+                            </div>
                           </div>
-                          <p className="text-gray-700 italic mt-3">“{r.comment}”</p>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Carousel>
+              ))}
+            </Carousel>
+          )}
         </div>
       </section>
 
@@ -184,7 +228,10 @@ export default function ExperienceWithMyHotel() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Our Story</h2>
           <p className="text-gray-600 leading-relaxed mb-8">
-            Founded in 2010, My Hotel has grown from a boutique retreat into a leading destination for travelers seeking comfort, authenticity, and a touch of luxury. We craft experiences that go beyond accommodation — where every guest feels at home.
+            Founded in 2010, My Hotel has grown from a boutique retreat into a
+            leading destination for travelers seeking comfort, authenticity, and a
+            touch of luxury. We craft experiences that go beyond accommodation —
+            where every guest feels at home.
           </p>
           <img
             src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
@@ -198,10 +245,18 @@ export default function ExperienceWithMyHotel() {
       {/* CTA */}
       <section className="bg-gradient-to-r from-rose-600 to-blue-700 text-white py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Book your next experience with us</h2>
-          <p className="text-white/90 mb-6">Your perfect getaway awaits — discover your stay today.</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Book your next experience with us
+          </h2>
+          <p className="text-white/90 mb-6">
+            Your perfect getaway awaits — discover your stay today.
+          </p>
           <div className="flex justify-center">
-            <Button type="default" size="large" onClick={() => (window.location.href = "/booking")}>
+            <Button
+              type="default"
+              size="large"
+              onClick={() => (window.location.href = "/booking")}
+            >
               Book Now
             </Button>
           </div>

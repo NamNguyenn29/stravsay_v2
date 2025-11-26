@@ -9,125 +9,114 @@ import {
   Row,
   Col,
   Select,
-  message,
   Divider,
   Space,
+  Spin,
+  notification,
 } from "antd";
 import { UndoOutlined, SaveOutlined } from "@ant-design/icons";
+import type { FormInstance } from "antd";
+import { settingService } from "@/services/settingService";
+import type { Setting } from "@/model/Setting";
 
-const { Option } = Select;
-
-/**
- * TODO: replace demo fetch/save with real API calls
- */
+type SettingFormData = Omit<Setting, "id" | "updatedDate">;
 
 export default function GeneralSettings() {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<SettingFormData>();
   const [loading, setLoading] = useState(false);
-  const [initialValues, setInitialValues] = useState<Record<string, any> | null>(null);
+  const [fetching, setFetching] = useState(true);
+  const [settingId, setSettingId] = useState("");
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    // TODO: GET /api/settings/general
-    // Demo data để hiển thị trước khi có backend
-    const demo = {
-      hotelName: "StravStay Hotel",
-      contactEmail: " stravstay@gmail.com",
-      contactPhone: "+84912345678",
-      address: "123 My Phuoc Tan Van, Chanh Hiep, Ho Chi Minh",
-      timezone: "Asia/Ho_Chi_Minh",
-      defaultLanguage: "en",
-      websiteUrl: "https://stravstay.example",
+    const fetchSetting = async () => {
+      try {
+        const response = await settingService.getSetting();
+        if (response.data.isSuccess && response.data.object) {
+          const setting: Setting = response.data.object;
+          setSettingId(setting.id);
+          form.setFieldsValue({
+            contactEmail: setting.contactEmail,
+            contactPhone: setting.contactPhone,
+            address: setting.address,
+            status: setting.status,
+          });
+        } else {
+          api.error({
+            message: "Load Failed",
+            description: response.data.message || "Failed to load settings",
+            placement: "topRight",
+          });
+        }
+      } catch (err) {
+        api.error({
+          message: "Error",
+          description: "Failed to load settings",
+          placement: "topRight",
+        });
+      } finally {
+        setFetching(false);
+      }
     };
-    setInitialValues(demo);
-    form.setFieldsValue(demo);
-  }, [form]);
+    fetchSetting();
+  }, [form, api]);
 
-  // Reset về giá trị ban đầu (từ server/demo)
-  const handleReset = () => {
-    if (initialValues) form.setFieldsValue(initialValues);
-    else form.resetFields();
-    message.info("Changes reverted.");
-  };
-
-  // Validate phone (simple) và URL bằng regex (basic)
-  const validatePhone = (_: any, value: string) => {
-    if (!value) return Promise.resolve();
-    const phoneRe = /^[+0-9\s\-()]{6,20}$/;
-    return phoneRe.test(value) ? Promise.resolve() : Promise.reject("Invalid phone number");
-  };
-
-  const validateUrl = (_: any, value: string) => {
-    if (!value) return Promise.resolve();
-    try {
-      // URL constructor phức tạp cho browser env; dùng regex đơn giản
-      const urlRe =
-        /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w\-._~:?#[\]@!$&'()*+,;=\/%]*)?$/i;
-      return urlRe.test(value) ? Promise.resolve() : Promise.reject("Invalid URL");
-    } catch {
-      return Promise.reject("Invalid URL");
-    }
-  };
-
-  // Lưu dữ liệu (PUT /api/settings/general)
-  const handleSave = async (values: any) => {
+  const handleSave = async (values: SettingFormData) => {
     setLoading(true);
     try {
-      // TODO: call real backend API: PUT /api/settings/general
-      // Example:
-      // await fetch("/api/settings/general", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(values) });
-
-      // Demo: cập nhật local state
-      setInitialValues(values);
-      message.success("Settings saved successfully.");
+      await settingService.updateSetting({
+        id: settingId,
+        ...values,
+        updatedDate: new Date().toISOString(),
+      });
+      api.success({
+        message: "Update Success!",
+        description: "Settings have been saved successfully",
+        placement: "topRight",
+        duration: 3,
+      });
     } catch (err) {
-      console.error("Save general settings error:", err);
-      message.error("Failed to save settings.");
+      api.error({
+        message: "Update Failed",
+        description: "Failed to save settings. Please try again.",
+        placement: "topRight",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  if (fetching) {
+    return (
+      <Card style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center", minHeight: 400 }}>
+        <Spin size="large" />
+      </Card>
+    );
+  }
+
   return (
-    <Card
-      variant="borderless"
-      style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        borderRadius: 12,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-      }}
-    >
+    <Card style={{ maxWidth: 1200, margin: "0 auto", borderRadius: 12 }}>
       <div style={{ marginBottom: 12 }}>
         <h3 style={{ margin: 0, fontSize: 18 }}>General Settings</h3>
-        <div style={{ color: "#6b7280", marginTop: 6 }}>
-          Configure basic hotel info and public contact details.
-        </div>
+        <div style={{ color: "#6b7280", marginTop: 6 }}>Configure hotel contact information</div>
       </div>
 
       <Divider style={{ margin: "12px 0 18px" }} />
 
-      <Form
+      {contextHolder}
+
+      <Form<SettingFormData>
         form={form}
         layout="vertical"
         onFinish={handleSave}
-        initialValues={initialValues ?? undefined}
       >
         <Row gutter={[24, 8]}>
-          {/* Left column */}
           <Col xs={24} md={12}>
-            <Form.Item
-              label="Hotel Name"
-              name="hotelName"
-              rules={[{ required: true, message: "Please enter hotel name" }]}
-            >
-              <Input placeholder="e.g. StravStay Central" />
-            </Form.Item>
-
             <Form.Item
               label="Contact Email"
               name="contactEmail"
               rules={[
-                { required: true, message: "Please enter contact email" },
+                { required: true, message: "Please enter email" },
                 { type: "email", message: "Invalid email" },
               ]}
             >
@@ -143,55 +132,36 @@ export default function GeneralSettings() {
             </Form.Item>
           </Col>
 
-          {/* Right column */}
           <Col xs={24} md={12}>
             <Form.Item
               label="Contact Phone"
               name="contactPhone"
-              rules={[{ validator: validatePhone }]}
+              rules={[{ required: true, message: "Please enter phone" }]}
             >
               <Input placeholder="+84 912 345 678" />
             </Form.Item>
 
-            <Form.Item label="Timezone" name="timezone">
-              <Select showSearch placeholder="Select timezone">
-                <Option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh (GMT+7)</Option>
-                <Option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</Option>
-                <Option value="Europe/London">Europe/London (GMT+0)</Option>
-                <Option value="UTC">UTC</Option>
+            <Form.Item
+              label="Status"
+              name="status"
+              rules={[{ required: true }]}
+            >
+              <Select>
+                <Select.Option value={1}>Active</Select.Option>
+                <Select.Option value={0}>Inactive</Select.Option>
               </Select>
-            </Form.Item>
-
-            <Form.Item label="Default Language" name="defaultLanguage">
-              <Select placeholder="Select default language">
-                <Option value="en">English</Option>
-                <Option value="vi">Tiếng Việt</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item label="Website URL" name="websiteUrl" rules={[{ validator: validateUrl }]}>
-              <Input placeholder="https://example.com" />
             </Form.Item>
           </Col>
 
-          {/* Buttons row full width */}
-          <Col xs={24}>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 8 }}>
-              <Space>
-                <Button icon={<UndoOutlined />} onClick={handleReset}>
-                  Reset
-                </Button>
-
-                <Button
-                  type="primary"
-                  icon={<SaveOutlined />}
-                  htmlType="submit"
-                  loading={loading}
-                >
-                  Save Changes
-                </Button>
-              </Space>
-            </div>
+          <Col xs={24} style={{ textAlign: "right", marginTop: 16 }}>
+            <Space>
+              <Button icon={<UndoOutlined />} onClick={() => form.resetFields()}>
+                Reset
+              </Button>
+              <Button type="primary" icon={<SaveOutlined />} htmlType="submit" loading={loading}>
+                Save
+              </Button>
+            </Space>
           </Col>
         </Row>
       </Form>

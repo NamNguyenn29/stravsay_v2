@@ -20,42 +20,64 @@ namespace behotel.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
+        private readonly ISystemLogService _systemLogService; 
 
-        public AuthController(IConfiguration config, IUserService userService)
+        public AuthController(
+            IConfiguration config,
+            IUserService userService,
+            ISystemLogService systemLogService) 
         {
             _config = config;
             _userService = userService;
+            _systemLogService = systemLogService; 
         }
 
         [HttpPost("login")]
         public async Task<ApiResponse<string>> Login([FromBody] LoginModel loginModel)
         {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+
             if (!ModelState.IsValid)
             {
                 var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                 var combinedErrors = string.Join("; ", errorMessages);
+
+                await _systemLogService.CreateLogAsync(null, ipAddress, false, "LoginFailed");
+
                 return new ApiResponse<string>(null, null, "400", combinedErrors, false, 0, 0, 0, 0, null, null);
             }
 
             var userByEmail = await _userService.GetUserByEmailAsync(loginModel.Email);
             if (userByEmail == null)
             {
+                await _systemLogService.CreateLogAsync(null, ipAddress, false, "LoginFailed");
+
                 return new ApiResponse<string>(null, null, "400", "Account is not exists", false, 0, 0, 0, 0, null, null);
             }
+
             if (userByEmail.IsActived == false)
             {
+                await _systemLogService.CreateLogAsync(userByEmail.Id, ipAddress, false, "LoginFailed");
+
                 return new ApiResponse<string>(null, null, "400", "Inactive Account", false, 0, 0, 0, 0, null, null);
             }
+
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginModel.Password, userByEmail.Password);
             if (!isPasswordValid)
             {
+                await _systemLogService.CreateLogAsync(userByEmail.Id, ipAddress, false, "LoginFailed");
+
                 return new ApiResponse<string>(null, null, "400", "InCorrect Information", false, 0, 0, 0, 0, null, null);
             }
+
             var userDTO = await _userService.GetUserDTOAsync(userByEmail.Id);
             if (userDTO == null)
             {
+                await _systemLogService.CreateLogAsync(userByEmail.Id, ipAddress, false, "LoginFailed");
+
                 return new ApiResponse<string>(null, null, "400", "Failed to load Information", false, 0, 0, 0, 0, null, null);
             }
+
             loginModel.Roles = userDTO.RoleList;
 
             var accessToken = GenerateAccessToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
@@ -66,8 +88,10 @@ namespace behotel.Controllers
                 SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddHours(1)
             };
+
             var refreshToken = GenerateRefreshToken(userDTO.Id.ToString(), loginModel.Email, loginModel.Roles);
-            await _userService.SaveRefreshToken(userDTO.Id,refreshToken);
+            await _userService.SaveRefreshToken(userDTO.Id, refreshToken);
+
             var cookiesOptionsForRFToken = new CookieOptions
             {
                 HttpOnly = true,
@@ -75,27 +99,41 @@ namespace behotel.Controllers
                 SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(7)
             };
+
             var roleJson = JsonSerializer.Serialize(userDTO.RoleList);
             Response.Cookies.Append("accessToken", accessToken, cookieOptionsForACToken);
-            Response.Cookies.Append("refreshToken",refreshToken, cookiesOptionsForRFToken);
+            Response.Cookies.Append("refreshToken", refreshToken, cookiesOptionsForRFToken);
             Response.Cookies.Append("roles", roleJson, new CookieOptions
             {
-                HttpOnly = false, // middleware Edge runtime có thể đọc
+                HttpOnly = false,
                 Secure = true,
                 SameSite = SameSiteMode.None,
                 Path = "/",
                 Expires = DateTime.UtcNow.AddHours(1)
-
-
             });
-            return new ApiResponse<string>(null, accessToken, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
 
+
+            await _systemLogService.CreateLogAsync(userDTO.Id, ipAddress, true, "Login");
+
+            return new ApiResponse<string>(null, accessToken, "200", "Login successfully", true, 0, 0, 0, 0, null, null);
         }
 
         [Authorize]
         [HttpPost("logout")]
-        public ApiResponse<string> Logout()
+        public async Task<ApiResponse<string>> Logout() 
         {
+
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid? userId = null;
+
+            if (Guid.TryParse(userIdClaim, out Guid parsedUserId))
+            {
+                userId = parsedUserId;
+            }
+
             Response.Cookies.Delete("accessToken", new CookieOptions
             {
                 HttpOnly = true,
@@ -117,15 +155,17 @@ namespace behotel.Controllers
                 SameSite = SameSiteMode.None,
                 Path = "/"
             });
+            await _systemLogService.CreateLogAsync(userId, ipAddress, true, "Logout");
+
             return new ApiResponse<string>(null, null, "200", "Logout successfully", true, 0, 0, 0, 0, null, null);
         }
 
         [AllowAnonymous]
         [HttpPost("refresh")]
-        public async Task<IActionResult>  RefreshToken()
+        public async Task<IActionResult> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            if(string.IsNullOrEmpty(refreshToken))
+            if (string.IsNullOrEmpty(refreshToken))
             {
                 return Unauthorized(new { message = "No refresh token provided" });
             }
@@ -167,14 +207,12 @@ namespace behotel.Controllers
                 var roleJson = JsonSerializer.Serialize(userDTO.RoleList);
                 Response.Cookies.Append("roles", roleJson, new CookieOptions
                 {
-                    HttpOnly = false, // middleware Edge runtime có thể đọc
+                    HttpOnly = false,
                     Secure = true,
                     SameSite = SameSiteMode.None,
                     Path = "/",
                     Expires = DateTime.UtcNow.AddHours(1),
-
                 });
-
 
                 return Ok(new { message = "Access token refreshed successfully" });
             }
@@ -182,30 +220,24 @@ namespace behotel.Controllers
             {
                 return Unauthorized("Refresh token expired");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return Unauthorized("Invalid refresh token");
             }
-
-
-
-
-
         }
-
 
         private string GenerateAccessToken(string id, string email, List<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, id),
-                new Claim(ClaimTypes.Email , email),
+                new Claim(ClaimTypes.Email, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            ;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -215,27 +247,23 @@ namespace behotel.Controllers
                 audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
-
                 signingCredentials: creds
-                );
+            );
             return new JwtSecurityTokenHandler().WriteToken(token);
-
         }
-
 
         private string GenerateRefreshToken(string id, string email, List<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, id),
-                new Claim(ClaimTypes.Email , email),
-                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.Email, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-          ;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -246,12 +274,8 @@ namespace behotel.Controllers
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds
-                );
+            );
             return new JwtSecurityTokenHandler().WriteToken(token);
-
         }
-
-
     }
-
 }

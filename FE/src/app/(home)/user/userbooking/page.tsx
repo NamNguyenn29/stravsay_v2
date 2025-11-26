@@ -64,7 +64,7 @@ export default function ElegantBookings() {
         try {
             setLoading(true);
             const res = await BookingService.getBookingForUser();
-            const bookingList = res.data.list;
+            const bookingList = res.data.list  || [];
             setBookings(bookingList);
 
             await loadReviewsForBookings(bookingList);

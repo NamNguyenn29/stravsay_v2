@@ -65,7 +65,7 @@ builder.Services.AddScoped<IRoomService, RoomImpl>();
 builder.Services.AddScoped<IBookingService, behotel.Interface.Implement.BookingImpl>();
 builder.Services.AddScoped<ISupportRequestService, SupportRequestImpl>();
 builder.Services.AddScoped<IServiceService, ServiceImpl>();
-//builder.Services.AddScoped<IDiscountService, DiscountImpl>();
+builder.Services.AddScoped<IDiscountService, DiscountImpl>();
 builder.Services.AddScoped<IRoomTypeService, RoomTypeImpl>();
 builder.Services.AddScoped<IInProgressBookingService, InprogressBookingImpl>();
 builder.Services.AddScoped<IUserSoftDeleteService,UserSoftDelete>();
@@ -74,6 +74,9 @@ builder.Services.AddScoped<IUserSoftDeleteService,UserSoftDelete>();
 builder.Services.AddScoped<IReviewService, ReviewImpl>();
 builder.Services.AddScoped<IPaymentService, PaymentImpl>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodImpl>();
+
+builder.Services.AddScoped<ISystemLogService, SystemLogImpl>();
+builder.Services.AddScoped<ISettingService, SettingImpl>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

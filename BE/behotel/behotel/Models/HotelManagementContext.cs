@@ -12,7 +12,7 @@ namespace behotel.Models
         public DbSet<RoomType> RoomType { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<Role> Role { get; set; }
-        //public DbSet<Discount> Discounts { get; set; }
+        public DbSet<Discount> Discount { get; set; }
         public DbSet<BookingService> BookingService { get; set; }
         public DbSet<Booking> Booking { get; set; }
 
@@ -26,11 +26,11 @@ namespace behotel.Models
         public DbSet<Booking_Deleted> Booking_Deleted { get; set; }
 
         public DbSet<Review> Review { get; set; }
-        public DbSet<ReviewAttachment> ReviewAttachment { get; set; }
-        public DbSet<Review_Deleted> Review_Deleted { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<SystemLog> SystemLogs { get; set; }
 
         public DbSet<Refund> Refunds { get; set; }
+        public DbSet<Setting> Setting { get; set; }
     }
 }

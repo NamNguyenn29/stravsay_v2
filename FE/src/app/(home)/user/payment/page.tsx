@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Checkbox, Input, Button } from "antd";
 import { userService } from "@/services/userService";
 import { User } from "@/model/User";
-import useMessage from "antd/es/message/useMessage";
 import { paymentServices } from "@/services/paymentService";
 import { Service } from "@/model/Service";
 import { serviceServices } from "@/services/serviceService";
@@ -16,7 +15,11 @@ import { PaymentResponse } from "@/model/PaymentResponse";
 import { Payment } from "@/model/Payment";
 import { notification } from "antd";
 import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
+import { AxiosError } from "axios";
+
+interface ErrorResponse {
+  message?: string;
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -41,30 +44,28 @@ export default function CheckoutPage() {
 
   const { room, checkInDate, checkOutDate, totalAmount, setTotalAmount } = useBookingStore();
 
-
   const datedif = checkInDate && checkOutDate
     ? Math.ceil(
-      (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
-      (1000 * 60 * 60 * 24)
-    )
+        (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
     : 0;
+
   useEffect(() => {
     if (!room || !checkInDate || !checkOutDate) return;
 
     const diffDays = Math.ceil(
       (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
-      (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
     );
     const roomTotal = room.basePrice * diffDays;
     const serviceTotal = services
-      .filter(s => selectedServiceIds.includes(s.id))
+      .filter((s) => selectedServiceIds.includes(s.id))
       .reduce((sum, s) => sum + s.price, 0);
 
-    setTotalAmount(roomTotal + serviceTotal); 
-  }, [room, checkInDate, checkOutDate, services, selectedServiceIds]);
+    setTotalAmount(roomTotal + serviceTotal);
+  }, [room, checkInDate, checkOutDate, services, selectedServiceIds, setTotalAmount]);
 
-
-  // Load user, payment methods, services
   useEffect(() => {
     loadUser();
     loadPaymentMethods();
@@ -82,10 +83,11 @@ export default function CheckoutPage() {
       setFullName(u.fullName || "");
       setPhone(u.phone || "");
       setEmail(u.email || "");
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
       api.error({
         message: "Error",
-        description: "Failed to load user information",
+        description: err.response?.data?.message || "Failed to load user information",
         placement: "topRight",
       });
     }
@@ -103,10 +105,11 @@ export default function CheckoutPage() {
           setPaymentMethodId(data[0].paymentMethodID);
         }
       }
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
       api.error({
         message: "Error",
-        description: "Failed to load payment methods",
+        description: err.response?.data?.message || "Failed to load payment methods",
         placement: "topRight",
       });
     } finally {
@@ -125,10 +128,11 @@ export default function CheckoutPage() {
       } else {
         setServices([]);
       }
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
       api.error({
         message: "Error",
-        description: "Failed to load services",
+        description: err.response?.data?.message || "Failed to load services",
         placement: "topRight",
       });
       setServices([]);
@@ -143,7 +147,6 @@ export default function CheckoutPage() {
     );
   };
 
-  // Validation
   const validateInputs = (): boolean => {
     if (!fullName || fullName.trim().length < 3) {
       api.error({
@@ -206,16 +209,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      // // Calculate total amount
-      // const basePrice = room.basePrice;
-      // const servicesPrice = services
-      //   .filter((s) => selectedServiceIds.includes(s.id))
-      //   .reduce((total, s) => total + s.price, 0);
-
-      // // Tổng tiền = giá phòng 1 đêm × số đêm + tổng giá dịch vụ
-      // const totalAmount = basePrice * datedif + servicesPrice;
-
-
       const bookingPayload = {
         fullName,
         phone,
@@ -226,14 +219,13 @@ export default function CheckoutPage() {
         checkInDate: new Date(checkInDate).toISOString(),
         checkOutDate: new Date(checkOutDate).toISOString(),
         price: totalAmount,
-        status: 0, // PENDING
+        status: 0,
         createdDate: new Date().toISOString(),
         adult: room.adult,
         children: room.children,
-        services: selectedServiceIds
+        services: selectedServiceIds,
       };
 
-      console.log("Creating booking:", bookingPayload);
       const bookingRes = await BookingService.createBooking(bookingPayload);
       const booking = bookingRes.data.object;
 
@@ -247,19 +239,13 @@ export default function CheckoutPage() {
         return;
       }
 
-      console.log("Booking created:", booking);
-
-
       const paymentPayload: Payment = {
         bookingID: booking.id,
         paymentMethodID: paymentMethodId,
-        amount: totalAmount
+        amount: totalAmount,
       };
 
-      console.log("Creating payment:", paymentPayload);
       const paymentRes = await paymentServices.createPayment(paymentPayload);
-
-
       const paymentData: PaymentResponse = paymentRes.data.object;
 
       if (!paymentData) {
@@ -272,12 +258,8 @@ export default function CheckoutPage() {
         return;
       }
 
-      console.log("Payment created:", paymentData);
-
-      const selectedMethod = methods.find(m => m.paymentMethodID === paymentMethodId);
+      const selectedMethod = methods.find((m) => m.paymentMethodID === paymentMethodId);
       const methodCode = selectedMethod?.code?.toUpperCase();
-
-      console.log("Payment method:", methodCode);
 
       if (methodCode === "PAY_ON_ARRIVAL") {
         api.success({
@@ -287,22 +269,16 @@ export default function CheckoutPage() {
           duration: 3,
         });
 
-        
         setTimeout(() => {
           router.push("/user/userbooking");
         }, 2000);
 
-        setCreatingPayment(false); 
+        setCreatingPayment(false);
         return;
       }
 
       if (paymentData.payUrl) {
-        console.log("Redirecting to:", paymentData.payUrl);
-
-      
         window.location.href = paymentData.payUrl;
-
-        
         return;
       }
 
@@ -312,13 +288,12 @@ export default function CheckoutPage() {
         placement: "topRight",
       });
       setCreatingPayment(false);
-
-    } catch (err: any) {
-      console.error("Continue error:", err);
-
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
+      
       api.error({
         message: "Error",
-        description: err?.response?.data?.message || "Error while processing payment.",
+        description: err.response?.data?.message || "Error while processing payment.",
         placement: "topRight",
       });
 
@@ -336,7 +311,6 @@ export default function CheckoutPage() {
           transition={{ duration: 0.6 }}
           className="max-w-5xl w-full space-y-10"
         >
-          {/* Header */}
           <div className="text-center">
             <h1 className="text-4xl font-bold text-rose-600 tracking-tight mb-2">
               Booking Checkout
@@ -346,16 +320,13 @@ export default function CheckoutPage() {
             </p>
           </div>
 
-          {/* Customer Information */}
           <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-100 text-2xl font-semibold bg-gradient-to-r from-rose-50 to-white">
               Customer Information
             </div>
             <div className="p-8 grid grid-cols-12 gap-6">
               <div className="col-span-12">
-                <label className="block text-gray-600 font-medium mb-1">
-                  Full Name
-                </label>
+                <label className="block text-gray-600 font-medium mb-1">Full Name</label>
                 <Input
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -364,9 +335,7 @@ export default function CheckoutPage() {
                 />
               </div>
               <div className="col-span-6">
-                <label className="block text-gray-600 font-medium mb-1">
-                  Phone Number
-                </label>
+                <label className="block text-gray-600 font-medium mb-1">Phone Number</label>
                 <Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -375,9 +344,7 @@ export default function CheckoutPage() {
                 />
               </div>
               <div className="col-span-6">
-                <label className="block text-gray-600 font-medium mb-1">
-                  Email Address
-                </label>
+                <label className="block text-gray-600 font-medium mb-1">Email Address</label>
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -393,7 +360,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Extra Services */}
           <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-100 text-2xl font-semibold bg-gradient-to-r from-rose-50 to-white">
               Extra Services
@@ -415,14 +381,13 @@ export default function CheckoutPage() {
                       whileHover={{ scale: 1.03 }}
                       key={s.id}
                       onClick={() => toggleService(s.id)}
-                      className={`border rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all ${selectedServiceIds.includes(s.id)
-                        ? "border-rose-400 bg-rose-50 shadow-sm"
-                        : "border-gray-200 hover:border-rose-100"
-                        }`}
+                      className={`border rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all ${
+                        selectedServiceIds.includes(s.id)
+                          ? "border-rose-400 bg-rose-50 shadow-sm"
+                          : "border-gray-200 hover:border-rose-100"
+                      }`}
                     >
-                      <div className="font-medium text-gray-800 text-base">
-                        {s.name}
-                      </div>
+                      <div className="font-medium text-gray-800 text-base">{s.name}</div>
                       <div className="text-sm text-gray-500 mt-1">
                         {s.price.toLocaleString()}₫
                       </div>
@@ -433,7 +398,6 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Payment Methods */}
           <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-100 text-2xl font-semibold bg-gradient-to-r from-rose-50 to-white">
               Payment Methods
@@ -447,21 +411,19 @@ export default function CheckoutPage() {
                     whileHover={{ scale: 1.03 }}
                     key={m.paymentMethodID}
                     onClick={() => setPaymentMethodId(m.paymentMethodID)}
-                    className={`border rounded-xl p-6 flex items-center justify-center text-center transition-all ${paymentMethodId === m.paymentMethodID
-                      ? "border-rose-400 bg-rose-50 shadow-sm"
-                      : "border-gray-200 hover:border-rose-100"
-                      }`}
+                    className={`border rounded-xl p-6 flex items-center justify-center text-center transition-all ${
+                      paymentMethodId === m.paymentMethodID
+                        ? "border-rose-400 bg-rose-50 shadow-sm"
+                        : "border-gray-200 hover:border-rose-100"
+                    }`}
                   >
-                    <div className="font-medium text-gray-800 text-base">
-                      {m.name}
-                    </div>
+                    <div className="font-medium text-gray-800 text-base">{m.name}</div>
                   </motion.button>
                 ))
               )}
             </div>
           </div>
 
-          {/* Continue Button */}
           <div className="flex justify-end">
             <Button
               type="primary"

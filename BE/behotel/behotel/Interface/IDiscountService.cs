@@ -1,12 +1,23 @@
-﻿//using behotel.DTO;
+﻿using behotel.DTO;
+using behotel.Helper;
 
-//public interface IDiscountService
-//{
-//    Task<IEnumerable<DiscountDTO>> GetAllAsync();
-//    Task<DiscountDTO> GetByIdAsync(Guid id);
-//    Task<DiscountDTO> GetByCodeAsync(string code);
-//    Task<DiscountDTO> CreateAsync(DiscountDTO dto);
-//    Task<DiscountDTO> UpdateAsync(Guid id, DiscountDTO dto);
-//    Task<bool> DeleteAsync(Guid id);
-//    Task<DiscountDTO> ValidateDiscountAsync(string code, decimal orderAmount);
-//}
+namespace behotel.Interface
+{
+    public interface IDiscountService
+    {
+        Task<ApiResponse<DiscountDTO>> GetAllAsync(int currentPage, int pageSize);
+
+        Task<ApiResponse<DiscountDTO>> GetByIdAsync(Guid id);
+
+        Task<ApiResponse<DiscountDTO>> GetByCodeAsync(string code);
+
+        Task<ApiResponse<DiscountDTO>> CreateAsync(DiscountDTO dto);
+
+        Task<ApiResponse<DiscountDTO>> UpdateAsync(Guid id, DiscountDTO dto);
+
+      
+        Task<ApiResponse<string>> DeleteAsync(Guid id);
+
+        Task<ApiResponse<DiscountDTO>> ValidateAndCalculateAsync(string code, decimal orderAmount);
+    }
+}

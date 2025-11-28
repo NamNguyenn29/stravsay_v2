@@ -29,7 +29,7 @@ namespace behotel.Interface.Implement
             var booking = await _context.Booking.FindAsync(id);
             if (booking == null)
             {
-                return new ApiResponse<BookingDTO>(null, null, "404", "Booking not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<BookingDTO>(null, null, "400", "Booking not found", false, 0, 0, 0, 0, null, 0);
             }
             booking.Status = 1;
             await _context.SaveChangesAsync();
@@ -48,7 +48,7 @@ namespace behotel.Interface.Implement
             var user = await _context.User.FindAsync(userId);
             if (booking == null || user == null)
             {
-                return new ApiResponse<string>(null, null, "404", "Booking or user not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<string>(null, null, "400", "Booking or user not found", false, 0, 0, 0, 0, null, 0);
             }
             if (user.Id != booking.UserId)
             {
@@ -69,12 +69,12 @@ namespace behotel.Interface.Implement
             var user = await _userService.GetUserByIdAsync(Guid.Parse(newBooking.UserId));
             if (user == null || !user.IsActived)
             {
-                return new ApiResponse<BookingDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<BookingDTO>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, null);
             }
             var roomDTO = await _roomService.GetRoomDTOByIdAsync(Guid.Parse(newBooking.RoomId));
             if (roomDTO == null)
             {
-                return new ApiResponse<BookingDTO>(null, null, "404", "Room not found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<BookingDTO>(null, null, "400", "Room not found", false, 0, 0, 0, 0, null, null);
             }
             decimal totalServicePrice = 0;
             if (newBooking.services != null)
@@ -221,7 +221,7 @@ namespace behotel.Interface.Implement
             }
             if (bookingDTOs.Count == 0)
             {
-                return new ApiResponse<BookingDTO>(null, null, "404", "No booking found for user", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<BookingDTO>(null, null, "400", "No booking found for user", false, 0, 0, 0, 0, null, 0);
             }
             return new ApiResponse<BookingDTO>(bookingDTOs, null, "200", "Get bookings for user successfully", true, 0, 0, 0, 0, null, 0);
         }
@@ -231,7 +231,7 @@ namespace behotel.Interface.Implement
             var allBookings = await GetAllBookingAsync();
             if (allBookings.Count() < 1)
             {
-                return new ApiResponse<BookingDTO>(null, null, "404", "No booking found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<BookingDTO>(null, null, "400", "No booking found", false, 0, 0, 0, 0, null, null);
             }
             var bookingDTOs = new List<BookingDTO>();
             int totalElement = allBookings.Count();

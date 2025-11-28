@@ -37,7 +37,7 @@ namespace behotel.Controllers
             var service = await _serviceService.GetServiceByIdAsync(idGuid);
                 if (service == null)
                 {
-                    return new ApiResponse<Service>(null, null, "404", "Service not found", false, 0, 0, 0, 0, null,null);
+                    return new ApiResponse<Service>(null, null, "400", "Service not found", false, 0, 0, 0, 0, null,null);
                 }
 
                 return new ApiResponse<Service>(null, service, "200", "Get service successfully", true,0,0,0,0, null, null);

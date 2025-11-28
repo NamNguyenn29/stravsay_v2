@@ -108,7 +108,7 @@ namespace behotel.Controllers
             var result = await _paymentService.GetByIdAsync(paymentId);
             if (result == null)
             {
-                return NotFound(new ApiResponse<string>(null, null, "404", "Không tìm thấy thanh toán", false, 0, 0, 0, 0, null, null));
+                return NotFound(new ApiResponse<string>(null, null, "400", "Không tìm thấy thanh toán", false, 0, 0, 0, 0, null, null));
             }
 
             var response = new ApiResponse<PaymentDTO>(

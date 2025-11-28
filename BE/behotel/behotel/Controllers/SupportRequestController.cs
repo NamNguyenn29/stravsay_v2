@@ -44,7 +44,7 @@ namespace behotel.Controllers
             var supportRequest = await _supportRequestService.GetSupportRequestByIdAsync(idGuid);
             if (supportRequest == null)
             {
-                return _apiResponse = new ApiResponse<SupportRequest>(null, null, "404", "Request not found", false, 0, 0, 0, 0, null, null);
+                return _apiResponse = new ApiResponse<SupportRequest>(null, null, "400", "Request not found", false, 0, 0, 0, 0, null, null);
             }
             _apiResponse = new ApiResponse<SupportRequest>(null, supportRequest, "200", "Get request successfully", true, 0, 0, 0, 1, null, null);
             return _apiResponse;
@@ -109,12 +109,12 @@ namespace behotel.Controllers
             Guid idGuid = Guid.Parse(id);
             if (String.IsNullOrWhiteSpace(response))
             {
-                return new ApiResponse<SupportRequest>(null, null, "404", "response is require", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<SupportRequest>(null, null, "400", "response is require", false, 0, 0, 0, 0, null, null);
             }
             var supportRequest = await _supportRequestService.ResponseRequestAsync(idGuid, response);
             if (supportRequest == null)
             {
-                return new ApiResponse<SupportRequest>(null, null, "404", "Support request not found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<SupportRequest>(null, null, "400", "Support request not found", false, 0, 0, 0, 0, null, null);
             }
             var subject = $"Phản hồi từ Travstay về yêu cầu hỗ trợ #{supportRequest.Title}";
 

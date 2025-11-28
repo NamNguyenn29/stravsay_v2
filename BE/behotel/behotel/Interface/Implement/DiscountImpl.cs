@@ -26,7 +26,7 @@ namespace behotel.Interface.Implement
 
                 if (allDiscounts.Count == 0)
                 {
-                    return new ApiResponse<DiscountDTO>(null, null, "404", "No discounts found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<DiscountDTO>(null, null, "400", "No discounts found", false, 0, 0, 0, 0, null, null);
                 }
 
                 int totalElement = allDiscounts.Count;
@@ -55,7 +55,7 @@ namespace behotel.Interface.Implement
 
                 if (discount == null)
                 {
-                    return new ApiResponse<DiscountDTO>(null, null, "404", "Discount not found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<DiscountDTO>(null, null, "400", "Discount not found", false, 0, 0, 0, 0, null, null);
                 }
 
                 var discountDTO = MapToDTO(discount);
@@ -82,7 +82,7 @@ namespace behotel.Interface.Implement
 
                 if (discount == null)
                 {
-                    return new ApiResponse<DiscountDTO>(null, null, "404", "Discount code not found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<DiscountDTO>(null, null, "400", "Discount code not found", false, 0, 0, 0, 0, null, null);
                 }
 
                 var discountDTO = MapToDTO(discount);
@@ -155,7 +155,7 @@ namespace behotel.Interface.Implement
 
                 if (discount == null)
                 {
-                    return new ApiResponse<DiscountDTO>(null, null, "404", "Discount not found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<DiscountDTO>(null, null, "400", "Discount not found", false, 0, 0, 0, 0, null, null);
                 }
 
                 // Validate
@@ -194,7 +194,7 @@ namespace behotel.Interface.Implement
 
                 if (discount == null)
                 {
-                    return new ApiResponse<string>(null, null, "404", "Discount not found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<string>(null, null, "400", "Discount not found", false, 0, 0, 0, 0, null, null);
                 }
 
                 // Check xem có booking nào đang dùng discount này không
@@ -233,7 +233,7 @@ namespace behotel.Interface.Implement
                 // Check 1: Code tồn tại?
                 if (discount == null)
                 {
-                    return new ApiResponse<DiscountDTO>(null, null, "404", "Discount code not found", false, 0, 0, 0, 0, null, null);
+                    return new ApiResponse<DiscountDTO>(null, null, "400", "Discount code not found", false, 0, 0, 0, 0, null, null);
                 }
 
                 // Check 2: Status active?

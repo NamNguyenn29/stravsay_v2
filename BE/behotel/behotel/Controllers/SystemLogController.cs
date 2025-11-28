@@ -51,7 +51,7 @@ namespace behotel.Controllers
 
             if (!result.IsSuccess)
             {
-                if (result.Code == "404")
+                if (result.Code == "400")
                     return NotFound(result);
                 return StatusCode(500, result);
             }

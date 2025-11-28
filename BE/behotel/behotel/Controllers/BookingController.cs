@@ -38,7 +38,7 @@ namespace behotel.Controllers
             var booking = await _bookingService.GetBookingDTOByIdAsync(idGuid);
             if (booking == null)
             {
-                return  new ApiResponse<BookingDTO>( null, null, "404", "Booking not found", false,0,0,0,0, null, null);
+                return  new ApiResponse<BookingDTO>( null, null, "400", "Booking not found", false,0,0,0,0, null, null);
             }
             return new ApiResponse<BookingDTO>(null, booking, "200", "Get booking successfully", true,0,0,0,1, null, null);
         }

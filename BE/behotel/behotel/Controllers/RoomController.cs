@@ -53,7 +53,7 @@ namespace behotel.Controllers
             var availableRooms = await _roomImpl.GetAvailableRoomsAsync(selectedRoomTypeId, checkInDate, checkOutDate, adult, children);
             if (availableRooms == null)
             {
-                return new ApiResponse<RoomDTO>(null, null, "404", "No available room found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<RoomDTO>(null, null, "400", "No available room found", false, 0, 0, 0, 0, null, null);
             }
             return new ApiResponse<RoomDTO>(availableRooms.ToList(), null, "200", "Get room successfully", true, 0, 0, 0, availableRooms.Count(), null, null);
         }
@@ -70,7 +70,7 @@ namespace behotel.Controllers
             var room = await _roomImpl.GetRoomDTOByIdAsync(idGuid);
             if (room == null)
             {
-                return  new ApiResponse<RoomDTO>(null, null, "404", "Room not found", false,0,0,0,0, null, null);
+                return  new ApiResponse<RoomDTO>(null, null, "400", "Room not found", false,0,0,0,0, null, null);
             }
 
             return new ApiResponse<RoomDTO>(null, room, "200", "Get room successfully", true,0,0,0,1, null, null);

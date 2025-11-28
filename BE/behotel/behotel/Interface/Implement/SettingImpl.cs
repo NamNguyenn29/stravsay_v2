@@ -24,7 +24,7 @@ namespace behotel.Interface.Implement
                     return new ApiResponse<SettingDTO>(
                         List: null,
                         Object: null,
-                        Code: "404",
+                        Code: "400",
                         Message: "Setting not found",
                         IsSuccess: false,
                         CurrentPage: 0,
@@ -106,7 +106,7 @@ namespace behotel.Interface.Implement
                     return new ApiResponse<SettingDTO>(
                         List: null,
                         Object: null,
-                        Code: "404",
+                        Code: "400",
                         Message: "Setting not found",
                         IsSuccess: false,
                         CurrentPage: 0,

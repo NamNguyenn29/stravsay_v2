@@ -42,7 +42,7 @@ namespace behotel.Controllers
             var user = await _userService.GetUserDTOAsync(idGuid);
             if (user == null)
             {
-                return new ApiResponse<UserDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<UserDTO>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, null);
             }
 
             return new ApiResponse<UserDTO>(null, user, "200", "Get user successfully", true, 0, 0, 0, 1, null, null);
@@ -138,7 +138,7 @@ namespace behotel.Controllers
             var user = await _userService.GetUserDTOAsync(idGuid);
             if (user == null)
             {
-                return new ApiResponse<UserDTO>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, null);
+                return new ApiResponse<UserDTO>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, null);
             }
 
             return new ApiResponse<UserDTO>(null, user, "200", "Get user successfully", true, 0, 0, 0, 1, null, null);

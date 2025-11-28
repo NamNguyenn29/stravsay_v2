@@ -159,7 +159,7 @@ namespace behotel.Interface.Implement
                     return new ApiResponse<SystemLogDTO>(
                         List: null,
                         Object: null,
-                        Code: "404",
+                        Code: "400",
                         Message: "Log not found",
                         IsSuccess: false,
                         CurrentPage: 0,

@@ -43,7 +43,7 @@ namespace behotel.Interface.Implement
 
             if (review == null)
             {
-                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<ReviewDTO>(null, null, "400", "Review not found", false, 0, 0, 0, 0, null, 0);
             }
 
             return new ApiResponse<ReviewDTO>(null, MapToDTO(review), "200", "Get review successfully", true, 0, 0, 0, 0, null, 0);
@@ -104,7 +104,7 @@ namespace behotel.Interface.Implement
             var booking = await _context.Booking.FindAsync(reviewDto.BookingID);
             if (booking == null)
             {
-                return new ApiResponse<ReviewDTO>(null, null, "404", "Booking not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<ReviewDTO>(null, null, "400", "Booking not found", false, 0, 0, 0, 0, null, 0);
             }
 
 
@@ -151,7 +151,7 @@ namespace behotel.Interface.Implement
             var review = await _context.Review.FindAsync(reviewId);
             if (review == null)
             {
-                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<ReviewDTO>(null, null, "400", "Review not found", false, 0, 0, 0, 0, null, 0);
             }
 
             if (review.UserID != currentUserId)
@@ -177,7 +177,7 @@ namespace behotel.Interface.Implement
 
             if (review == null)
             {
-                return new ApiResponse<ReviewDTO>(null, null, "404", "Review not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<ReviewDTO>(null, null, "400", "Review not found", false, 0, 0, 0, 0, null, 0);
             }
 
             _context.Review.Remove(review);

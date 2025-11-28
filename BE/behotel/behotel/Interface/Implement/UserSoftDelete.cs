@@ -29,7 +29,7 @@ namespace behotel.Interface.Implement
             var user = await _context.User.FindAsync(id);
             if (user == null)
             {
-                return new ApiResponse<string>(null, null, "404", "User not found", false, 0, 0, 0, 0, null, 0);
+                return new ApiResponse<string>(null, null, "400", "User not found", false, 0, 0, 0, 0, null, 0);
             }
             var userRoles = await _context.UserRole.Where(ur => ur.IdUser == id).ToListAsync();
             User_Deleted user_Deleted = new User_Deleted(user.Id, user.FullName, user.Email, user.DateOfBirth, user.Phone, user.Password, user.Status, user.ActiveCode, user.IsActived, user.ForgotPassCode, user.CreatedDate);

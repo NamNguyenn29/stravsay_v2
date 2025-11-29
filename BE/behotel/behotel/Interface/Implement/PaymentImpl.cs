@@ -129,13 +129,12 @@ namespace behotel.Interface.Implement
                 }
                 else if (paymentMethod.Code.Equals("PAY_ON_ARRIVAL", StringComparison.OrdinalIgnoreCase))
                 {
-                    payment.Status = 1;
+                    payment.Status = 0;
                     payment.PaidAt = DateTime.UtcNow;
-                    booking.Status = 1;
+                    booking.Status = 0;
 
                     await _context.SaveChangesAsync();
 
-                    // ✅ FIX: Commit transaction
                     await transaction.CommitAsync();
 
                     dto.PaymentID = payment.PaymentID;
@@ -146,13 +145,11 @@ namespace behotel.Interface.Implement
                     return dto;
                 }
 
-                // ✅ FIX: Commit nếu không match case nào
                 await transaction.CommitAsync();
                 return dto;
             }
             catch (Exception ex)
             {
-                // ✅ FIX: Rollback nếu có lỗi
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Lỗi khi tạo payment");
                 throw;

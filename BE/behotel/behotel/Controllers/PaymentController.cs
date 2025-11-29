@@ -2,6 +2,7 @@
 using behotel.Helper;
 using behotel.Interface;
 using behotel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace behotel.Controllers
 {
+    [Authorize]   
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
@@ -34,6 +36,56 @@ namespace behotel.Controllers
             _logger = logger;
             _config = config;
             _context = context;
+        }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllPayments()
+        {
+            try
+            {
+                var payments = await _context.Payments
+                    .OrderByDescending(p => p.CreatedDate)
+                    .ToListAsync();
+
+                var paymentDTOs = payments.Select(p => new PaymentDTO
+                {
+                    PaymentID = p.PaymentID,
+                    BookingID = p.BookingID,
+                    PaymentMethodID = p.PaymentMethodID,
+                    Amount = p.Amount,
+                    PaidAt = p.PaidAt,
+                    CreatedDate = p.CreatedDate,
+                    ProviderTransactionRef = p.ProviderTransactionRef,
+                    MerchantReference = p.MerchantReference,
+                    Fee = p.Fee,
+                    ResponsePayload = p.ResponsePayload,
+                    PayUrl = p.PayUrl
+                }).ToList();
+
+                var response = new ApiResponse<PaymentDTO>(
+                    List: paymentDTOs,
+                    Object: null,
+                    Code: "200",
+                    Message: "Lấy danh sách thanh toán thành công",
+                    IsSuccess: true,
+                    CurrentPage: 0,
+                    PageSize: 0,
+                    TotalPage: 0,
+                    TotalElement: paymentDTOs.Count,
+                    String: null,
+                    Int: null
+                );
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi lấy danh sách thanh toán");
+                return StatusCode(500, new ApiResponse<string>(
+                    null, null, "500",
+                    "Lỗi server khi lấy danh sách thanh toán",
+                    false, 0, 0, 0, 0, null, null
+                ));
+            }
         }
 
         [HttpGet("methods")]
@@ -146,7 +198,6 @@ namespace behotel.Controllers
                     return Redirect("https://localhost:3000/user/userbooking?error=invalid_payment");
                 }
 
-                // Lưu callback info (nếu tìm thấy payment)
                 try
                 {
                     Guid paymentGuid;
@@ -185,14 +236,12 @@ namespace behotel.Controllers
                     _logger.LogError(ex, "⚠️ Lỗi khi lưu callback info");
                 }
 
-                // Success: đánh dấu paid bằng service (idempotent)
                 if (resultCode == "0")
                 {
                     try
                     {
                         if (Guid.TryParse(orderId, out var paymentId))
                         {
-                            // truyền transId + toàn bộ query làm responsePayload cho traceability
                             var payload = JsonConvert.SerializeObject(new { resultCode, transId, query = Request.QueryString.Value });
                             var marked = await _paymentService.MarkAsPaidAsync(paymentId, transId, payload);
                             if (!marked)
@@ -210,7 +259,6 @@ namespace behotel.Controllers
                     return Redirect($"https://localhost:3000/user/userbooking?payment=success&id={orderId}");
                 }
 
-                // Failed/Cancelled - Cancel payment & booking
                 _logger.LogWarning($"❌ MoMo payment FAILED: {orderId}, code={resultCode}");
                 try
                 {

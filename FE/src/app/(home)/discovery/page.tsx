@@ -8,21 +8,21 @@ export default function DiscoveryPage() {
     {
       id: 1,
       name: "Deluxe Ocean View",
-      price: 120,
+      price: 1200000,
       image: "/rooms/room1.jpg",
       desc: "A luxurious sea-view room featuring a king-size bed and private balcony.",
     },
     {
       id: 2,
       name: "Superior City View",
-      price: 90,
+      price: 900000,
       image: "/rooms/room2.jpg",
       desc: "A cozy room with stunning city views, ideal for short getaways.",
     },
     {
       id: 3,
       name: "Family Suite",
-      price: 150,
+      price: 1500000,
       image: "/rooms/room3.jpg",
       desc: "Spacious suite with two bedrooms and a separate living area for families.",
     },
@@ -100,7 +100,7 @@ export default function DiscoveryPage() {
                 <p className="text-gray-600 text-sm mt-1 mb-3">{room.desc}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold text-indigo-600">
-                    ${room.price}/night
+                    {room.price}đ/night
                   </span>
                   <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
                     Book Now

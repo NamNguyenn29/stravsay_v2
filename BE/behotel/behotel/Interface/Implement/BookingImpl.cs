@@ -344,7 +344,7 @@ namespace behotel.Interface.Implement
             }
 
             var payment = await _context.Payments.FirstOrDefaultAsync(p => p.BookingID == booking.Id);
-           
+            var review = await _context.Review.FirstOrDefaultAsync( r => r.BookingID == booking.Id );
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -356,6 +356,11 @@ namespace behotel.Interface.Implement
                     _context.Payments.Remove(payment);
                     await _context.SaveChangesAsync();
 
+                }
+                if(payment != null)
+                {
+                    _context.Review.Remove(review);
+                    await _context.SaveChangesAsync();
                 }
                 _context.Booking.Remove(booking);
                 _context.BookingService.RemoveRange(bookingServices);

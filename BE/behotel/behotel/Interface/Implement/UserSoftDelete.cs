@@ -46,12 +46,15 @@ namespace behotel.Interface.Implement
                     CreatedDate = userRole.CreatedDate
                 });
             }
+            List<SystemLog> logs = await _context.SystemLogs.Where(l => l.UserId == user.Id).ToListAsync();
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 await _context.User_Deleted.AddAsync(user_Deleted);
                 await _context.UserRole_Deleted.AddRangeAsync(userRoles_Deleted);
                 _context.UserRole.RemoveRange(userRoles);
+                _context.SystemLogs.RemoveRange(logs);
+                await _context.SaveChangesAsync();
                 _context.User.Remove(user);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

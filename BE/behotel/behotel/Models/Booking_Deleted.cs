@@ -11,6 +11,7 @@ namespace behotel.Models
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public decimal Price { get; set; }
+        public Guid? DiscountID { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Adult { get; set; }

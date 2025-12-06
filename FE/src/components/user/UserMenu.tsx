@@ -15,6 +15,20 @@ export default function UserMenu() {
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
 
+    const loadUser = async () => {
+        try {
+            const res = await userService.getMyUser();
+            if (res.data.isSuccess) {
+                const user = res.data.object;
+                setName(user.fullName);
+                if (user.roleList.includes("USER")) {
+                    setRole("USER");
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
     useEffect(() => {
         loadUser();
         const handleClickOutside = (e: MouseEvent) => {
@@ -45,20 +59,7 @@ export default function UserMenu() {
     //     }
     // }
 
-    const loadUser = async () => {
-        try {
-            const res = await userService.getMyUser();
-            if (res.data.isSuccess) {
-                const user = res.data.object;
-                setName(user.fullName);
-                if (user.roleList.includes("USER")) {
-                    setRole("USER");
-                }
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    
 
 
     // function getCookie(name: string): string | null {

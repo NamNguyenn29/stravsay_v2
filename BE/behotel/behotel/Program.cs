@@ -77,6 +77,7 @@ builder.Services.AddScoped<IPaymentMethodService, PaymentMethodImpl>();
 
 builder.Services.AddScoped<ISystemLogService, SystemLogImpl>();
 builder.Services.AddScoped<ISettingService, SettingImpl>();
+builder.Services.AddScoped<IDashboardService, DashboardImpl>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

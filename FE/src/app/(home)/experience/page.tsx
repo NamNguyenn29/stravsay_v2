@@ -62,10 +62,6 @@ export default function ExperienceWithMyHotel() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadAllReviews();
-  }, []);
-
   const loadAllReviews = async () => {
     try {
       setLoading(true);
@@ -97,6 +93,11 @@ export default function ExperienceWithMyHotel() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    loadAllReviews();
+  }, []);
+
+  
 
   const slides: Review[][] = [];
   for (let i = 0; i < reviews.length; i += 2) {

@@ -16,6 +16,7 @@ import { Payment } from "@/model/Payment";
 import { notification } from "antd";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import DiscountInput from "@/components/user/DiscountInput";
 
 interface ErrorResponse {
   message?: string;
@@ -25,52 +26,69 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
 
-  // Customer Info
+
   const [fullName, setFullName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [user, setUser] = useState<User | null>(null);
 
-  // Payment
+
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [paymentMethodId, setPaymentMethodId] = useState<string | null>(null);
   const [loadingMethods, setLoadingMethods] = useState<boolean>(false);
   const [creatingPayment, setCreatingPayment] = useState<boolean>(false);
 
-  // Extra Services
+
   const [services, setServices] = useState<Service[]>([]);
   const [loadingServices, setLoadingServices] = useState<boolean>(true);
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
 
-  const { room, checkInDate, checkOutDate, totalAmount, setTotalAmount } = useBookingStore();
+
+  const {
+    room,
+    checkInDate,
+    checkOutDate,
+    totalAmount,
+    setTotalAmount,
+    setDiscountAmount,
+    setDiscountCode
+  } = useBookingStore();
+
+
+  const [subtotal, setSubtotal] = useState<number>(0);
+  const [localDiscountAmount, setLocalDiscountAmount] = useState<number>(0);
+  const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>("");
 
   const datedif = checkInDate && checkOutDate
     ? Math.ceil(
-        (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+      (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
     : 0;
+
 
   useEffect(() => {
     if (!room || !checkInDate || !checkOutDate) return;
 
     const diffDays = Math.ceil(
       (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) /
-        (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24)
     );
     const roomTotal = room.basePrice * diffDays;
     const serviceTotal = services
       .filter((s) => selectedServiceIds.includes(s.id))
       .reduce((sum, s) => sum + s.price, 0);
 
-    setTotalAmount(roomTotal + serviceTotal);
-  }, [room, checkInDate, checkOutDate, services, selectedServiceIds, setTotalAmount]);
+    const calculatedSubtotal = roomTotal + serviceTotal;
+    setSubtotal(calculatedSubtotal);
+  }, [room, checkInDate, checkOutDate, services, selectedServiceIds]);
+
 
   useEffect(() => {
-    loadUser();
-    loadPaymentMethods();
-    loadServices();
-  }, []);
+    const finalAmount = subtotal - localDiscountAmount;
+    const total = finalAmount > 0 ? finalAmount : 0;
+    setTotalAmount(total);
+  }, [subtotal, localDiscountAmount, setTotalAmount]);
 
   const loadUser = useCallback(async () => {
     try {
@@ -140,11 +158,27 @@ export default function CheckoutPage() {
       setLoadingServices(false);
     }
   };
+  useEffect(() => {
+    loadUser();
+    loadPaymentMethods();
+    loadServices();
+  }, []);
+
+
 
   const toggleService = (id: string) => {
     setSelectedServiceIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
+  };
+
+  const handleDiscountApplied = (amount: number, code: string) => {
+
+    setLocalDiscountAmount(amount);
+    setAppliedDiscountCode(code);
+
+    setDiscountAmount(amount);
+    setDiscountCode(code);
   };
 
   const validateInputs = (): boolean => {
@@ -224,6 +258,7 @@ export default function CheckoutPage() {
         adult: room.adult,
         children: room.children,
         services: selectedServiceIds,
+        discountCode: appliedDiscountCode || undefined
       };
 
       const bookingRes = await BookingService.createBooking(bookingPayload);
@@ -290,7 +325,7 @@ export default function CheckoutPage() {
       setCreatingPayment(false);
     } catch (error) {
       const err = error as AxiosError<ErrorResponse>;
-      
+
       api.error({
         message: "Error",
         description: err.response?.data?.message || "Error while processing payment.",
@@ -381,11 +416,10 @@ export default function CheckoutPage() {
                       whileHover={{ scale: 1.03 }}
                       key={s.id}
                       onClick={() => toggleService(s.id)}
-                      className={`border rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all ${
-                        selectedServiceIds.includes(s.id)
+                      className={`border rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all ${selectedServiceIds.includes(s.id)
                           ? "border-rose-400 bg-rose-50 shadow-sm"
                           : "border-gray-200 hover:border-rose-100"
-                      }`}
+                        }`}
                     >
                       <div className="font-medium text-gray-800 text-base">{s.name}</div>
                       <div className="text-sm text-gray-500 mt-1">
@@ -395,6 +429,19 @@ export default function CheckoutPage() {
                   ))
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* DISCOUNT SECTION */}
+          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-100 text-2xl font-semibold bg-gradient-to-r from-rose-50 to-white">
+              Discount Code
+            </div>
+            <div className="p-8">
+              <DiscountInput
+                subtotal={subtotal}
+                onDiscountApplied={handleDiscountApplied}
+              />
             </div>
           </div>
 
@@ -411,11 +458,10 @@ export default function CheckoutPage() {
                     whileHover={{ scale: 1.03 }}
                     key={m.paymentMethodID}
                     onClick={() => setPaymentMethodId(m.paymentMethodID)}
-                    className={`border rounded-xl p-6 flex items-center justify-center text-center transition-all ${
-                      paymentMethodId === m.paymentMethodID
+                    className={`border rounded-xl p-6 flex items-center justify-center text-center transition-all ${paymentMethodId === m.paymentMethodID
                         ? "border-rose-400 bg-rose-50 shadow-sm"
                         : "border-gray-200 hover:border-rose-100"
-                    }`}
+                      }`}
                   >
                     <div className="font-medium text-gray-800 text-base">{m.name}</div>
                   </motion.button>

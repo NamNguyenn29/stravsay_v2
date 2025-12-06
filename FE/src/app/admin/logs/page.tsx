@@ -22,19 +22,15 @@ export default function SystemLogsPage() {
   const [selectedLog, setSelectedLog] = useState<SystemLog | null>(null);
   const [modal, modalContextHolder] = Modal.useModal();
 
-  useEffect(() => {
-    loadAllLogs();
-  }, []);
-
   const loadAllLogs = async () => {
     try {
       setLoading(true);
       const res = await systemlogService.getAllLogs(1, 1000);
-      
+
       if (res.data?.isSuccess) {
         const data = res.data.list || [];
         setAllLogs(data);
-        
+
         const startIdx = (currentPage - 1) * pageSize;
         setLogs(data.slice(startIdx, startIdx + pageSize));
         setTotalElement(data.length);
@@ -48,6 +44,11 @@ export default function SystemLogsPage() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    loadAllLogs();
+  }, []);
+
+
 
   const handlePaginationChange = (page: number, size: number) => {
     setCurrentPage(page);
@@ -255,11 +256,11 @@ export default function SystemLogsPage() {
                     <td className="px-4 py-3 text-gray-600">
                       {index + 1 + (currentPage - 1) * pageSize}
                     </td>
-                    
+
                     <td className="px-4 py-3 font-medium text-gray-800">
                       {log.userName || "Unknown"}
                     </td>
-                    
+
                     <td className="px-4 py-3">
                       {log.userId ? (
                         <span className="text-xs text-gray-500 font-mono">
@@ -269,33 +270,32 @@ export default function SystemLogsPage() {
                         <span className="text-gray-400">-</span>
                       )}
                     </td>
-                    
+
                     <td className="px-4 py-3 text-gray-700 font-mono text-xs">
                       {log.ipAddress || "-"}
                     </td>
-                    
+
                     <td className="px-4 py-3 text-center">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getActionBadgeColor(log.action)}`}>
                         {getActionLabel(log.action)}
                       </span>
                     </td>
-                    
+
                     <td className="px-4 py-3 text-center">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          log.status
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${log.status
                             ? "bg-green-100 text-green-700"
                             : "bg-red-100 text-red-700"
-                        }`}
+                          }`}
                       >
                         {log.status ? "Success" : "Failed"}
                       </span>
                     </td>
-                    
+
                     <td className="px-4 py-3 text-gray-600">
                       {formatDate(log.createdDate)}
                     </td>
-                    
+
                     <td className="px-4 py-3 text-center">
                       <div className="flex gap-2 justify-center">
                         <button
@@ -359,11 +359,10 @@ export default function SystemLogsPage() {
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Status</label>
                 <div className="p-2">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      selectedLog.status
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${selectedLog.status
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
-                    }`}
+                      }`}
                   >
                     {selectedLog.status ? "Success" : "Failed"}
                   </span>

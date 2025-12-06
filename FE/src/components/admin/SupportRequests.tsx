@@ -1,4 +1,3 @@
-// src/components/admin/SupportRequests.tsx
 "use client";
 
 import React from "react";

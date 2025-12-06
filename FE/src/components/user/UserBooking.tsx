@@ -34,9 +34,6 @@ export function ElegantBookings() {
             router.replace('/user/userbooking', { scroll: false });
         }
     }, [searchParams, router, messageApi]);
-    useEffect(() => {
-        loadBooking();
-    }, []);
     const loadBooking = async () => {
         try {
             setLoading(true);
@@ -48,6 +45,10 @@ export function ElegantBookings() {
             setLoading(false);
         }
     };
+    useEffect(() => {
+        loadBooking();
+    }, []);
+    
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
         return dayjs(dateString).format("DD/MM/YYYY : HH:00");

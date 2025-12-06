@@ -60,19 +60,16 @@ namespace behotel.Controllers
 
         [Authorize]
         [HttpPost("validate")]
-        public async Task<IActionResult> ValidateDiscount([FromBody] ValidateDiscountRequest request)
+        public async Task<IActionResult> ValidateDiscount([FromBody] DiscountDTO dto)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.DiscountCode))
+            if (string.IsNullOrWhiteSpace(dto.DiscountCode))
             {
                 return BadRequest(new { message = "Discount code is required" });
             }
-
-            if (request.OrderAmount <= 0)
-            {
-                return BadRequest(new { message = "Order amount must be greater than 0" });
-            }
-
-            var response = await _discountService.ValidateAndCalculateAsync(request.DiscountCode, request.OrderAmount);
+            var response = await _discountService.ValidateAndCalculateAsync(
+                dto.DiscountCode,
+                dto.MinOrderAmount
+            );
 
             if (!response.IsSuccess)
             {
@@ -132,10 +129,6 @@ namespace behotel.Controllers
 
             return Ok(response);
         }
-        public class ValidateDiscountRequest
-        {
-            public string DiscountCode { get; set; }
-            public decimal OrderAmount { get; set; }
-        }
+
     }
 }

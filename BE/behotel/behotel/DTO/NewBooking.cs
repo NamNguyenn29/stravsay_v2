@@ -6,10 +6,9 @@
         public string RoomId { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public string[]? services { get; set; }
-        public string? DiscountID { get; set; }
+        public string[]? ServiceIds { get; set; }  // ← Đổi tên
+        public string? DiscountCode { get; set; }  // ← Đổi từ DiscountID
         public int Adult { get; set; }
         public int Children { get; set; }
-
     }
 }

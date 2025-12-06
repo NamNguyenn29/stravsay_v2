@@ -25,7 +25,7 @@ namespace behotel.Interface.Implement
         private readonly ILogger<PaymentImpl> _logger;
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private const int PENDING_TIMEOUT_MINUTES = 15; // Timeout cho PENDING payment
+        private const int PENDING_TIMEOUT_MINUTES = 15;
 
         public PaymentImpl(
             HotelManagementContext context,
@@ -71,7 +71,6 @@ namespace behotel.Interface.Implement
 
                 if (existingPending != null)
                 {
-                    // ✅ FIX: Commit transaction trước khi return
                     await transaction.CommitAsync();
 
                     return new PaymentDTO
@@ -105,7 +104,6 @@ namespace behotel.Interface.Implement
                     payment.PayUrl = payUrl;
                     await _context.SaveChangesAsync();
 
-                    // ✅ FIX: Commit transaction
                     await transaction.CommitAsync();
 
                     dto.PaymentID = payment.PaymentID;
@@ -119,7 +117,6 @@ namespace behotel.Interface.Implement
                     payment.PayUrl = payUrl;
                     await _context.SaveChangesAsync();
 
-                    // ✅ FIX: Commit transaction
                     await transaction.CommitAsync();
 
                     dto.PaymentID = payment.PaymentID;
@@ -133,8 +130,18 @@ namespace behotel.Interface.Implement
                     payment.PaidAt = DateTime.UtcNow;
                     booking.Status = 0;
 
-                    await _context.SaveChangesAsync();
+                    if (booking.DiscountID.HasValue)
+                    {
+                        var discount = await _context.Discount.FindAsync(booking.DiscountID.Value);
+                        if (discount != null)
+                        {
+                            discount.DiscountUsage++;
+                            _context.Discount.Update(discount);
+                            _logger.LogInformation($"✅ Tăng DiscountUsage cho discount {discount.DiscountCode}: {discount.DiscountUsage}/{discount.MaxUsageLimit}");
+                        }
+                    }
 
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
                     dto.PaymentID = payment.PaymentID;
@@ -279,7 +286,6 @@ namespace behotel.Interface.Implement
                 }
                 else
                 {
-                    // Nếu VNPAY trả về mã lỗi, hủy payment
                     await CancelAsync(paymentId);
                 }
             }
@@ -359,7 +365,6 @@ namespace behotel.Interface.Implement
                     return false;
                 }
 
-                // IDEMPOTENCY CHECK #1: Payment đã PAID rồi
                 if (payment.Status == 1)
                 {
                     _logger.LogInformation($"Payment {paymentId} đã PAID trước đó, bỏ qua callback duplicate.");
@@ -367,7 +372,6 @@ namespace behotel.Interface.Implement
                     return true;
                 }
 
-                // IDEMPOTENCY CHECK #2: Transaction ID đã được xử lý chưa
                 if (!string.IsNullOrEmpty(providerRef))
                 {
                     var existingTransaction = await _context.Payments
@@ -383,7 +387,6 @@ namespace behotel.Interface.Implement
                     }
                 }
 
-                // Không cho phép update payment đã CANCEL
                 if (payment.Status == 2)
                 {
                     _logger.LogWarning($"Payment {paymentId} đã CANCEL, không thể chuyển thành PAID.");
@@ -391,14 +394,12 @@ namespace behotel.Interface.Implement
                     return false;
                 }
 
-                // Cập nhật payment thành SUCCESS
                 payment.Status = 1;
                 payment.PaidAt = DateTime.UtcNow;
                 payment.ProviderTransactionRef = providerRef;
                 payment.ResponsePayload = responsePayload;
                 _context.Payments.Update(payment);
 
-                // Cập nhật booking thành SUCCESS
                 var booking = await _context.Booking.FindAsync(payment.BookingID);
                 if (booking == null)
                 {
@@ -407,11 +408,25 @@ namespace behotel.Interface.Implement
                     return false;
                 }
 
-                // Chỉ update nếu booking đang PENDING
                 if (booking.Status == 0)
                 {
                     booking.Status = 1;
                     _context.Booking.Update(booking);
+
+                    if (booking.DiscountID.HasValue)
+                    {
+                        var discount = await _context.Discount.FindAsync(booking.DiscountID.Value);
+                        if (discount != null)
+                        {
+                            discount.DiscountUsage++;
+                            _context.Discount.Update(discount);
+                            _logger.LogInformation($"✅ Tăng DiscountUsage cho discount {discount.DiscountCode}: {discount.DiscountUsage}/{discount.MaxUsageLimit}");
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"⚠️ Discount {booking.DiscountID} không tồn tại khi tăng usage");
+                        }
+                    }
                 }
                 else if (booking.Status == 2)
                 {
@@ -420,7 +435,6 @@ namespace behotel.Interface.Implement
                     return false;
                 }
 
-                // Lưu tất cả thay đổi
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -435,67 +449,62 @@ namespace behotel.Interface.Implement
             }
         }
 
-       public async Task<bool> CancelAsync(Guid paymentId)
-{
-    using var transaction = await _context.Database.BeginTransactionAsync();
-    
-    try
-    {
-        var payment = await _context.Payments.FindAsync(paymentId);
-        if (payment == null)
+        public async Task<bool> CancelAsync(Guid paymentId)
         {
-            _logger.LogWarning($"Payment {paymentId} không tồn tại");
-            return false;
-        }
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-        // Đã CANCEL rồi thì return true
-        if (payment.Status == 2)
-        {
-            _logger.LogInformation($"Payment {paymentId} đã CANCEL trước đó.");
-            await transaction.CommitAsync();
-            return true;
-        }
-
-        // Không cho phép cancel payment đã PAID
-        if (payment.Status == 1)
-        {
-            _logger.LogWarning($"Payment {paymentId} đã PAID, không thể cancel.");
-            await transaction.RollbackAsync();
-            return false;
-        }
-
-        // Chỉ cancel payment PENDING (status = 0)
-        if (payment.Status == 0)
-        {
-            payment.Status = 2;
-            _context.Payments.Update(payment);
-
-            // Đồng bộ cập nhật booking thành CANCELLED
-            var booking = await _context.Booking.FindAsync(payment.BookingID);
-            if (booking != null && booking.Status == 0)
+            try
             {
-                booking.Status = 2;
-                _context.Booking.Update(booking);
+                var payment = await _context.Payments.FindAsync(paymentId);
+                if (payment == null)
+                {
+                    _logger.LogWarning($"Payment {paymentId} không tồn tại");
+                    return false;
+                }
+
+                if (payment.Status == 2)
+                {
+                    _logger.LogInformation($"Payment {paymentId} đã CANCEL trước đó.");
+                    await transaction.CommitAsync();
+                    return true;
+                }
+
+                if (payment.Status == 1)
+                {
+                    _logger.LogWarning($"Payment {paymentId} đã PAID, không thể cancel.");
+                    await transaction.RollbackAsync();
+                    return false;
+                }
+                if (payment.Status == 0)
+                {
+                    payment.Status = 2;
+                    _context.Payments.Update(payment);
+
+                    var booking = await _context.Booking.FindAsync(payment.BookingID);
+                    if (booking != null && booking.Status == 0)
+                    {
+                        booking.Status = 2;
+                        _context.Booking.Update(booking);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation($"Payment {paymentId} và Booking {payment.BookingID} đã được cancel.");
+                    return true;
+                }
+
+                await transaction.RollbackAsync();
+                return false;
             }
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            _logger.LogInformation($"❌ Payment {paymentId} và Booking {payment.BookingID} đã được cancel.");
-            return true;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Lỗi khi cancel Payment {paymentId}");
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
 
-        await transaction.RollbackAsync();
-        return false;
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, $"Lỗi khi cancel Payment {paymentId}");
-        await transaction.RollbackAsync();
-        return false;
-    }
-}
-      
         private class MomoResponse
         {
             [JsonProperty("payUrl")] public string PayUrl { get; set; }

@@ -1,4 +1,3 @@
-// src/components/admin/RecentBookings.tsx
 "use client";
 
 import React from "react";

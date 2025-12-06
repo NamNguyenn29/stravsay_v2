@@ -11,11 +11,13 @@ interface BookingState {
     noAdult: number;
     room: Room | null;
 
-   
     totalAmount: number;
+    discountAmount: number;
+    discountCode: string;
+    
     setTotalAmount: (amount: number) => void;
-
-  
+    setDiscountAmount: (amount: number) => void;
+    setDiscountCode: (code: string) => void;
 
     setRoomType: (roomType: RoomType | null) => void;
     setCheckInDate: (date: string) => void;
@@ -34,9 +36,13 @@ export const useBookingStore = create<BookingState>((set) => ({
     roomType: null,
     room: null,
 
-   
     totalAmount: 0,
+    discountAmount: 0,
+    discountCode: "",
+    
     setTotalAmount: (amount) => set({ totalAmount: amount }),
+    setDiscountAmount: (amount) => set({ discountAmount: amount }),
+    setDiscountCode: (code) => set({ discountCode: code }),
 
     setRoomType: (roomType) => set({ roomType }),
     setCheckInDate: (date) => set({ checkInDate: date }),
@@ -53,8 +59,8 @@ export const useBookingStore = create<BookingState>((set) => ({
             noAdult: 2,
             noChildren: 0,
             room: null,
-
-            
             totalAmount: 0,
+            discountAmount: 0,
+            discountCode: "",
         }),
 }));

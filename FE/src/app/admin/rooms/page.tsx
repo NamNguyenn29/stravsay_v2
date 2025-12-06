@@ -45,6 +45,11 @@ export default function RoomManagement() {
             messageApi.error(res.data.message);
         }
     }, [messageApi]);
+    const loadRoomType = async () => {
+        // const data = await getRoomType();
+        const res = await roomTypeService.getRoomType();
+        setRoomTypes(res.data.list);
+    }
 
     useEffect(() => {
         if (!isSearching) {
@@ -57,11 +62,7 @@ export default function RoomManagement() {
     }, [currentPage, pageSize, isSearching, loadRoom, searchRoom]);
 
     const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
-    const loadRoomType = async () => {
-        // const data = await getRoomType();
-        const res = await roomTypeService.getRoomType();
-        setRoomTypes(res.data.list);
-    }
+
 
 
     // edit 

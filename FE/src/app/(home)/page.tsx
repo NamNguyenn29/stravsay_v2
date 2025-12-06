@@ -44,9 +44,6 @@ export default function Home() {
   // item cho room type dropdown
   const [items, setItems] = useState<MenuProps["items"]>([]);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
-  useEffect(() => {
-    loadRoomType();
-  }, [])
   const loadRoomType = async () => {
     const res = await roomTypeService.getRoomType();
     const list: RoomType[] = res.data.list;
@@ -61,6 +58,10 @@ export default function Home() {
 
     setItems(mappedItems);
   }
+  useEffect(() => {
+    loadRoomType();
+  }, [])
+
 
 
   // xu ly su kien chon item trong dropdown
@@ -263,12 +264,7 @@ export default function Home() {
                   <h4 className="text-lg font-semibold mb-2">{promo.title}</h4>
                   <p className="text-sm text-gray-600 mb-4">{promo.desc}</p>
                   <div className="flex justify-between items-center">
-                    <a href="#" className="text-rose-500 font-medium hover:underline">
-                      View Details →
-                    </a>
-                    <button className="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 transition">
-                      Book Now
-                    </button>
+
                   </div>
                 </div>
               </article>

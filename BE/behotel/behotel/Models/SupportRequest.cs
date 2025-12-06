@@ -22,5 +22,6 @@ namespace behotel.Models
         public DateTime CreatedDate { get; set; }
         [MaxLength(2000)]
         public string? Response {  get; set; }
+
     }
 }

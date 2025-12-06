@@ -13,6 +13,6 @@ export type Booking = {
     createdDate: string,
     adult: number,
     children: number,
-    discountCode?: number,
+    discountCode?: string,
     services?: string[]
 }

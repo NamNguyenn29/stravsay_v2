@@ -3,8 +3,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { Menu, Button } from "antd";
-import type { MenuProps, message } from "antd";
-import { logOut } from "@/api/UserApi/logOut";
+import type { MenuProps } from "antd";
 import { useRouter } from "next/navigation";
 import {
   DashboardOutlined,
@@ -18,20 +17,16 @@ import {
 } from "@ant-design/icons";
 import { userService } from "@/services/userService";
 
-type AdminMenuItem = {
+interface AdminMenuItem {
   key: string;
   label: string;
-  href?: string;
-  icon?: React.ReactNode;
-  children?: AdminMenuItem[];
-  hidden?: boolean;
-};
+  href: string;
+  icon: React.ReactNode;
+}
 
-type Props = {
-  selectedKey?: string; // truyền URL hiện tại hoặc key để highlight
-  collapsed?: boolean; // nếu muốn thu gọn
-  onLogout?: () => void; // callback logout
-};
+interface AdminSidebarProps {
+  selectedKey?: string;
+}
 
 const MENU: AdminMenuItem[] = [
   { key: "/admin", label: "Dashboard", href: "/admin", icon: <DashboardOutlined /> },
@@ -44,44 +39,43 @@ const MENU: AdminMenuItem[] = [
   { key: "/admin/discounts", label: "Discounts", href: "/admin/discounts", icon: <TagOutlined /> },
   { key: "/admin/settings", label: "Settings", href: "/admin/settings", icon: <SettingOutlined /> },
   { key: "/admin/logs", label: "System Logs", href: "/admin/logs", icon: <FileTextOutlined /> },
-
 ];
 
 function toAntdItems(items: AdminMenuItem[]): MenuProps["items"] {
-  return items
-    .filter((it) => !it.hidden)
-    .map((it) => ({
-      key: it.key,
-      icon: it.icon,
-      label: it.href ? (
-        <Link href={it.href} className="admin-sidebar-link">
-          {it.label}
-        </Link>
-      ) : (
-        <span>{it.label}</span>
-      ),
-      children: it.children ? toAntdItems(it.children) : undefined,
-    }));
+  return items.map((item) => ({
+    key: item.key,
+    icon: item.icon,
+    label: (
+      <Link href={item.href} style={{ textDecoration: "none", color: "inherit" }}>
+        {item.label}
+      </Link>
+    ),
+  }));
 }
 
-export default function AdminSidebar({ selectedKey, collapsed = false }: Props) {
+export default function AdminSidebar({ selectedKey }: AdminSidebarProps) {
   const items = useMemo(() => toAntdItems(MENU), []);
   const router = useRouter();
+
+  const handleLogout = async () => {
+    const result = await userService.logOut();
+    if (result.data.isSuccess) {
+      sessionStorage.setItem("justLoggedOut", "true");
+      router.push("/login");
+    }
+  };
+
   return (
     <aside
-      role="navigation"
-      aria-label="Admin sidebar"
       style={{
-        width: collapsed ? 80 : 260,
+        width: 260,
         minHeight: "100vh",
         background: "#fff",
         borderRight: "1px solid #f0f0f0",
         display: "flex",
         flexDirection: "column",
       }}
-      className="admin-sidebar"
     >
-      {/* Logo / header */}
       <div
         style={{
           padding: 16,
@@ -101,19 +95,17 @@ export default function AdminSidebar({ selectedKey, collapsed = false }: Props) 
             alignItems: "center",
             justifyContent: "center",
             fontWeight: 800,
+            color: "#fff",
           }}
         >
           AD
         </div>
-        {!collapsed && (
-          <div>
-            <div style={{ fontWeight: 700, color: "#04090eff" }}>Admin Panel</div>
-            <div style={{ fontSize: 12, color: "#888" }}>Admin</div>
-          </div>
-        )}
+        <div>
+          <div style={{ fontWeight: 700, color: "#04090eff" }}>Admin Panel</div>
+          <div style={{ fontSize: 12, color: "#888" }}>Admin</div>
+        </div>
       </div>
 
-      {/* Menu */}
       <div style={{ padding: 8, flex: 1, overflowY: "auto" }}>
         <Menu
           mode="inline"
@@ -123,22 +115,12 @@ export default function AdminSidebar({ selectedKey, collapsed = false }: Props) 
         />
       </div>
 
-      {/* Footer: logout */}
       <div style={{ padding: 12, borderTop: "1px solid #f0f0f0" }}>
         <Button
           type="text"
           danger
           icon={<LogoutOutlined />}
-          onClick={async () => {
-            // const result = await logOut();
-            const result = await userService.logOut();
-            if (result.data.isSuccess) {
-              // document.cookie = "CURRENT_USER=; path=/; max-age=0";
-              sessionStorage.setItem("justLoggedOut", "true");
-              router.push("/login");
-
-            }
-          }}
+          onClick={handleLogout}
           style={{ width: "100%", textAlign: "left" }}
         >
           Logout

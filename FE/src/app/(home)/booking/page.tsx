@@ -38,11 +38,7 @@ export default function BookingPage() {
         setAdult,
         setChildren,
     } = useBookingStore();
-    // 🔹 load loại phòng khi khởi tạo
-    useEffect(() => {
-        loadRoomType();
-        loadAvailableRoom();
-    }, []);
+ 
 
     const loadRoomType = async () => {
         // const data = await getRoomType();
@@ -75,6 +71,11 @@ export default function BookingPage() {
         setLoading(false);
     };
 
+       // 🔹 load loại phòng khi khởi tạo
+    useEffect(() => {
+        loadRoomType();
+        loadAvailableRoom();
+    }, []);
     // Khi thay đổi ngày hoặc loại phòng thì gọi lại API
     useEffect(() => {
         if (roomType && checkInDate && checkOutDate) {

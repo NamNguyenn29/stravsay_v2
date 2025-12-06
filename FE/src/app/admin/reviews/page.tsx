@@ -27,10 +27,6 @@ export default function ReviewManagement() {
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
   const [modal, modalContextHolder] = Modal.useModal();
 
-  useEffect(() => {
-    loadAllReviews();
-  }, []);
-
   const loadAllReviews = async () => {
     try {
       setLoading(true);
@@ -39,7 +35,7 @@ export default function ReviewManagement() {
       if (res.data?.isSuccess) {
         const data = res.data.list || [];
         setAllReviews(data);
-        
+
         const startIdx = (currentPage - 1) * pageSize;
         setReviews(data.slice(startIdx, startIdx + pageSize));
         setTotalElement(data.length);
@@ -52,12 +48,17 @@ export default function ReviewManagement() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    loadAllReviews();
+  }, []);
+
+
 
   const handlePaginationChange = (page: number, size: number) => {
     setCurrentPage(page);
     setPageSize(size);
 
-  
+
     const dataSource = keyword.trim() || ratingFilter ? reviews : allReviews;
     const startIdx = (page - 1) * size;
     setReviews(dataSource.slice(startIdx, startIdx + size));

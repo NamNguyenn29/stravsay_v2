@@ -64,9 +64,6 @@ namespace behotel.Controllers
         {
             var review = await _reviewService.GetReviewByBookingIdAsync(bookingId);
 
-            if (review == null)
-                return NotFound();
-
             return Ok(review);
         }
 
